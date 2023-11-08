@@ -4,3 +4,4 @@ dist/
 .hbuilderx/
 
 package-lock.json
+.idea/

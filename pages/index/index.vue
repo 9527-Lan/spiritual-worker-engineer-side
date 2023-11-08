@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<image class="logo" src="/static/logo.png"></image>
+		<image class="logo" src="/static/logo@1x.png"></image>
 		<view class="text-area">
 			<u-button type="primary" text="确定" @click="hasLogin == false && navTo('/pages/login/login')"></u-button>
 		</view>
@@ -29,7 +29,7 @@
 			navTo(url) {
 				console.log('跳转路径', url);
 				if (!this.hasLogin) {
-					url = '/pages/login/login';
+					url = '/pages/login/index';
 				}
 				uni.$u.route(url)
 			},

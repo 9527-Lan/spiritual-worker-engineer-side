@@ -101,25 +101,28 @@
 			//  #ifndef MP
 			async toLogin() {
 				this.logining = true;
-				this.$store.dispatch('user/login', {
-					code: this.verifyCode,
-					mobile: this.mobile
-				}).then(res => {
-					const pages = getCurrentPages();
-					if (pages.length > 1) {
-						uni.navigateBack()
-					} else {
-						console.log("跳转首页")
-						// 跳转首页
-						uni.switchTab({
-							url: '/pages/index/index'
-						});
-					}
-					this.logining = false;
-				}).catch((err) => {
-					console.log(err)
-					this.logining = false;
+				uni.switchTab({
+				 	url: '/pages/homePage/index'
 				});
+				// this.$store.dispatch('user/login', {
+				// 	code: this.verifyCode,
+				// 	mobile: this.mobile
+				// }).then(res => {
+				// 	const pages = getCurrentPages();
+				// 	if (pages.length > 1) {
+				// 		uni.navigateBack()
+				// 	} else {
+				// 		console.log("跳转首页")
+				// 		// 跳转首页
+				// 		uni.switchTab({
+				// 			url: '/pages/index/index'
+				// 		});
+				// 	}
+				// 	this.logining = false;
+				// }).catch((err) => {
+				// 	console.log(err)
+				// 	this.logining = false;
+				// });
 			},
 			// #endif
 		}

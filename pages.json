@@ -11,6 +11,17 @@
 			}
 		},
 		{
+			"path": "pages/login/index",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": false,
+					"animationType": "slide-in-bottom"
+				}
+			}
+		},
+		{
 			"path": "pages/login/login",
 			"style": {
 				"navigationBarTitleText": "",
@@ -20,13 +31,140 @@
 					"animationType": "slide-in-bottom"
 				}
 			}
+		},
+		{//首页
+			"path": "pages/homePage/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{//首页->用工详情
+			"path": "pages/homePage/stepAhead/stepAhead",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{//首页->搜索
+			"path": "pages/homePage/search/search",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{//我的
+			"path": "pages/my/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{//我的->进行中列表
+			"path": "pages/my/underWay/underWay",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{//我的->进行中详情
+			"path": "pages/my/underWay/employmentDetails",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{//我的->抢单中列表
+			"path": "pages/my/seizeOrdering/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{//我的->抢单中详情
+			"path": "pages/my/seizeOrdering/componments/seizeDetails",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{//我的->已完成列表
+			"path": "pages/my/successed/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{//我的->已完成详情
+			"path": "pages/my/successed/componments/successedDetails",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{//我的->异常列表
+			"path": "pages/my/abnormal/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{//我的->异常详情
+			"path": "pages/my/abnormal/componments/abnormalDetails",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{//我的->我的信息
+			"path": "pages/my/myMessage/myMessage",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/my/withdrawal",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/my/fundDetails",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
 		}
+		
 	],
+	
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "灵活用工",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
 	},
-	"uniIdRouter": {}
+	"uniIdRouter": {},
+	"tabBar": {
+			"color": "#999999",
+			"selectedColor": "#999999",
+			"backgroundColor": "#FFF",
+			"borderStyle":"white",
+			"list": [
+				{
+					"pagePath": "pages/homePage/index",
+					"iconPath": "/static/tabbar/home.png",
+					"selectedIconPath": "/static/tabbar/home1.png",
+					"text": "首页"
+				},
+				{
+					"pagePath": "pages/my/index",
+					"iconPath": "/static/tabbar/my.png",
+					"selectedIconPath": "/static/tabbar/my1.png",
+					"text": "我的"
+				}
+			]
+		}
 }
