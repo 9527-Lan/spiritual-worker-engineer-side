@@ -68,6 +68,9 @@
 </template>
 
 <script>
+	import {
+		casualPages
+	} from "@/api/user.js"
 	export default {
 		data() {
 			return {
@@ -113,7 +116,8 @@
 						}
 					]
 				],
-				indexList: [{}, {}, {}, {}]
+				indexList: [{}, {}, {}, {}],
+				status: '3'
 			}
 		},
 		onReady() {
@@ -121,10 +125,11 @@
 			//this.$refs.datetimePicker.setFormatter(this.formatter)
 		},
 		onLoad() {
-			this.loadmore()
+			this.loadmore();
+			this.casualPagesList()
 		},
 		computed: {
-			
+
 		},
 		methods: {
 			leftClick() {
@@ -154,6 +159,15 @@
 				uni.navigateTo({
 					url: '/pages/my/successed/componments/successedDetails',
 				});
+			},
+			// 订单异常
+			casualPagesList() {
+				let params = {
+					status: this.status
+				}
+				casualPages(params).then(res => {
+					console.log(res)
+				})
 			}
 		}
 	}

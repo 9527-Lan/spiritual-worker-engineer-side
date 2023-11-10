@@ -4,7 +4,7 @@ axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
 
 // create an axios instance
 const service = axios.create({
-	 baseURL: "https://api.youlai.tech", //  线上接口地址(微信、HBX内置浏览器)
+	 baseURL: "https://t44o902052.zicp.fun", //  线上接口地址(微信、HBX内置浏览器)
 	// baseURL: "http://app.youlai.tech/prod-api", // 线上接口地址(谷歌等有跨域限制浏览器)
 	// baseURL: "http://localhost:9999", // 本地开发环境地址
 	withCredentials: true, // send cookies when cross-domain requests
@@ -21,6 +21,8 @@ service.interceptors.request.use(
 				config.headers['Authorization'] = token;
 			}
 		}
+		
+		config.headers['Authorization'] = 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6ImFjMThjMzIwLTVhNGEtNDUwOC04NTMyLTQwNzI4NDg5OTJjMCJ9.o0VNOTYO7Hc4iOX0B7BuewsX0e8wySuC9q9qJxiB50hd7-bEvb59KIFzAtYTO_qA8ZeK5GNo6BNL1RijWRemcQ'
 		return config
 	},
 	error => {

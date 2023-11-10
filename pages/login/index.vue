@@ -58,16 +58,16 @@
 					uni.switchTab({
 					 	url: '/pages/homePage/index'
 					});
-					uni.login({
-						provider: 'weixin',
-						success: res => {
-							console.log('code:' + res.code)
-							this.code = res.code
-						},
-						fail: err => {
-							console.log(err)
-						}
-					})
+					// uni.login({
+					// 	provider: 'weixin',
+					// 	success: res => {
+					// 		console.log('code:' + res.code)
+					// 		this.code = res.code
+					// 	},
+					// 	fail: err => {
+					// 		console.log(err)
+					// 	}
+					// })
 				} else {
 					this.show = true;
 				}

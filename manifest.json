@@ -17,7 +17,9 @@
             "delay" : 0
         },
         /* 模块配置 */
-        "modules" : {},
+        "modules" : {
+            "OAuth" : {}
+        },
         /* 应用发布信息 */
         "distribute" : {
             /* android打包配置 */
@@ -44,7 +46,13 @@
             "ios" : {},
             /* SDK配置 */
             "sdkConfigs" : {
-                "maps" : {}
+                "maps" : {},
+                "oauth" : {
+                    "weixin" : {
+                        "appid" : "touristappid",
+                        "UniversalLinks" : ""
+                    }
+                }
             }
         }
     },
@@ -80,6 +88,17 @@
     "h5" : {
         "sdkConfigs" : {
             "maps" : {}
+        },
+        "devServer" : {
+            "proxy" : {
+                //外网网址根路径 `/ `后，数据包前的部分
+                "/" : {
+                    //外网根路径 `https://www.abc.com`
+                    "target" : "https://t44o902052.zicp.fun"
+                }
+            },
+            //步骤二勾选后的效果
+            "https" : false
         }
     }
 }

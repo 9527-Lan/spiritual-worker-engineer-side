@@ -87,6 +87,7 @@
 </template>
 
 <script>
+	import {casualEngineer,casualServiceLabel} from "@/api/user.js"
 	export default {
 		data() {
 			return {
@@ -140,12 +141,17 @@
 				labelStyle:  {
 					"font-weight": "700",
 					"font-size": "28rpx"
-				}
+				},
+				id:"1"
 			}
 		},
 		onReady() {
 			//如果需要兼容微信小程序，并且校验规则中含有方法等，只能通过setRules方法设置规则。
 			this.$refs.uForm.setRules(this.rules)
+		},
+		onLoad(){
+			this.casualEngineerList(),
+			this.casualServiceLabelList()
 		},
 		computed: {},
 		methods: {
@@ -162,6 +168,21 @@
 				this.model1.userInfo.type = e.name
 				this.$refs.uForm.validateField('userInfo.type')
 			},
+			 // 服务类型下拉框
+			casualEngineerList(){								
+				casualEngineer({}).then(res=>{
+					console.log(res)
+				})
+			},
+			// 选择标签下拉框
+			casualServiceLabelList(){
+				let params={
+					typeIds:this.id
+				}
+				casualServiceLabel(params).then(res=>{
+					console.log(res)
+				})
+			}
 		}
 	}
 </script>

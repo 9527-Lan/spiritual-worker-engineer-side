@@ -87,6 +87,9 @@
 </template>
 
 <script>
+	import {
+		progressQuery
+	} from "@/api/user.js"
 	import writeTodayRecord from './componments/writeTodayRecord.vue'
 	export default {
 		components: {
@@ -111,7 +114,9 @@
 				],
 				dateShow: false,
 				dateValue: Number(new Date()),
-				indexList: [{}, {}, {}, {}]
+				indexList: [{}, {}, {}, {}],
+				orderid: '10',
+				engineerid: '1'
 			}
 		},
 		onReady() {
@@ -119,7 +124,8 @@
 			this.$refs.datetimePicker.setFormatter(this.formatter)
 		},
 		onLoad() {
-			this.loadmore()
+			this.loadmore(),
+				this.findProgressQuery()
 		},
 		computed: {},
 		methods: {
@@ -163,6 +169,17 @@
 			todayRecord() {
 				console.log(1111);
 				this.recordShow = !this.recordShow
+			},
+			findProgressQuery() {
+				let params = {
+					order_id: this.orderid,
+					engineer_id: this.engineerid
+				}
+				progressQuery(params).then(res => {
+					if (res.code === '00000') {
+						console.log(res.data)
+					}
+				})
 			}
 		}
 	}

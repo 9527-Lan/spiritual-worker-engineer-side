@@ -26,7 +26,8 @@
 				<view class="controls">
 					<u--text class="topText" size="24rpx" align="center" color="#FFFFFF"
 						iconStyle="color:#ffffff;size:22rpx" prefixIcon="baidu" text="提现" @click="withdrawal"></u--text>
-					<u--text class="btmText" size="24rpx" align="center" color="#FFFFFF" text="资金明细" @click="fundDetails"></u--text>
+					<u--text class="btmText" size="24rpx" align="center" color="#FFFFFF" text="资金明细"
+						@click="fundDetails"></u--text>
 				</view>
 			</view>
 			<view class="btm">
@@ -92,11 +93,18 @@
 </template>
 
 <script>
+	import {
+		findEngineer
+	} from "@/api/user.js"
 	export default {
 		data() {
 			return {
 				avatarSrc: '',
+				id: "1", //我的工程师
 			}
+		},
+		onShow() {
+			this.findEngineerList() //我的工程师查询
 		},
 		computed: {},
 		methods: {
@@ -110,12 +118,12 @@
 					url: '/pages/my/seizeOrdering/index',
 				});
 			},
-			underWay(){
+			underWay() {
 				uni.navigateTo({
 					url: '/pages/my/underWay/underWay',
 				});
 			},
-			error(){
+			error() {
 				uni.navigateTo({
 					url: '/pages/my/abnormal/index',
 				});
@@ -129,6 +137,18 @@
 				uni.navigateTo({
 					url: '/pages/my/fundDetails',
 				});
+			},
+			//我的工程师查询
+			findEngineerList() {
+				const params = {
+					id: this.id
+				}
+				findEngineer(params).then(res => {
+					if (res.code === "00000") {
+						console.log(res.data)
+					}
+				})
+
 			}
 		}
 	}

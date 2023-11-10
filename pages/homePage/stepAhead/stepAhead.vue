@@ -59,36 +59,73 @@
 			</text>
 			<rich-text :nodes="nodeText" class="rText"></rich-text>
 		</view>
+		<view class="occupy" style="width: 100vw; height: 173rpx;">
+		</view>
+		
 	</view>
 </template>
 
 <script>
+	import {casualOrderEngineer} from '@/api/user.js'
 	export default {
 		data() {
 			return {
-				nodeText:'<p>对公司的项目进行临时安保工作</p>  <p>一、工作地点:</p> <p>可根据个人意愿就近分配工作，如有环境不适应可申请调换。</p> <p>一、工作地点:</p> <p>可根据个人意愿就近分配工作，如有环境不适应可申请调换。</p> <p>一、工作地点:</p> <p>可根据个人意愿就近分配工作，如有环境不适应可申请调换。</p> <p>一、工作地点:</p> <p>可根据个人意愿就近分配工作，如有环境不适应可申请调换。</p>' ,
-				}
-			},
-			methods: {
-				rightClick() {
-					uni.switchTab({
-						url: '/pages/homePage/index'
-					});
+				nodeText: '<p>对公司的项目进行临时安保工作</p>  <p>一、工作地点:</p> <p>可根据个人意愿就近分配工作，如有环境不适应可申请调换。</p> <p>一、工作地点:</p> <p>可根据个人意愿就近分配工作，如有环境不适应可申请调换。</p> <p>一、工作地点:</p> <p>可根据个人意愿就近分配工作，如有环境不适应可申请调换。</p> <p>一、工作地点:</p> <p>可根据个人意愿就近分配工作，如有环境不适应可申请调换。</p>',
+				order_id: 9,
+				engineer_id: 2,
+				circleStyle:{
+					width: '521rpx',
+					height:' 89rpx',
+					position: 'absolute',
+					left:'187rpx',
+					bottom:'65rpx',
 				}
 			}
+		},
+		onLoad(){
+		this.submitTo()	
+		},
+		methods: {
+			rightClick() {
+				uni.switchTab({
+					url: '/pages/homePage/index'
+				});
+			},
+			submitTo(){
+				let params = {
+					engineer_id: this.engineer_id,
+					order_id: this.order_id,
+				}
+				casualOrderEngineer(params).then(res =>{
+					if(res.code == '00000'){
+						uni.showToast({
+							duration:2000,
+							title: '抢单成功',
+							success: () => {
+								setTimeout(() => {
+									uni.navigateBack(1)
+								}, 1000)
+							}
+						})
+					}
+				})
+			}
+			
 		}
+	}
 </script>
 
 <style lang="scss" scoped>
-	.bg{
-		   position: fixed;
-		    width: 100%;
-		    height: 100%;
-		    top: 0;
-		    left: 0;
-		    z-index: -1;
-			background-color: #F2F6FF;
+	.bg {
+		position: fixed;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		z-index: -1;
+		background-color: #F2F6FF;
 	}
+
 	.blueFixed {
 		position: fixed;
 		width: 100%;
@@ -160,11 +197,15 @@
 			line-height: 67rpx;
 		}
 	}
-	.rText{
+
+	.rText {
 		font-size: 24rpx;
 		font-family: PingFang SC;
 		font-weight: 500;
 		color: #333333;
 		line-height: 48rpx;
 	}
+
+	
+	
 </style>

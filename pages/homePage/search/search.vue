@@ -57,19 +57,24 @@
 </template>
 
 <script>
+	import {
+		casualOrder
+	} from "@/api/user.js"
 	export default {
 		data() {
 			return {
-				keyword:'',
-				indexList: [{}, {}, {}, {}]
+				keyword: '',
+				indexList: [{}, {}, {}, {}],
+				status:'5'
 			}
 		},
 		onLoad() {
-			this.loadmore()
+			this.loadmore(),
+			this.findCasualOrder()
 		},
 		computed: {},
 		methods: {
-			leftClick(){
+			leftClick() {
 				uni.switchTab({
 					url: '/pages/homePage/index',
 				});
@@ -80,7 +85,18 @@
 			//查询list数据
 			loadmore() {
 
-			},
+			},			
+			// 任务订单信息
+			findCasualOrder() {
+				const params={
+					status:this.status
+				};
+				casualOrder(params).then(res => {
+					if (res.code === '00000') {
+						console.log(res.data)
+					}
+				})
+			}
 		}
 	}
 </script>
