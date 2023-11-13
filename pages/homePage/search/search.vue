@@ -49,7 +49,7 @@
 <script>
 	import {
 		casualOrder
-	} from "@/api/user.js"
+	} from "@/api/index.js"
 	export default {
 		data() {
 			return {

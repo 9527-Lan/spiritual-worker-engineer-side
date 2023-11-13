@@ -8,7 +8,7 @@
 				<p class="text">可提现金额（元）</p>
 				<view style="display: flex;">
 					<p style="font-size: 40rpx;">￥</p>
-					<p style="font-size: 60rpx;font-weight: 800;">3,325.00</p>
+					<p style="font-size: 60rpx;font-weight: 800;">{{balance}}</p>
 				</view>
 			</view>
 		</view>
@@ -44,6 +44,7 @@
 </template>
 
 <script>
+	import {engineerEnd} from "@/api/my.js"
 	export default {
 		data() {
 			return {
@@ -52,13 +53,21 @@
 					'font-weight': 800,
 					'color': '#333333'
 				},
+				balance:"",
 				form: {
 					
-				}
+				},
+				id:"",
 			}
 		},
-		onLoad() {
-			
+		onLoad(options) {
+			console.log(decodeURIComponent(options.id)) 
+			let params={
+				id:options.id
+			}
+			engineerEnd(params).then(res=>{
+				this.balance=res.data.balance
+			})
 		},
 		methods: {
 			rightClick() {

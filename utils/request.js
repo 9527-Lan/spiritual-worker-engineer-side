@@ -4,7 +4,7 @@ axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
 
 // create an axios instance
 const service = axios.create({
-	 baseURL: "https://t44o902052.zicp.fun", //  线上接口地址(微信、HBX内置浏览器)
+	baseURL: "https://t44o902052.zicp.fun", //  线上接口地址(微信、HBX内置浏览器)
 	// baseURL: "http://app.youlai.tech/prod-api", // 线上接口地址(谷歌等有跨域限制浏览器)
 	// baseURL: "http://localhost:9999", // 本地开发环境地址
 	withCredentials: true, // send cookies when cross-domain requests
@@ -21,8 +21,9 @@ service.interceptors.request.use(
 				config.headers['Authorization'] = token;
 			}
 		}
-		
-		config.headers['Authorization'] = 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6ImJlM2M5OTYxLTFhZjctNDdiYy05NWU1LTM0ZjBhOTMwY2VkNiJ9.xR0h4xqz01JGuY8dYq1ZleKguYCgFEc73Z_agtQlbgcsva8IIeQpia2nKqkdR53vCMWdFiQV0X7uQynehAYAtg'
+
+		config.headers['Authorization'] =
+			'Bearer eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6ImMzYTY2YWQ0LTNhOTQtNDZmMS04M2M2LWFjZDNjMzBlODRiMSJ9.fnrN5K0B9Qb72KfZGrQTtrpmGhcnXMbnO1PKJ6UeIeE8uxkDXTG0EsMIFbZvZm2scmmHhaAcAFhI41fyL4cV5w'
 		return config
 	},
 	error => {
@@ -57,8 +58,8 @@ service.defaults.adapter = function(config) {
 			}
 		})
 		console.log('请求路径:', config.url);
-		if(config.params) console.log('请求params:', config.params);
-		if(config.data) console.log('请求data:', config.data);
+		if (config.params) console.log('请求params:', config.params);
+		if (config.data) console.log('请求data:', config.data);
 	})
 }
 
@@ -76,7 +77,7 @@ service.interceptors.response.use(({
 		const {
 			code,
 			msg
-		} =  error.response.data
+		} = error.response.data
 
 		if (code === 'A0230') { // token过期
 			uni.showToast({

@@ -7,10 +7,10 @@
 			</view>
 			<view class="right">
 				<view class="name">
-					张三
+					{{myList.engineerRealname}}
 				</view>
 				<view class="phone">
-					手机号：{{'156****1596'}}
+					手机号：{{myList.phone}}
 				</view>
 			</view>
 		</view>
@@ -20,7 +20,7 @@
 					<view class="balanceTop">余额（元）</view>
 					<view class="balanceBtm">
 						<view class="symbol">￥</view>
-						<view class="number">{{'3,325.00'}}</view>
+						<view class="number">{{myList.balance}}</view>
 					</view>
 				</view>
 				<view class="controls">
@@ -33,11 +33,11 @@
 			<view class="btm">
 				<view class="toDay">
 					<text class="text">今日收入(元)</text>
-					<text>132.00</text>
+					<text>{{myList.todayIncome}}</text>
 				</view>
 				<view class="month">
 					<text class="text">本月收入(元)</text>
-					<text>7800.00</text>
+					<text>{{myList.monthIncome}}</text>
 				</view>
 			</view>
 		</view>
@@ -45,19 +45,19 @@
 			<view class="title">我的订单</view>
 			<view class="btm">
 				<view @click="seize">
-					<view class="num">3</view>
+					<view class="num">{{myList.qdzOrderCount}}</view>
 					<view class="text">抢单中</view>
 				</view>
 				<view @click="underWay">
-					<view class="num">1</view>
+					<view class="num">{{myList.jxzOrderCount}}</view>
 					<view class="text">进行中</view>
 				</view>
 				<view @click="successed">
-					<view class="num">56</view>
+					<view class="num">{{myList.ywcOrderCount}}</view>
 					<view class="text">已完成</view>
 				</view>
 				<view @click="error">
-					<view class="num numRed">0</view>
+					<view class="num numRed">{{myList.ycOrderCount}}</view>
 					<view class="text">异常</view>
 				</view>
 			</view>
@@ -94,17 +94,18 @@
 
 <script>
 	import {
-		findEngineer
-	} from "@/api/user.js"
+		engineerEnd
+	} from "@/api/my.js"
 	export default {
 		data() {
 			return {
 				avatarSrc: '',
 				id: "2", //我的工程师
+				myList:[],
 			}
 		},
 		onShow() {
-			this.findEngineerList() //我的工程师查询
+			this.engineerEndList() //我的工程师查询
 		},
 		computed: {},
 		methods: {
@@ -130,7 +131,7 @@
 			},
 			withdrawal() {
 				uni.navigateTo({
-					url: '/pages/my/withdrawal',
+					url: '/pages/my/withdrawal?id='+this.id,
 				});
 			},
 			fundDetails() {
@@ -139,13 +140,14 @@
 				});
 			},
 			//我的工程师查询
-			findEngineerList() {
+			engineerEndList() {
 				const params = {
 					id: this.id
 				}
-				findEngineer(params).then(res => {
+				engineerEnd(params).then(res => {
 					if (res.code === "00000") {
 						console.log(res.data)
+						this.myList=res.data
 					}
 				})
 

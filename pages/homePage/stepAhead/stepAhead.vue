@@ -7,50 +7,36 @@
 		</view>
 		<view class="card">
 			<view class="top">
-				<text class="topTextBlack">临时电工</text>
-				<text class="topTextBlue">300元/天</text>
+				<text class="topTextBlack">{{orderList.name}}</text>
+				<text class="topTextBlue">{{orderList.price}}元/天</text>
 			</view>
+			
 			<view class="tagRow">
 				<view class="tag">
-					<u-tag :text="`岗位量${5}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF" plain></u-tag>
-				</view>
-				<view class="tag">
-					<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF" color="#333333"
+					<u-tag :text="orderList.typeName" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
 						plain></u-tag>
 				</view>
 				<view class="tag">
-					<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF" color="#333333"
-						plain></u-tag>
+					<u-tag :text="`岗位量${orderList.orderQuantity}`" size="mini" bgColor="#E6F0FF"
+						borderColor="#E6F0FF" plain></u-tag>
 				</view>
 				<view class="tag">
-					<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF" color="#333333"
-						plain></u-tag>
-				</view>
-				<view class="tag">
-					<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF" color="#333333"
-						plain></u-tag>
-				</view>
-				<view class="tag">
-					<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF" color="#333333"
-						plain></u-tag>
+					<u-tag :text="orderList.labelName" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
+						color="#333333" plain></u-tag>
 				</view>
 			</view>
 			<view>
 				<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
-					margin="18rpx 0 0 0" :text="'金碧物业有限公司'"></u--text>
+					margin="18rpx 0 0 0" :text="orderList.principalName"></u--text>
 			</view>
 			<view>
 				<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
-					margin="18rpx 0 0 0" :text="'长沙市岳麓区洋湖街道湘江时代写字楼A1栋'"></u--text>
-			</view>
-			<view>
-				<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
-					margin="18rpx 0 0 0" :text="'2023.01.11-2023.02.22'"></u--text>
+					margin="18rpx 0 0 0" :text="`${orderList.orderStatr}-${orderList.orderEnd}`"></u--text>
 			</view>
 			<u-divider></u-divider>
 			<view>
 				<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#3B85F0" size="24rpx"
-					margin="18rpx 0 0 0" :text="'已有78人报名A1栋'"></u--text>
+					margin="18rpx 0 0 0" :text="`已有${orderList.haveRegistered}人报名A1栋`"></u--text>
 			</view>
 		</view>
 		<view class="description">
@@ -61,12 +47,19 @@
 		</view>
 		<view class="occupy" style="width: 100vw; height: 173rpx;">
 		</view>
-		
+		<view>
+			<view class="bottomImg">
+				<!-- <i src="" class="img"></i>
+				<u--text :text="`平台客服`"></u--text> -->
+				<u-button shape="circle"  type="primary" @click="submitTo">立刻抢单</u-button>
+			</view>
+		</view>
 	</view>
 </template>
 
 <script>
 	import {casualOrderEngineer} from '@/api/user.js'
+	import {casualOrder} from '@/api/index.js'
 	export default {
 		data() {
 			return {
@@ -79,10 +72,19 @@
 					position: 'absolute',
 					left:'187rpx',
 					bottom:'65rpx',
-				}
+				},
+				orderList:[]
 			}
 		},
-		onLoad(){
+		onLoad(options){
+			console.log(options);
+			casualOrder().then(res=>{
+				
+					const list=res.data.list.filter(item=>item.id===options.id)
+					this.orderList=list[0];
+					this.nodeText=this.orderList.description
+					console.log(this.orderList)
+				})
 		// this.submitTo()	
 		},
 		methods: {
@@ -109,7 +111,8 @@
 						})
 					}
 				})
-			}
+			},
+			
 			
 		}
 	}
@@ -206,6 +209,9 @@
 		line-height: 48rpx;
 	}
 
-	
+	// .img{
+	// 	width:36rpx;
+	// 	height:36rpx;
+	// }
 	
 </style>

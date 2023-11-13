@@ -18,53 +18,38 @@
 		</view>
 		<view class="list">
 			<u-list @scrolltolower="scrolltolower">
-				<u-list-item v-for="(item, index) in indexList" :key="index">
-					<view class="list-item" @click="details(item)">
+				<u-list-item v-for="(item, index) in LowerList" :key="index">
+					<view class="list-item" @click="details(item.id)">
 						<view class="listBlok">
 							<view class="top-box">
 								<view class="top">
-									<text class="topTextBlack">临时电工</text>
-									<text class="topTextBlue">300元/天</text>
+									<text class="topTextBlack">{{item.name}}</text>
+									<text class="topTextBlue">{{item.price}}元/天</text>
 								</view>
 								<view class="tagRow">
 									<view class="tag">
-										<u-tag :text="`岗位量${5}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-											plain></u-tag>
+										<u-tag :text="`岗位量${item.orderQuantity}`" size="mini" bgColor="#E6F0FF"
+											borderColor="#E6F0FF" plain></u-tag>
 									</view>
 									<view class="tag">
-										<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-											color="#333333" plain></u-tag>
-									</view>
-									<view class="tag">
-										<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-											color="#333333" plain></u-tag>
-									</view>
-									<view class="tag">
-										<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-											color="#333333" plain></u-tag>
-									</view>
-									<view class="tag">
-										<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-											color="#333333" plain></u-tag>
-									</view>
-									<view class="tag">
-										<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-											color="#333333" plain></u-tag>
+										<u-tag :text="`${item.labelName}`" size="mini" bgColor="#E6F0FF"
+											borderColor="#E6F0FF" color="#333333" plain></u-tag>
 									</view>
 								</view>
 								<view>
 									<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
-										margin="18rpx 0 0 0" :text="'金碧物业有限公司'"></u--text>
+										margin="18rpx 0 0 0" :text="item.principalName"></u--text>
 								</view>
 								<view>
 									<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
-										margin="18rpx 0 0 0" :text="'2023.01.11-2023.02.22'"></u--text>
+										margin="18rpx 0 0 0" :text="`${item.orderStatr}-${item.orderEnd}`"></u--text>
 								</view>
 							</view>
+							<view class="statusBox fail">
+								<p>您的订单状态{{item.statusName}}</p>
+							</view>
 						</view>
-						<view class="statusBox fail">
-							<p>您的抢单已失败</p>
-						</view>
+						
 					</view>
 				</u-list-item>
 			</u-list>
@@ -73,6 +58,10 @@
 </template>
 
 <script>
+	import {
+		LowerSingleEnd,
+		engineerEndList
+	} from "@/api/my.js"
 	export default {
 		data() {
 			return {
@@ -102,25 +91,27 @@
 					value: 0
 				},
 				statusColumns: [
-					[{
-							label: '全部',
-							value: 0
-						},
-						{
-							label: '抢单中',
-							value: 1
-						}, {
-							label: '抢单成功',
-							value: 2
-						}, {
-							label: '抢单失败',
-							value: 3
-						}
-					]
+					// [{
+					// 		label: '全部',
+					// 		value: 0
+					// 	},
+					// 	{
+					// 		label: '抢单中',
+					// 		value: 1
+					// 	}, {
+					// 		label: '抢单成功',
+					// 		value: 2
+					// 	}, {
+					// 		label: '抢单失败',
+					// 		value: 3
+					// 	}
+					// ]
 				],
 				dateShow: false,
 				dateValue: Number(new Date()),
-				indexList: [{}, {}, {}, {}]
+				LowerList: [],
+				id: "1",
+				statusName:""
 			}
 		},
 		onReady() {
@@ -129,9 +120,11 @@
 		},
 		onLoad() {
 			this.loadmore()
+			this.LowerSingleEndList()
+			this.engineerEndListButtom()
 		},
 		computed: {
-			
+
 		},
 		methods: {
 			leftClick() {
@@ -155,11 +148,14 @@
 			typeConfirm(columnIndex) {
 				this.typeValue = columnIndex.value[0]
 				console.log(this.typeValue, ...columnIndex.value);
+				this.LowerList=this.LowerList.filter(item=>item.name===this.typeValue.label)
+				console.log()
 				this.typeShow = false
 			},
 			statusConfirm(columnIndex) {
 				this.statusValue = columnIndex.value[0]
 				console.log(this.statusValue, ...columnIndex.value);
+				this.LowerList=this.LowerList.filter(item=>item.statusName===this.typeValue.label)
 				this.statusShow = false
 			},
 
@@ -170,11 +166,25 @@
 			loadmore() {
 
 			},
-			details(item) {
-				console.log(item)
+			details(e) {				
 				uni.navigateTo({
-					url: '/pages/my/seizeOrdering/componments/seizeDetails',
+					url: '/pages/my/seizeOrdering/componments/seizeDetails?id='+e,
 				});
+			},
+			LowerSingleEndList() {
+				const params = {
+					id: this.id
+				}
+				LowerSingleEnd(params).then(res => {
+					console.log(res)
+					this.LowerList = res.data
+				})
+			},
+			// 抢单中下拉框
+			engineerEndListButtom() {
+				engineerEndList().then(res => {
+				this.statusColumns=[res.data]
+				})
 			}
 		}
 	}

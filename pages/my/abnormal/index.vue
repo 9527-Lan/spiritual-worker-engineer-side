@@ -14,46 +14,30 @@
 		<view class="list">
 			<u-list @scrolltolower="scrolltolower">
 				<u-list-item v-for="(item, index) in indexList" :key="index">
-					<view class="list-item" @click="details(item)">
+					<view class="list-item" @click="details(item.id)">
 						<view class="listBlok">
 							<view class="top-box">
 								<view class="top">
-									<text class="topTextBlack">临时电工</text>
-									<text class="topTextBlue">300元/天</text>
+									<text class="topTextBlack">{{item.name}}</text>
+									<text class="topTextBlue">{{item.price}}元/天</text>
 								</view>
 								<view class="tagRow">
 									<view class="tag">
-										<u-tag :text="`岗位量${5}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-											plain></u-tag>
+										<u-tag :text="`岗位量${item.orderQuantity}`" size="mini" bgColor="#E6F0FF"
+											borderColor="#E6F0FF" plain></u-tag>
 									</view>
 									<view class="tag">
-										<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-											color="#333333" plain></u-tag>
-									</view>
-									<view class="tag">
-										<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-											color="#333333" plain></u-tag>
-									</view>
-									<view class="tag">
-										<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-											color="#333333" plain></u-tag>
-									</view>
-									<view class="tag">
-										<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-											color="#333333" plain></u-tag>
-									</view>
-									<view class="tag">
-										<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-											color="#333333" plain></u-tag>
+										<u-tag :text="`${item.labelName}`" size="mini" bgColor="#E6F0FF"
+											borderColor="#E6F0FF" color="#333333" plain></u-tag>
 									</view>
 								</view>
 								<view>
 									<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
-										margin="18rpx 0 0 0" :text="'金碧物业有限公司'"></u--text>
+										margin="18rpx 0 0 0" :text="item.principalName"></u--text>
 								</view>
 								<view>
 									<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
-										margin="18rpx 0 0 0" :text="'2023.01.11-2023.02.22'"></u--text>
+										margin="18rpx 0 0 0" :text="`${item.orderStatr}-${item.orderEnd}`"></u--text>
 								</view>
 							</view>
 						</view>
@@ -69,8 +53,9 @@
 
 <script>
 	import {
-		casualPages
-	} from "@/api/user.js"
+		queryOrderbyYcIdList
+	} from "@/api/my.js"
+	
 	export default {
 		data() {
 			return {
@@ -116,8 +101,8 @@
 						}
 					]
 				],
-				indexList: [{}, {}, {}, {}],
-				status: '3'
+				indexList: [],
+				id: '1'
 			}
 		},
 		onReady() {
@@ -126,7 +111,7 @@
 		},
 		onLoad() {
 			this.loadmore();
-			this.casualPagesList()
+			this.findQueryOrderbyYcIdList()
 		},
 		computed: {
 
@@ -154,19 +139,18 @@
 			loadmore() {
 
 			},
-			details(item) {
-				console.log(item)
+			details(e) {
 				uni.navigateTo({
-					url: '/pages/my/successed/componments/successedDetails',
+					url: '/pages/my/successed/componments/successedDetails?id='+e,
 				});
 			},
 			// 订单异常
-			casualPagesList() {
+			findQueryOrderbyYcIdList() {
 				let params = {
-					status: this.status
+					id: this.id
 				}
-				casualPages(params).then(res => {
-					console.log(res)
+				queryOrderbyYcIdList(params).then(res => {
+					this.indexList=res.data
 				})
 			}
 		}

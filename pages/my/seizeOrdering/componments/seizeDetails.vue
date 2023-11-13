@@ -11,50 +11,31 @@
 			</view>
 			<view class="content">
 				<view class="top">
-					<text class="topTextBlack">临时电工</text>
-					<text class="topTextBlue">300元/天</text>
+					<text class="topTextBlack">{{orderList.name}}</text>
+					<text class="topTextBlue">{{orderList.price}}元/天</text>
 				</view>
 				<view class="tagRow">
 					<view class="tag">
-						<u-tag :text="`岗位量${5}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF" plain></u-tag>
+						<u-tag :text="`岗位量${orderList.orderQuantity}`" size="mini" bgColor="#E6F0FF"
+							borderColor="#E6F0FF" plain></u-tag>
 					</view>
 					<view class="tag">
-						<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF" color="#333333"
-							plain></u-tag>
-					</view>
-					<view class="tag">
-						<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF" color="#333333"
-							plain></u-tag>
-					</view>
-					<view class="tag">
-						<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF" color="#333333"
-							plain></u-tag>
-					</view>
-					<view class="tag">
-						<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF" color="#333333"
-							plain></u-tag>
-					</view>
-					<view class="tag">
-						<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF" color="#333333"
-							plain></u-tag>
+						<u-tag :text="`${orderList.labelName}`" size="mini" bgColor="#E6F0FF"
+							borderColor="#E6F0FF" color="#333333" plain></u-tag>
 					</view>
 				</view>
 				<view>
 					<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
-						margin="18rpx 0 0 0" :text="'金碧物业有限公司'"></u--text>
+						margin="18rpx 0 0 0" :text="orderList.principalName"></u--text>
 				</view>
 				<view>
 					<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
-						margin="18rpx 0 0 0" :text="'长沙市岳麓区洋湖街道湘江时代写字楼A1栋'"></u--text>
-				</view>
-				<view>
-					<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
-						margin="18rpx 0 0 0" :text="'2023.01.11-2023.02.22'"></u--text>
+						margin="18rpx 0 0 0" :text="`${orderList.orderStatr}-${orderList.orderEnd}`"></u--text>
 				</view>
 				<u-divider></u-divider>
 				<view>
 					<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#3B85F0" size="24rpx"
-						margin="18rpx 0 0 0" :text="'已有78人报名A1栋'"></u--text>
+						margin="18rpx 0 0 0" :text="`已有${orderList.haveRegistered}人报名A1栋`"></u--text>
 				</view>
 			</view>
 		</view>
@@ -68,14 +49,28 @@
 </template>
 
 <script>
+	import {LowerSingleEnd} from "@/api/my.js"
 	export default {
 		data() {
 			return {
+				id:'1',
+				orderList:[],
 				nodeText:'<p>对公司的项目进行临时安保工作</p>  <p>一、工作地点:</p> <p>可根据个人意愿就近分配工作，如有环境不适应可申请调换。</p> <p>一、工作地点:</p> <p>可根据个人意愿就近分配工作，如有环境不适应可申请调换。</p> <p>一、工作地点:</p> <p>可根据个人意愿就近分配工作，如有环境不适应可申请调换。</p> <p>一、工作地点:</p> <p>可根据个人意愿就近分配工作，如有环境不适应可申请调换。</p>' ,
 				}
 			},
 			created() {
 				
+			},
+			onLoad(options){
+				console.log(options.id)
+				let params={
+					id:this.id
+				}
+				LowerSingleEnd(params).then(res=>{
+					const list=res.data.filter(item=>item.id===options.id)
+					this.orderList=list[0]
+					console.log(list,'111')
+				})
 			},
 			methods: {
 				rightClick() {

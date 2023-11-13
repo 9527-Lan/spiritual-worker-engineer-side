@@ -16,46 +16,30 @@
 		<view class="list">
 			<u-list @scrolltolower="scrolltolower">
 				<u-list-item v-for="(item, index) in indexList" :key="index">
-					<view class="list-item" @click.stop="stepAhead(item)">
+					<view class="list-item" @click.stop="stepAhead(item.id)">
 						<view class="listBlok">
 							<view class="top-box">
 								<view class="top">
-									<text class="topTextBlack">临时电工</text>
-									<text class="topTextBlue">300元/天</text>
+									<text class="topTextBlack">{{item.name}}</text>
+									<text class="topTextBlue">{{item.price}}元/天</text>
 								</view>
 								<view class="tagRow">
 									<view class="tag">
-										<u-tag :text="`岗位量${5}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-											plain></u-tag>
+										<u-tag :text="`岗位量${item.orderQuantity}`" size="mini" bgColor="#E6F0FF"
+											borderColor="#E6F0FF" plain></u-tag>
 									</view>
 									<view class="tag">
-										<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-											color="#333333" plain></u-tag>
-									</view>
-									<view class="tag">
-										<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-											color="#333333" plain></u-tag>
-									</view>
-									<view class="tag">
-										<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-											color="#333333" plain></u-tag>
-									</view>
-									<view class="tag">
-										<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-											color="#333333" plain></u-tag>
-									</view>
-									<view class="tag">
-										<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-											color="#333333" plain></u-tag>
+										<u-tag :text="`${item.labelName}`" size="mini" bgColor="#E6F0FF"
+											borderColor="#E6F0FF" color="#333333" plain></u-tag>
 									</view>
 								</view>
 								<view>
 									<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
-										margin="18rpx 0 0 0" :text="'金碧物业有限公司'"></u--text>
+										margin="18rpx 0 0 0" :text="item.principalName"></u--text>
 								</view>
 								<view>
 									<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
-										margin="18rpx 0 0 0" :text="'2023.01.11-2023.02.22'"></u--text>
+										margin="18rpx 0 0 0" :text="`${item.orderStatr}-${item.orderEnd}`"></u--text>
 								</view>
 							</view>
 							<view class="bottom-box">
@@ -87,9 +71,7 @@
 </template>
 
 <script>
-	import {
-		progressQuery
-	} from "@/api/my.js"	
+		import {queryOrderbyJxzId} from "@/api/my.js"
 	import writeTodayRecord from './componments/writeTodayRecord.vue'
 	export default {
 		components: {
@@ -114,9 +96,10 @@
 				],
 				dateShow: false,
 				dateValue: Number(new Date()),
-				indexList: [{}, {}, {}, {}],
+				indexList: [],
 				orderid: '10',
-				engineerid: '1'
+				engineerid: '1',
+				id:"2"
 			}
 		},
 		onReady() {
@@ -125,7 +108,7 @@
 		},
 		onLoad() {
 			this.loadmore(),
-				this.findProgressQuery()
+			this.queryOrderbyJxzIdList()
 		},
 		computed: {},
 		methods: {
@@ -160,28 +143,24 @@
 			loadmore() {
 
 			},
-			stepAhead(item) {
-				console.log(item)
+			stepAhead(e) {
 				uni.navigateTo({
-					url: '/pages/my/underWay/employmentDetails',
+					url: '/pages/my/underWay/employmentDetails?id='+e,
 				});
 			},
 			todayRecord() {
 				console.log(1111);
 				this.recordShow = !this.recordShow
-			},
-			findProgressQuery() {
-				let params = {
-					order_id: this.orderid,
-					engineer_id: this.engineerid
+			},				
+			queryOrderbyJxzIdList(){
+				const params={
+					id:this.id
 				}
-				progressQuery(params).then(res => {
-					if (res.code === '00000') {
-						console.log(res.data)
-					}
+				queryOrderbyJxzId(params).then(res=>{
+					this.indexList=res.data
 				})
-			},			
-		}
+			}
+		},
 	}
 </script>
 

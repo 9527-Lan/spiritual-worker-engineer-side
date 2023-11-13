@@ -1,10 +1,10 @@
 <template>
 	<view>
 		<view class="bg"></view>
-		<view class="search" >
+		<view class="search" @click="toSearch">
 			<u-search placeholder="搜索用工信息..." v-model="keyword" :showAction="false" height="64rpx"
-				margin="100rpx 0 39rpx 48rpx" bgColor="#FFFFFF" style="pointer-events: none"
-				@click="toSearch"></u-search>
+				margin="100rpx 0 39rpx 48rpx" bgColor="#FFFFFF" style="pointer-events: none" 
+				disabled @click="toSearch"></u-search>
 		</view>
 		<view class="wrap">
 			<u-swiper :list="wrapList" height="277rpx" radius="15rpx"></u-swiper>
@@ -46,11 +46,12 @@
 		<view class="list">
 			<u-list @scrolltolower="scrolltolower">
 				<u-list-item v-for="(item, index) in OrderList" :key="index">
-					<view class="listBlok" @click="toStepAhead">
+					<view class="listBlok" @click="toStepAhead(item.id)">
 						<view class="top">
 							<text class="topTextBlack">{{item.name}}</text>
 							<text class="topTextBlue">{{item.price}}元/天</text>
 						</view>
+						
 						<view class="tagRow">
 							<view class="tag">
 								<u-tag :text="item.typeName" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
@@ -124,19 +125,20 @@
 
 			},
 			//抢单、
-			toStepAhead() {
+			toStepAhead(e) {
 				uni.navigateTo({
-					url: '/pages/homePage/stepAhead/stepAhead',
+					url: '/pages/homePage/stepAhead/stepAhead?id=' + e,
 				});
 			},
 			//搜索
 			toSearch() {
+				console.log(`1111`)
 				uni.navigateTo({
 					url: '/pages/homePage/search/search',
 				});
 			},
 			changeOption(e){
-				console.log(e)
+				console.log(e,'111')
 				this.pageNum = 1
 				this.OrderList = []
 				this.typeId = this.tabList[e.index].value

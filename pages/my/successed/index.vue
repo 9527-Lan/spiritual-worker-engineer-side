@@ -13,53 +13,38 @@
 		</view>
 		<view class="list">
 			<u-list @scrolltolower="scrolltolower">
-				<u-list-item v-for="(item, index) in indexList" :key="index">
-					<view class="list-item" @click="details(item)">
+				<u-list-item v-for="(item, index) in LowerList" :key="index">
+					<view class="list-item" @click="details(item.id)">
 						<view class="listBlok">
 							<view class="top-box">
 								<view class="top">
-									<text class="topTextBlack">临时电工</text>
-									<text class="topTextBlue">300元/天</text>
+									<text class="topTextBlack">{{item.name}}</text>
+									<text class="topTextBlue">{{item.price}}元/天</text>
 								</view>
 								<view class="tagRow">
 									<view class="tag">
-										<u-tag :text="`岗位量${5}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-											plain></u-tag>
+										<u-tag :text="`岗位量${item.orderQuantity}`" size="mini" bgColor="#E6F0FF"
+											borderColor="#E6F0FF" plain></u-tag>
 									</view>
 									<view class="tag">
-										<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-											color="#333333" plain></u-tag>
-									</view>
-									<view class="tag">
-										<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-											color="#333333" plain></u-tag>
-									</view>
-									<view class="tag">
-										<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-											color="#333333" plain></u-tag>
-									</view>
-									<view class="tag">
-										<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-											color="#333333" plain></u-tag>
-									</view>
-									<view class="tag">
-										<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-											color="#333333" plain></u-tag>
+										<u-tag :text="`${item.labelName}`" size="mini" bgColor="#E6F0FF"
+											borderColor="#E6F0FF" color="#333333" plain></u-tag>
 									</view>
 								</view>
 								<view>
 									<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
-										margin="18rpx 0 0 0" :text="'金碧物业有限公司'"></u--text>
+										margin="18rpx 0 0 0" :text="item.principalName"></u--text>
 								</view>
 								<view>
 									<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
-										margin="18rpx 0 0 0" :text="'2023.01.11-2023.02.22'"></u--text>
+										margin="18rpx 0 0 0" :text="`${item.orderStatr}-${item.orderEnd}`"></u--text>
 								</view>
 							</view>
+							<view class="statusBox fail">
+								<p>您的订单状态{{item.statusName}}</p>
+							</view>
 						</view>
-						<view class="statusBox unsettled">
-							<p>未结算</p>
-						</view>
+
 					</view>
 				</u-list-item>
 			</u-list>
@@ -68,6 +53,9 @@
 </template>
 
 <script>
+	import {
+		LowerSingleEndList
+	} from "@/api/my.js"
 	export default {
 		data() {
 			return {
@@ -113,7 +101,8 @@
 						}
 					]
 				],
-				indexList: [{}, {}, {}, {}]
+				LowerList: [],
+				id: "1"
 			}
 		},
 		onReady() {
@@ -121,10 +110,11 @@
 			//this.$refs.datetimePicker.setFormatter(this.formatter)
 		},
 		onLoad() {
-			this.loadmore()
+			this.loadmore(),
+			this.findLowerSingleEndList()
 		},
 		computed: {
-			
+
 		},
 		methods: {
 			leftClick() {
@@ -154,6 +144,14 @@
 				uni.navigateTo({
 					url: '/pages/my/successed/componments/successedDetails',
 				});
+			},
+			findLowerSingleEndList() {
+				let params = {
+					id: this.id
+				}
+				LowerSingleEndList(params).then(res => {
+					this.LowerList = res.data
+				})
 			}
 		}
 	}
@@ -251,7 +249,7 @@
 				font-weight: 500;
 			}
 
-			.settled{
+			.settled {
 				background: #FFF0D6;
 				color: #B18A50;
 			}
