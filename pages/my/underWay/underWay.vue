@@ -89,7 +89,7 @@
 <script>
 	import {
 		progressQuery
-	} from "@/api/user.js"
+	} from "@/api/my.js"	
 	import writeTodayRecord from './componments/writeTodayRecord.vue'
 	export default {
 		components: {
@@ -180,7 +180,7 @@
 						console.log(res.data)
 					}
 				})
-			}
+			},			
 		}
 	}
 </script>

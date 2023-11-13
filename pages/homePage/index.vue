@@ -3,7 +3,8 @@
 		<view class="bg"></view>
 		<view class="search" @click="toSearch">
 			<u-search placeholder="搜索用工信息..." v-model="keyword" :showAction="false" height="64rpx"
-				margin="100rpx 0 39rpx 48rpx" bgColor="#FFFFFF" style="pointer-events: none" @click="toSearch"></u-search>
+				margin="100rpx 0 39rpx 48rpx" bgColor="#FFFFFF" style="pointer-events: none"
+				@click="toSearch"></u-search>
 		</view>
 		<view class="wrap">
 			<u-swiper :list="wrapList" height="277rpx" radius="15rpx"></u-swiper>
@@ -33,7 +34,7 @@
 		</u-row>
 		<u-sticky bgColor="#fff">
 			<view class="tab">
-				<u-tabs :list="tabList" @click="click" lineWidth="35" lineHeight="20" :scrollable="false" :activeStyle="{
+				<u-tabs @click="changeOption" :list="tabList" lineWidth="35" lineHeight="20" :scrollable="false"  :activeStyle="{
 						color: '#333333',
 						fontWeight: 'bold',
 						transform: 'scale(1.05)',
@@ -44,45 +45,33 @@
 		</u-sticky>
 		<view class="list">
 			<u-list @scrolltolower="scrolltolower">
-				<u-list-item v-for="(item, index) in indexList" :key="index">
+				<u-list-item v-for="(item, index) in OrderList" :key="index">
 					<view class="listBlok" @click="toStepAhead">
 						<view class="top">
-							<text class="topTextBlack">临时电工</text>
-							<text class="topTextBlue">300元/天</text>
+							<text class="topTextBlack">{{item.name}}</text>
+							<text class="topTextBlue">{{item.price}}元/天</text>
 						</view>
 						<view class="tagRow">
 							<view class="tag">
-								<u-tag :text="`岗位量${5}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
+								<u-tag :text="item.typeName" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
 									plain></u-tag>
 							</view>
 							<view class="tag">
-								<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-									color="#333333" plain></u-tag>
+								<u-tag :text="`岗位量${item.orderQuantity}`" size="mini" bgColor="#E6F0FF"
+									borderColor="#E6F0FF" plain></u-tag>
 							</view>
 							<view class="tag">
-								<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-									color="#333333" plain></u-tag>
-							</view>
-							<view class="tag">
-								<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-									color="#333333" plain></u-tag>
-							</view>
-							<view class="tag">
-								<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-									color="#333333" plain></u-tag>
-							</view>
-							<view class="tag">
-								<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
+								<u-tag :text="item.labelName" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
 									color="#333333" plain></u-tag>
 							</view>
 						</view>
 						<view>
 							<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
-								margin="18rpx 0 0 0" :text="'金碧物业有限公司'"></u--text>
+								margin="18rpx 0 0 0" :text="item.principalName"></u--text>
 						</view>
 						<view>
 							<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
-								margin="18rpx 0 0 0" :text="'2023.01.11-2023.02.22'"></u--text>
+								margin="18rpx 0 0 0" :text="`${item.orderStatr}-${item.orderEnd}`"></u--text>
 						</view>
 					</view>
 				</u-list-item>
@@ -92,6 +81,10 @@
 </template>
 
 <script>
+	import {
+		casualOrder,
+		casualServiceType
+	} from "@/api/index.js"
 	export default {
 		data() {
 			return {
@@ -101,24 +94,26 @@
 					'/static/1.jpg',
 					'/static/1.jpg'
 				],
-				tabList: [{
-					name: '推荐',
-				}, {
-					name: '保安',
-				}, {
-					name: '保洁'
-				}, {
-					name: '电工'
-				}, {
-					name: '环卫'
-				}, {
-					name: '物业'
-				}],
-				indexList: [{}, {}, {}, {}]
+				tabList: [],
+				OrderList: [],
+				pageNum: 1,
+				pageSize: 10,
+				typeId: 1,
 			}
 		},
-		onLoad() {
+		onShow() {
 			this.loadmore()
+			this.casualServiceTypeList()
+		},		
+		onReachBottom(){
+			this.pageNum++
+			
+			this.casualOrderList()
+		},
+		onPullDownRefresh(){
+			this.pageNum = 1
+			this.OrderList = []
+			this.casualOrderList()
 		},
 		methods: {
 			scrolltolower() {
@@ -135,27 +130,68 @@
 				});
 			},
 			//搜索
-			toSearch(){
+			toSearch() {
 				uni.navigateTo({
 					url: '/pages/homePage/search/search',
 				});
+			},
+			changeOption(e){
+				console.log(e)
+				this.pageNum = 1
+				this.OrderList = []
+				this.typeId = this.tabList[e.index].value
+				this.casualOrderList()
+			},
+			// 任务订单信息
+			casualOrderList() {
+				
+				let params = {
+					typeId: this.typeId,
+					pageNum: this.pageNum,
+					pageSize: this.pageSize
+				}
+				
+				casualOrder(params).then(res => {
+					if (res.code === '00000') {
+						let dataList = res.data.list;
+						this.OrderList = this.OrderList.concat(dataList)
+						console.log(this.OrderList)
+					}
+				})
+			},
+			// 服务类型下拉框
+			casualServiceTypeList() {
+				casualServiceType().then(res => {
+					if (res.code === "00000") {
+						this.tabList = res.data.map(item => {
+							return {
+								name: item.label,
+								value: item.value,
+							}
+						})
+						this.typeId = res.data[0].value
+						this.casualOrderList()
+						console.log(this.tabList)
+					}
+				})
 			}
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
-	.bg{
-		   position: fixed;
-		    width: 100%;
-		    height: 100%;
-		    top: 0;
-		    left: 0;
-		    z-index: -1;
-			background-color: #F2F6FF;
+	.bg {
+		position: fixed;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		z-index: -1;
+		background-color: #F2F6FF;
 	}
+
 	.search {
-		width:483rpx;
+		width: 483rpx;
 	}
 
 	.wrap {

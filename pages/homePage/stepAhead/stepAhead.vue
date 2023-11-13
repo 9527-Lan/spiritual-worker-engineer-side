@@ -83,7 +83,7 @@
 			}
 		},
 		onLoad(){
-		this.submitTo()	
+		// this.submitTo()	
 		},
 		methods: {
 			rightClick() {

@@ -4,50 +4,40 @@
 		<u-navbar title="搜索" @leftClick="leftClick" :autoBack="true" leftIconSize="34rpx" bgColor="#F2F6FF"
 			ftIconColor="#000000" titleStyle="color: #000000;font-size:34rpx" />
 		<view>
-			<u-search placeholder="搜索用工信息..." v-model="keyword" :showAction="false" height="64rpx"
-				margin="100rpx 32rpx 39rpx 32rpx" bgColor="#FFFFFF" @click="toSearch"></u-search>
+			<view @onblur="searchList">
+				<u-search placeholder="搜索用工信息..." v-model="keyword" :showAction="false" height="64rpx"
+					margin="100rpx 32rpx 39rpx 32rpx" bgColor="#FFFFFF" @click="toSearch" @search="searchList"></u-search>
+			</view>			
 		</view>
 		<view class="list">
 			<u-list @scrolltolower="scrolltolower">
 				<u-list-item v-for="(item, index) in indexList" :key="index">
 					<view class="listBlok" @click="stepAhead">
 						<view class="top">
-							<text class="topTextBlack">临时电工</text>
-							<text class="topTextBlue">300元/天</text>
+							<text class="topTextBlack">{{item.name}}</text>
+							<text class="topTextBlue">{{item.price}}元/天</text>
 						</view>
 						<view class="tagRow">
 							<view class="tag">
-								<u-tag :text="`岗位量${5}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
+								<u-tag :text="item.typeName" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
 									plain></u-tag>
 							</view>
 							<view class="tag">
-								<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-									color="#333333" plain></u-tag>
+								<u-tag :text="`岗位量${item.orderQuantity}`" size="mini" bgColor="#E6F0FF"
+									borderColor="#E6F0FF" plain></u-tag>
 							</view>
 							<view class="tag">
-								<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-									color="#333333" plain></u-tag>
-							</view>
-							<view class="tag">
-								<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-									color="#333333" plain></u-tag>
-							</view>
-							<view class="tag">
-								<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-									color="#333333" plain></u-tag>
-							</view>
-							<view class="tag">
-								<u-tag :text="`${'中级电工证'}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
+								<u-tag :text="`${item.labelName}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
 									color="#333333" plain></u-tag>
 							</view>
 						</view>
 						<view>
 							<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
-								margin="18rpx 0 0 0" :text="'金碧物业有限公司'"></u--text>
+								margin="18rpx 0 0 0" :text="item.principalName"></u--text>
 						</view>
 						<view>
 							<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
-								margin="18rpx 0 0 0" :text="'2023.01.11-2023.02.22'"></u--text>
+								margin="18rpx 0 0 0" :text="`${item.orderStatr}-${item.orderEnd}`"></u--text>
 						</view>
 					</view>
 				</u-list-item>
@@ -64,12 +54,16 @@
 		data() {
 			return {
 				keyword: '',
-				indexList: [{}, {}, {}, {}],
-				status:'5'
+				indexList: [],
+				status: '5',
+				pageNum: 1,
+				pageSize: 5,
 			}
 		},
-		onLoad() {
-			this.loadmore(),
+		onShow() {
+			this.findCasualOrder()
+		},
+		onReachBottom() {
 			this.findCasualOrder()
 		},
 		computed: {},
@@ -82,20 +76,25 @@
 			scrolltolower() {
 				this.loadmore()
 			},
-			//查询list数据
-			loadmore() {
-
-			},			
 			// 任务订单信息
 			findCasualOrder() {
-				const params={
-					status:this.status
-				};
+				const params = {
+					pageNum: this.pageNum,
+					pageSize: this.pageSize,
+					status: this.status
+				}
 				casualOrder(params).then(res => {
 					if (res.code === '00000') {
-						console.log(res.data)
+						this.indexList = res.data.list
+						console.log(this.indexList)
 					}
 				})
+			},
+			// 搜索用工信息
+			searchList(){				
+				console.log(this.keyword,this.indexList)
+				this.indexList=this.indexList.filter(item=>this.keyword===item.name)
+				
 			}
 		}
 	}

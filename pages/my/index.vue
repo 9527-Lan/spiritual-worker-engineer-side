@@ -100,7 +100,7 @@
 		data() {
 			return {
 				avatarSrc: '',
-				id: "1", //我的工程师
+				id: "2", //我的工程师
 			}
 		},
 		onShow() {

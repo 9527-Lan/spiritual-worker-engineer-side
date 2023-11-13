@@ -30,7 +30,7 @@ export function casualOrderEngineer(params) {
 // 我的工程师查询
 export function findEngineer(params) {
 	return request({
-		url: '/web/casualEngineer/querybyId',
+		url: '/app/my_engineer',
 		method: 'get',
 		params: params,
 	})
@@ -71,6 +71,14 @@ export function casualEngineer(data) {
 export function casualServiceLabel(params) {
 	return request({
 		url: '/web/casualServiceLabel/getByIds',
+		method: 'get',
+		params: params,
+	})
+}
+// 服务类型下拉框
+export function casualServiceType(params) {
+	return request({
+		url: '/web/casualServiceType/options',
 		method: 'get',
 		params: params,
 	})
