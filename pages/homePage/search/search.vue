@@ -4,7 +4,7 @@
 		<u-navbar title="搜索" @leftClick="leftClick" :autoBack="true" leftIconSize="34rpx" bgColor="#F2F6FF"
 			ftIconColor="#000000" titleStyle="color: #000000;font-size:34rpx" />
 		<view>
-			<view @onblur="searchList">
+			<view>
 				<u-search placeholder="搜索用工信息..." v-model="keyword" :showAction="false" height="64rpx"
 					margin="100rpx 32rpx 39rpx 32rpx" bgColor="#FFFFFF" @click="toSearch" @search="searchList"></u-search>
 			</view>			

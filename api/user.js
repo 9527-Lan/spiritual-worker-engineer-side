@@ -35,22 +35,7 @@ export function findEngineer(params) {
 		params: params,
 	})
 }
-// 根据订单Id和工程师Id查询
-export function progressQuery(params) {
-	return request({
-		url: '/web/casualOrder/listOrderItem',
-		method: 'get',
-		params: params,
-	})
-}
-// 任务订单信息
-export function casualOrder(params) {
-	return request({
-		url: '/web/casualOrder/pages',
-		method: 'get',
-		params: params,
-	})
-}
+
 // 异常订单
 export function casualPages(params) {
 	return request({
@@ -71,14 +56,6 @@ export function casualEngineer(data) {
 export function casualServiceLabel(params) {
 	return request({
 		url: '/web/casualServiceLabel/getByIds',
-		method: 'get',
-		params: params,
-	})
-}
-// 服务类型下拉框
-export function casualServiceType(params) {
-	return request({
-		url: '/web/casualServiceType/options',
 		method: 'get',
 		params: params,
 	})

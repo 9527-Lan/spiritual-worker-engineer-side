@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="bg"></view>
-		<view class="search" @click="toSearch">
+		<view class="search" >
 			<u-search placeholder="搜索用工信息..." v-model="keyword" :showAction="false" height="64rpx"
 				margin="100rpx 0 39rpx 48rpx" bgColor="#FFFFFF" style="pointer-events: none"
 				@click="toSearch"></u-search>
