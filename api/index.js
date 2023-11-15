@@ -5,7 +5,7 @@ import request from '@/utils/request'
 // 首页列表渲染
 export function casualOrder(params) {
 	return request({
-		url: '/web/casualOrder/pages',
+		url: '/engineerEnd/web/casualOrder/pages',
 		method: 'get',
 		params: params,
 	})

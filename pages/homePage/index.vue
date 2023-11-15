@@ -99,12 +99,14 @@
 				OrderList: [],
 				pageNum: 1,
 				pageSize: 10,
-				typeId: 1,
+				typeId: "",
 			}
 		},
 		onShow() {
 			this.loadmore()
+			this.casualOrderList(this.typeId)
 			this.casualServiceTypeList()
+			
 		},		
 		onReachBottom(){
 			this.pageNum++
@@ -138,17 +140,22 @@
 				});
 			},
 			changeOption(e){
+			if(this.tabList[e.index].value==="0"){
+				this.typeId = '';
+				this.casualOrderList(this.typeId);
+				return;
+			}
+			// 其他的按钮
 				console.log(e,'111')
 				this.pageNum = 1
 				this.OrderList = []
 				this.typeId = this.tabList[e.index].value
-				this.casualOrderList()
+				this.casualOrderList(this.typeId)
 			},
 			// 任务订单信息
-			casualOrderList() {
-				
+			casualOrderList(e) {
 				let params = {
-					typeId: this.typeId,
+					typeId: e,
 					pageNum: this.pageNum,
 					pageSize: this.pageSize
 				}
@@ -165,15 +172,20 @@
 			casualServiceTypeList() {
 				casualServiceType().then(res => {
 					if (res.code === "00000") {
-						this.tabList = res.data.map(item => {
+					const list= res.data.map(item => {
 							return {
 								name: item.label,
 								value: item.value,
 							}
 						})
+					 list.unshift({
+							name:'推荐',
+							value:'0',
+						});
+						this.tabList = list;		
 						this.typeId = res.data[0].value
 						this.casualOrderList()
-						console.log(this.tabList)
+						console.log(this.tabList) 
 					}
 				})
 			}

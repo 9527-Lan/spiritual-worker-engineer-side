@@ -23,7 +23,7 @@ service.interceptors.request.use(
 		}
 
 		config.headers['Authorization'] =
-			'Bearer eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6ImMzYTY2YWQ0LTNhOTQtNDZmMS04M2M2LWFjZDNjMzBlODRiMSJ9.fnrN5K0B9Qb72KfZGrQTtrpmGhcnXMbnO1PKJ6UeIeE8uxkDXTG0EsMIFbZvZm2scmmHhaAcAFhI41fyL4cV5w'
+			'Bearer eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6IjY2MTc5ZDRjLWZjNzYtNDU0OS04OThmLWQ2MGI4YTQzMTAzMyJ9.unr00oxQW82bVdhmEuB6ULjbCDXiiveNtnX1SLzFrEwHO8tvmKKX7z2tyiD63dpLI_cP4W0INjizsc9lFNJDoA'
 		return config
 	},
 	error => {

@@ -64,13 +64,13 @@
 			return {
 				orderList:[],
 				id:'1',
-				nodeText:'<p>对公司的项目进行临时安保工作</p>  <p>一、工作地点:</p> <p>可根据个人意愿就近分配工作，如有环境不适应可申请调换。</p> <p>一、工作地点:</p> <p>可根据个人意愿就近分配工作，如有环境不适应可申请调换。</p> <p>一、工作地点:</p> <p>可根据个人意愿就近分配工作，如有环境不适应可申请调换。</p> <p>一、工作地点:</p> <p>可根据个人意愿就近分配工作，如有环境不适应可申请调换。</p>' ,
+				nodeText:'',
 				}
 			},
 			created() {
 				
 			},
-			onLoad(){
+			onLoad(options){
 				let params={
 					id:this.id
 				}
@@ -78,7 +78,8 @@
 					const list=res.data.filter(item=>{
 						return item.id===options.id
 					})
-					this.orderList=list[0]
+					this.orderList= list[0] || [];
+					this.nodeText= this.orderList.description == null ? '' : this.orderList.description 
 				})
 			},
 			methods: {

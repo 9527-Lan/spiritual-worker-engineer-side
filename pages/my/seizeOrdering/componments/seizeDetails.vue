@@ -20,8 +20,8 @@
 							borderColor="#E6F0FF" plain></u-tag>
 					</view>
 					<view class="tag">
-						<u-tag :text="`${orderList.labelName}`" size="mini" bgColor="#E6F0FF"
-							borderColor="#E6F0FF" color="#333333" plain></u-tag>
+						<u-tag :text="`${orderList.labelName}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
+							color="#333333" plain></u-tag>
 					</view>
 				</view>
 				<view>
@@ -45,53 +45,63 @@
 			</text>
 			<rich-text :nodes="nodeText" class="rText"></rich-text>
 		</view>
+		<u-button shape="circle" @click="cancelOrder(orderList.id)" type="primary">取消订单</u-button>
 	</view>
 </template>
 
 <script>
-	import {LowerSingleEnd} from "@/api/my.js"
+	import {
+		LowerSingleEnd
+	} from "@/api/my.js"
 	export default {
 		data() {
 			return {
-				id:'1',
-				orderList:[],
-				nodeText:'<p>对公司的项目进行临时安保工作</p>  <p>一、工作地点:</p> <p>可根据个人意愿就近分配工作，如有环境不适应可申请调换。</p> <p>一、工作地点:</p> <p>可根据个人意愿就近分配工作，如有环境不适应可申请调换。</p> <p>一、工作地点:</p> <p>可根据个人意愿就近分配工作，如有环境不适应可申请调换。</p> <p>一、工作地点:</p> <p>可根据个人意愿就近分配工作，如有环境不适应可申请调换。</p>' ,
-				}
+				id: '1',
+				orderList: [],
+				nodeText: '',
+			}
+		},
+		created() {
+
+		},
+		onLoad(options) {
+			console.log(options.id)
+			let params = {
+				id: this.id
+			}
+			LowerSingleEnd(params).then(res => {
+				const list = res.data.filter(item => item.id === options.id)
+				this.orderList = list[0]
+				this.nodeText = this.orderList.description == null ? '' : this.orderList.description
+			})
+		},
+		methods: {
+			rightClick() {
+				uni.switchTab({
+					url: '/pages/homePage/index'
+				});
 			},
-			created() {
-				
-			},
-			onLoad(options){
-				console.log(options.id)
-				let params={
-					id:this.id
-				}
-				LowerSingleEnd(params).then(res=>{
-					const list=res.data.filter(item=>item.id===options.id)
-					this.orderList=list[0]
-					console.log(list,'111')
-				})
-			},
-			methods: {
-				rightClick() {
-					uni.switchTab({
-						url: '/pages/homePage/index'
-					});
-				}
+			cancelOrder(e) {
+				uni.redirectTo({
+						url: '/pages/my/seizeOrdering/index?id='+e
+					}
+				)
 			}
 		}
+	}
 </script>
 
 <style lang="scss" scoped>
-	.bg{
-		   position: fixed;
-		    width: 100%;
-		    height: 100%;
-		    top: 0;
-		    left: 0;
-		    z-index: -1;
-			background-color: #F2F6FF;
+	.bg {
+		position: fixed;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		z-index: -1;
+		background-color: #F2F6FF;
 	}
+
 	.blueFixed {
 		position: fixed;
 		width: 100%;
@@ -108,6 +118,7 @@
 		background: #ffffff;
 		border-radius: 15rpx;
 		margin: 134rpx auto 34rpx;
+
 		.statusBox {
 			width: 100%;
 			height: 78rpx;
@@ -120,9 +131,11 @@
 			background: #E6F0FF;
 			border-radius: 15rpx;
 		}
+
 		.content {
 			padding: 20rpx 30rpx;
 		}
+
 		.top {
 			display: flex;
 			height: 34rpx;
@@ -152,7 +165,7 @@
 				margin-right: 13rpx;
 			}
 		}
-		
+
 
 		/deep/.u-divider {
 			margin: 24rpx 0 !important;
@@ -177,7 +190,8 @@
 			line-height: 67rpx;
 		}
 	}
-	.rText{
+
+	.rText {
 		font-size: 24rpx;
 		font-family: PingFang SC;
 		font-weight: 500;

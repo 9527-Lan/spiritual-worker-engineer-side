@@ -24,7 +24,7 @@
 						labelWidth="50"
 						borderBottom prop="money">
 						<u--input border="none" type="number" v-model="form.money" ></u--input>
-						<p slot="right" style="font-size: 32rpx;color: #3A84F0;">全部提现</p>
+						<p slot="right" style="font-size: 32rpx;color: #3A84F0;" >全部提现</p>
 					</u-form-item>
 				</u--form>
 			</view>
@@ -75,7 +75,8 @@
 			},
 			applyWithdrawal() {
 				
-			}
+			},
+		
 		}
 	}
 </script>

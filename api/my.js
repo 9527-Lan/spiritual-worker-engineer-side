@@ -56,3 +56,20 @@ export function queryOrderbyYcIdList(params) {
 		params: params,
 	})
 }
+// 用工详情
+export function LowerSingleEndCasualOrder(params) {
+	return request({
+		url: '/LowerSingleEnd/web/casualOrder/listOrderItem',
+		method: 'get',
+		params: params,
+	})
+}
+
+// 我的信息渲染
+export function casualEngineerMy(params) {
+	return request({
+		url: '/web/casualEngineer/querybyId',
+		method: 'get',
+		params: params,
+	})
+}

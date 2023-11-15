@@ -72,7 +72,7 @@
 						</u-tag>
 					</view>
 				</u-cell>
-				<u-cell title="银行卡管理" isLink url="" rightIconStyle="fontSize:32rpx">
+				<u-cell title="银行卡管理" isLink url="/pages/my/card/card" rightIconStyle="fontSize:32rpx">
 					<u-icon slot="icon" size="32" name="search"></u-icon>
 				</u-cell>
 				<u-cell title="我的推广码" isLink url="" rightIconStyle="fontSize:32rpx">

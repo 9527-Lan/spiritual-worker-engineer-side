@@ -63,7 +63,7 @@
 	export default {
 		data() {
 			return {
-				nodeText: '<p>对公司的项目进行临时安保工作</p>  <p>一、工作地点:</p> <p>可根据个人意愿就近分配工作，如有环境不适应可申请调换。</p> <p>一、工作地点:</p> <p>可根据个人意愿就近分配工作，如有环境不适应可申请调换。</p> <p>一、工作地点:</p> <p>可根据个人意愿就近分配工作，如有环境不适应可申请调换。</p> <p>一、工作地点:</p> <p>可根据个人意愿就近分配工作，如有环境不适应可申请调换。</p>',
+				nodeText: '',
 				order_id: 9,
 				engineer_id: 2,
 				circleStyle:{
@@ -81,8 +81,8 @@
 			casualOrder().then(res=>{
 				
 					const list=res.data.list.filter(item=>item.id===options.id)
-					this.orderList=list[0];
-					this.nodeText=this.orderList.description
+					this.orderList=list[0]?list[0]:[],
+					this.nodeText= this.orderList.description == null ? '' : this.orderList.description
 					console.log(this.orderList)
 				})
 		// this.submitTo()	

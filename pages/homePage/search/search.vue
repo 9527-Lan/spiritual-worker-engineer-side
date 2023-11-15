@@ -6,13 +6,14 @@
 		<view>
 			<view>
 				<u-search placeholder="搜索用工信息..." v-model="keyword" :showAction="false" height="64rpx"
-					margin="100rpx 32rpx 39rpx 32rpx" bgColor="#FFFFFF" @click="toSearch" @search="searchList"></u-search>
-			</view>			
+					margin="100rpx 32rpx 39rpx 32rpx" bgColor="#FFFFFF" @click="toSearch" @search="searchList"
+					@blur="searchList"></u-search>
+			</view>
 		</view>
 		<view class="list">
 			<u-list @scrolltolower="scrolltolower">
 				<u-list-item v-for="(item, index) in indexList" :key="index">
-					<view class="listBlok" @click="stepAhead">
+					<view class="listBlok" @click="toStepAhead(item.id)">
 						<view class="top">
 							<text class="topTextBlack">{{item.name}}</text>
 							<text class="topTextBlue">{{item.price}}元/天</text>
@@ -55,16 +56,33 @@
 			return {
 				keyword: '',
 				indexList: [],
-				status: '5',
 				pageNum: 1,
 				pageSize: 5,
+				total: ""
 			}
 		},
 		onShow() {
 			this.findCasualOrder()
 		},
-		onReachBottom() {
+		onPullDownRefresh() {
+			this.pageNum = 1
+			this.indexList = []
 			this.findCasualOrder()
+		},
+		onReachBottom() {
+			this.pageNum++
+			this.findCasualOrder()
+			const size=this.total / this.pageSize 
+			if(Number(this.pageNum)>+Number(size+1)){
+				this.pageNum=1
+				this.indexList = []
+				this.findCasualOrder()
+				console.log(size,'111',this.pageNum)
+			}
+			// if () {
+			// 	console.log('111')
+			// 	this.findCasualOrder()
+			// }
 		},
 		computed: {},
 		methods: {
@@ -73,28 +91,38 @@
 					url: '/pages/homePage/index',
 				});
 			},
-			scrolltolower() {
-				this.loadmore()
+			toStepAhead(e) {
+				console.log('111')
+				uni.navigateTo({
+					url: '/pages/homePage/search/user/user?id=' + e,
+				});
 			},
+			scrolltolower() {},
 			// 任务订单信息
 			findCasualOrder() {
 				const params = {
 					pageNum: this.pageNum,
 					pageSize: this.pageSize,
-					status: this.status
 				}
 				casualOrder(params).then(res => {
 					if (res.code === '00000') {
 						this.indexList = res.data.list
+						this.total = res.data.total
+					
 						console.log(this.indexList)
 					}
 				})
 			},
 			// 搜索用工信息
-			searchList(){				
-				console.log(this.keyword,this.indexList)
-				this.indexList=this.indexList.filter(item=>this.keyword===item.name)
-				
+			searchList() {
+
+				console.log(this.keyword, this.indexList)
+
+				this.indexList = this.indexList.filter(item => this.keyword === item.name)
+				if (this.keyword === '') {
+					this.findCasualOrder()
+				}
+
 			}
 		}
 	}

@@ -53,6 +53,9 @@
 
 <script>
 	import {
+		casualServiceType
+	} from "@/api/index.js"
+	import {
 		queryOrderbyYcIdList
 	} from "@/api/my.js"
 	
@@ -62,8 +65,8 @@
 				defaultIndex: [0, 0, 0, 0],
 				typeShow: false,
 				typeValue: {
-					label: '保安',
-					value: 1
+					label: '全部',
+					value: 0
 				},
 				typeColumns: [
 					[{
@@ -102,7 +105,8 @@
 					]
 				],
 				indexList: [],
-				id: '1'
+				id: '1',
+				typeId:''
 			}
 		},
 		onReady() {
@@ -111,7 +115,8 @@
 		},
 		onLoad() {
 			this.loadmore();
-			this.findQueryOrderbyYcIdList()
+			this.findQueryOrderbyYcIdList(this.typeId)
+			this.casualServiceTypeList()
 		},
 		computed: {
 
@@ -125,7 +130,16 @@
 			typeConfirm(columnIndex) {
 				this.typeValue = columnIndex.value[0]
 				console.log(this.typeValue, ...columnIndex.value);
+				if(this.typeValue.value==='0'){
+					this.typeId="",
+					this.findQueryOrderbyYcIdList(this.typeId)
+					this.typeShow = false
+					return ;
+				}
+				this.typeId=this.typeValue.value
+				this.findQueryOrderbyYcIdList(this.typeId)
 				this.typeShow = false
+				
 			},
 			statusConfirm(columnIndex) {
 				this.statusValue = columnIndex.value[0]
@@ -141,16 +155,33 @@
 			},
 			details(e) {
 				uni.navigateTo({
-					url: '/pages/my/successed/componments/successedDetails?id='+e,
+					url: '/pages/my/abnormal/componments/abnormalDetails?id='+e,
 				});
 			},
 			// 订单异常
-			findQueryOrderbyYcIdList() {
+			findQueryOrderbyYcIdList(e) {
 				let params = {
+					typeId:e,
 					id: this.id
 				}
 				queryOrderbyYcIdList(params).then(res => {
 					this.indexList=res.data
+				})
+			},
+			casualServiceTypeList() {
+				casualServiceType().then(res => {
+					if (res.code === "00000") {
+						const list = res.data
+			
+						list.unshift({
+							label: '全部',
+							value: '0',
+						});
+						this.typeColumns = [list];
+						console.log(this.typeColumns, '111')
+					
+						console.log(this.tabList)
+					}
 				})
 			}
 		}

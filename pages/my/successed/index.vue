@@ -41,7 +41,7 @@
 								</view>
 							</view>
 							<view class="statusBox fail">
-								<p>您的订单状态{{item.statusName}}</p>
+								<p>您的订单状态{{item.statusText}}</p>
 							</view>
 						</view>
 
@@ -54,6 +54,9 @@
 
 <script>
 	import {
+		casualServiceType
+	} from "@/api/index.js"
+	import {
 		LowerSingleEndList
 	} from "@/api/my.js"
 	export default {
@@ -62,8 +65,8 @@
 				defaultIndex: [0, 0, 0, 0],
 				typeShow: false,
 				typeValue: {
-					label: '保安',
-					value: 1
+					label: '全部',
+					value: 0
 				},
 				typeColumns: [
 					[{
@@ -102,7 +105,8 @@
 					]
 				],
 				LowerList: [],
-				id: "1"
+				id: "2",
+				typeId:''
 			}
 		},
 		onReady() {
@@ -111,7 +115,8 @@
 		},
 		onLoad() {
 			this.loadmore(),
-			this.findLowerSingleEndList()
+			this.findLowerSingleEndList(this.typeId)
+			this.casualServiceTypeList()
 		},
 		computed: {
 
@@ -122,11 +127,20 @@
 					url: '/pages/my/index',
 				});
 			},
-			typeConfirm(columnIndex) {
-				this.typeValue = columnIndex.value[0]
-				console.log(this.typeValue, ...columnIndex.value);
+		typeConfirm(columnIndex) {
+			this.typeValue = columnIndex.value[0]
+			console.log(this.typeValue, ...columnIndex.value);
+			if(this.typeValue.value==='0'){
+				this.typeId="",
+				this.findLowerSingleEndList(this.typeId)
 				this.typeShow = false
-			},
+				return ;
+			}
+			this.typeId=this.typeValue.value
+			this.findLowerSingleEndList(this.typeId)
+			this.typeShow = false
+			
+		},
 			statusConfirm(columnIndex) {
 				this.statusValue = columnIndex.value[0]
 				console.log(this.statusValue, ...columnIndex.value);
@@ -139,18 +153,34 @@
 			loadmore() {
 
 			},
-			details(item) {
-				console.log(item)
+			details(e) {
 				uni.navigateTo({
-					url: '/pages/my/successed/componments/successedDetails',
+					url: '/pages/my/successed/componments/successedDetails?id='+e,
 				});
 			},
-			findLowerSingleEndList() {
+			findLowerSingleEndList(e) {
 				let params = {
+					typeId:e,
 					id: this.id
 				}
 				LowerSingleEndList(params).then(res => {
 					this.LowerList = res.data
+				})
+			},
+			casualServiceTypeList() {
+				casualServiceType().then(res => {
+					if (res.code === "00000") {
+						const list = res.data
+			
+						list.unshift({
+							label: '全部',
+							value: '0',
+						});
+						this.typeColumns = [list];
+						console.log(this.typeColumns, '111')
+					
+						console.log(this.tabList)
+					}
 				})
 			}
 		}

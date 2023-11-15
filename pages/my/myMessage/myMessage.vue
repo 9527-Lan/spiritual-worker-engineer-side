@@ -26,34 +26,34 @@
 			</view>
 			<view>
 				<!-- 注意，如果需要兼容微信小程序，最好通过setRules方法设置rules规则 -->
-				<u--form :labelStyle="labelStyle" labelWidth="140" labelPosition="left" :model="model1" :rules="rules" ref="uForm">
-					<u-form-item required label="姓名" prop="userInfo.name" borderBottom ref="item1">
-						<u--input v-model="model1.userInfo.name" border="none" placeholder="请输入姓名"></u--input>
+				<u--form :labelStyle="labelStyle" labelWidth="140" labelPosition="left" :model="model1.userInfo" :rules="rules" ref="uForm">
+					<u-form-item required label="姓名" prop="engineerRealname" borderBottom ref="item1">
+						<u--input v-model="model1.userInfo.engineerRealname" border="none" placeholder="请输入姓名"></u--input>
 					</u-form-item>
-					<u-form-item required label="性别" prop="userInfo.sex" borderBottom @click="showSex = true"
+					<u-form-item required label="性别" prop="engineerSexName" borderBottom @click="showSex = true"
 						ref="item1">
-						<u--input v-model="model1.userInfo.sex" disabled disabledColor="#ffffff" placeholder="请选择性别"
+						<u--input v-model="model1.userInfo.engineerSexName" disabled disabledColor="#ffffff" placeholder="请选择性别"
 							border="none"></u--input>
 						<u-icon slot="right" name="arrow-right"></u-icon>
 					</u-form-item>
-					<u-form-item required label="身份证号" prop="userInfo.name" borderBottom >
-						<u--input v-model="model1.userInfo.name" border="none" placeholder="请输入身份证号"></u--input>
+					<u-form-item required label="身份证号" prop="idcard" borderBottom >
+						<u--input v-model="model1.userInfo.idcard" border="none" placeholder="请输入身份证号"></u--input>
 					</u-form-item>
-					<u-form-item required label="服务类型" prop="userInfo.type" borderBottom @click="showType = true"
+					<u-form-item required label="服务类型" prop="typeIds" borderBottom @click="showType = true"
 						ref="item1">
-						<u--input v-model="model1.userInfo.type" disabled disabledColor="#ffffff" placeholder="请选择性别"
+						<u--input v-model="model1.userInfo.typeIds" disabled disabledColor="#ffffff" placeholder="请选择性别"
 							border="none"></u--input>
 						<u-icon slot="right" name="arrow-right"></u-icon>
 					</u-form-item>
-					<u-form-item required label="服务标签" prop="userInfo.sex" borderBottom @click="showLabel = true"
+					<u-form-item required label="服务标签" prop="typeName" borderBottom @click="showLabel = true"
 						ref="item1">
-						<u--input v-model="model1.userInfo.label" disabled disabledColor="#ffffff" placeholder="请选择服务标签"
+						<u--input v-model="model1.userInfo.typeName" disabled disabledColor="#ffffff" placeholder="请选择服务标签"
 							border="none"></u--input>
 						<u-icon slot="right" name="arrow-right"></u-icon>
 					</u-form-item>
-					<u-form-item required label="上传证书" prop="userInfo.sex" borderBottom @click="showLabel = true"
+					<u-form-item required label="上传证书" prop="isContract" borderBottom @click="showLabel = true"
 						ref="item1">
-						<u--input v-model="model1.userInfo.label" disabled disabledColor="#ffffff" placeholder="请选择服务标签"
+						<u--input v-model="model1.userInfo.isContract" disabled disabledColor="#ffffff" placeholder="请选择服务标签"
 							border="none"></u--input>
 						<u--text slot="right" type="error" text="审核未通过" size="24"></u--text> 
 					</u-form-item>
@@ -87,14 +87,15 @@
 </template>
 
 <script>
-	import {casualEngineer,casualServiceLabel} from "@/api/user.js"
+  import {casualEngineerMy} from "@/api/my.js"
 	export default {
 		data() {
 			return {
 				model1: {
 					userInfo: {
-						name: '',
+						engineerRealname: '',
 						sex: '',
+						idcard:''
 					},
 				},
 				showSex: false,
@@ -142,7 +143,8 @@
 					"font-weight": "700",
 					"font-size": "28rpx"
 				},
-				id:"1"
+				id:"2",
+				formList:[]
 			}
 		},
 		onReady() {
@@ -150,8 +152,8 @@
 			this.$refs.uForm.setRules(this.rules)
 		},
 		onLoad(){
-			this.casualEngineerList(),
-			this.casualServiceLabelList()
+			// 
+		this.casualEngineerMyList()
 		},
 		computed: {},
 		methods: {
@@ -168,19 +170,14 @@
 				this.model1.userInfo.type = e.name
 				this.$refs.uForm.validateField('userInfo.type')
 			},
-			 // 服务类型下拉框
-			casualEngineerList(){								
-				casualEngineer({}).then(res=>{
-					console.log(res)
-				})
-			},
-			// 选择标签下拉框
-			casualServiceLabelList(){
+			casualEngineerMyList(){
 				let params={
-					typeIds:this.id
+					id:this.id
 				}
-				casualServiceLabel(params).then(res=>{
-					console.log(res)
+				casualEngineerMy(params).then(res=>{
+					console.log(res.data)
+					this.model1.userInfo=res.data
+					console.log(this.model1.userInfo,'111')
 				})
 			}
 		}

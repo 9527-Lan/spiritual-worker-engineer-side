@@ -53,6 +53,13 @@
 				"navigationBarTextStyle": "white"
 			}
 		},
+		{//搜索->用工详情
+			"path": "pages/homePage/search/user/user",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
+		},
 		{//我的
 			"path": "pages/my/index",
 			"style": {
@@ -123,6 +130,13 @@
 				"navigationBarTextStyle": "white"
 			}
 		},
+		{//我的->银行卡
+			"path": "pages/my/card/card",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
+		},
 		{
 			"path": "pages/my/withdrawal",
 			"style": {
@@ -135,6 +149,14 @@
 			"style": {
 				"navigationStyle": "custom",
 				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path" : "pages/homePage/search/user/user",
+			"style" : 
+			{
+				"navigationBarTitleText" : "",
+				"enablePullDownRefresh" : false
 			}
 		}
 		

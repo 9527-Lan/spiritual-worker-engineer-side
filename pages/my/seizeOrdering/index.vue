@@ -46,10 +46,10 @@
 								</view>
 							</view>
 							<view class="statusBox fail">
-								<p>您的订单状态{{item.statusName}}</p>
+								<p>您的订单状态</p>
 							</view>
 						</view>
-						
+
 					</view>
 				</u-list-item>
 			</u-list>
@@ -58,6 +58,9 @@
 </template>
 
 <script>
+	import {
+		casualServiceType
+	} from "@/api/index.js"
 	import {
 		LowerSingleEnd,
 		engineerEndList
@@ -68,7 +71,7 @@
 				defaultIndex: [0, 0, 0, 0],
 				typeShow: false,
 				typeValue: {
-					label: '保安',
+					label: '全部',
 					value: 1
 				},
 				typeColumns: [
@@ -110,18 +113,24 @@
 				dateShow: false,
 				dateValue: Number(new Date()),
 				LowerList: [],
-				id: "1",
-				statusName:""
+				id: "2",
+				statusName: "",
+				typeId:""
 			}
 		},
 		onReady() {
 			// 微信小程序需要用此写法
 			//this.$refs.datetimePicker.setFormatter(this.formatter)
 		},
-		onLoad() {
+		onLoad(options) {
 			this.loadmore()
-			this.LowerSingleEndList()
+			this.LowerSingleEndList(this.typeId)
 			this.engineerEndListButtom()
+			if (options.id) {
+				this.LowerList = this.LowerList.filter(item => item.id !== options.id)
+				this.LowerSingleEndList()
+			}
+			this.casualServiceTypeList()
 		},
 		computed: {
 
@@ -142,20 +151,28 @@
 				return value
 			},
 			dateConfirm(v, m) {
+				console.log(v, m)
 				this.dateValue = v.value
 				this.dateShow = false
 			},
 			typeConfirm(columnIndex) {
 				this.typeValue = columnIndex.value[0]
 				console.log(this.typeValue, ...columnIndex.value);
-				this.LowerList=this.LowerList.filter(item=>item.name===this.typeValue.label)
-				console.log()
+				if(this.typeValue.value==='0'){
+					this.typeId="",
+					this.LowerSingleEndList(this.typeId)
+					this.typeShow = false
+					return ;
+				}
+				this.typeId=this.typeValue.value
+				this.LowerSingleEndList(this.typeId)
 				this.typeShow = false
+				
 			},
 			statusConfirm(columnIndex) {
 				this.statusValue = columnIndex.value[0]
 				console.log(this.statusValue, ...columnIndex.value);
-				this.LowerList=this.LowerList.filter(item=>item.statusName===this.typeValue.label)
+				
 				this.statusShow = false
 			},
 
@@ -166,14 +183,15 @@
 			loadmore() {
 
 			},
-			details(e) {				
+			details(e) {
 				uni.navigateTo({
-					url: '/pages/my/seizeOrdering/componments/seizeDetails?id='+e,
+					url: '/pages/my/seizeOrdering/componments/seizeDetails?id=' + e,
 				});
 			},
-			LowerSingleEndList() {
+			LowerSingleEndList(e) {
 				const params = {
-					id: this.id
+					typeId:e,
+					id: this.id,
 				}
 				LowerSingleEnd(params).then(res => {
 					console.log(res)
@@ -183,7 +201,28 @@
 			// 抢单中下拉框
 			engineerEndListButtom() {
 				engineerEndList().then(res => {
-				this.statusColumns=[res.data]
+					const statusList=res.data
+					statusList.unshift({
+						label: '全部',
+						value: '0',
+					})
+					this.statusColumns = [statusList]
+				})
+			},
+			casualServiceTypeList() {
+				casualServiceType().then(res => {
+					if (res.code === "00000") {
+						const list = res.data
+
+						list.unshift({
+							label: '全部',
+							value: '0',
+						});
+						this.typeColumns = [list];
+						console.log(this.typeColumns, '111')
+					
+						console.log(this.tabList)
+					}
 				})
 			}
 		}

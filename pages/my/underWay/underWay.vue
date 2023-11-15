@@ -71,7 +71,12 @@
 </template>
 
 <script>
-		import {queryOrderbyJxzId} from "@/api/my.js"
+	import {
+		casualServiceType
+	} from "@/api/index.js"
+	import {
+		queryOrderbyJxzId
+	} from "@/api/my.js"
 	import writeTodayRecord from './componments/writeTodayRecord.vue'
 	export default {
 		components: {
@@ -82,11 +87,14 @@
 				recordShow: false,
 				typeShow: false,
 				typeValue: {
-					label: '保安',
-					value: 1
+					label: '全部',
+					value: 0
 				},
 				typeColumns: [
 					[{
+						label: '全部',
+						value: 0
+					}, {
 						label: '保安',
 						value: 1
 					}, {
@@ -99,7 +107,8 @@
 				indexList: [],
 				orderid: '10',
 				engineerid: '1',
-				id:"2"
+				id: "2",
+				typeId: ""
 			}
 		},
 		onReady() {
@@ -108,7 +117,8 @@
 		},
 		onLoad() {
 			this.loadmore(),
-			this.queryOrderbyJxzIdList()
+				this.queryOrderbyJxzIdList(this.typeId)
+			this.casualServiceTypeList()
 		},
 		computed: {},
 		methods: {
@@ -133,6 +143,14 @@
 			typeConfirm(columnIndex) {
 				this.typeValue = columnIndex.value[0]
 				console.log(this.typeValue, ...columnIndex.value);
+				if (this.typeValue.value === '0') {
+					this.typeId = "",
+						this.casualServiceTypeList(this.typeId)
+					this.typeShow = false
+					return;
+				}
+				this.typeId = this.typeValue.value
+				this.queryOrderbyJxzIdList(this.typeId)
 				this.typeShow = false
 			},
 
@@ -145,19 +163,35 @@
 			},
 			stepAhead(e) {
 				uni.navigateTo({
-					url: '/pages/my/underWay/employmentDetails?id='+e,
+					url: '/pages/my/underWay/employmentDetails?id=' + e,
 				});
 			},
 			todayRecord() {
 				console.log(1111);
 				this.recordShow = !this.recordShow
-			},				
-			queryOrderbyJxzIdList(){
-				const params={
-					id:this.id
+			},
+			queryOrderbyJxzIdList(e) {
+				const params = {
+					typeId: e,
+					id: this.id
 				}
-				queryOrderbyJxzId(params).then(res=>{
-					this.indexList=res.data
+				queryOrderbyJxzId(params).then(res => {
+					this.indexList = res.data
+				})
+			},
+			casualServiceTypeList() {
+				casualServiceType().then(res => {
+					if (res.code === "00000") {
+						const list = res.data
+
+						list.unshift({
+							label: '全部',
+							value: '0',
+						});
+						this.typeColumns = [list];
+						console.log(this.typeColumns, '111')
+
+					}
 				})
 			}
 		},

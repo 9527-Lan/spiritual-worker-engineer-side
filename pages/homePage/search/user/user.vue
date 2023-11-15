@@ -6,22 +6,23 @@
 		<view class="blueFixed">
 		</view>
 		<view class="card">
-			<view class="statusBox">
-				<p>状态：进行中</p>
-			</view>
-			<view class="content">
 			<view class="top">
 				<text class="topTextBlack">{{orderList.name}}</text>
 				<text class="topTextBlue">{{orderList.price}}元/天</text>
 			</view>
+			
 			<view class="tagRow">
+				<view class="tag">
+					<u-tag :text="orderList.typeName" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
+						plain></u-tag>
+				</view>
 				<view class="tag">
 					<u-tag :text="`岗位量${orderList.orderQuantity}`" size="mini" bgColor="#E6F0FF"
 						borderColor="#E6F0FF" plain></u-tag>
 				</view>
 				<view class="tag">
-					<u-tag :text="`${orderList.labelName}`" size="mini" bgColor="#E6F0FF"
-						borderColor="#E6F0FF" color="#333333" plain></u-tag>
+					<u-tag :text="orderList.labelName" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
+						color="#333333" plain></u-tag>
 				</view>
 			</view>
 			<view>
@@ -32,22 +33,10 @@
 				<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
 					margin="18rpx 0 0 0" :text="`${orderList.orderStatr}-${orderList.orderEnd}`"></u--text>
 			</view>
-				<u-divider></u-divider>
-				<view class="bottom-box">
-					<view class="bottom-left">
-						<u-steps current="1" dot direction="column">
-							<u-steps-item title="已下单 10:30 10:30">
-							</u-steps-item>
-							<u-steps-item title="已出库" desc="10:35">
-							</u-steps-item>
-							<u-steps-item title="运输中" desc="11:40"></u-steps-item>
-						</u-steps>
-					</view>
-					<view class="bottom-right" @click.stop="todayRecord">
-						<u-button style="width: 100%;height: 100%;" size="mini" shape="circle" color="#3A84F0"
-							text="今日记录"></u-button>
-					</view>
-				</view>
+			<u-divider></u-divider>
+			<view>
+				<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#3B85F0" size="24rpx"
+					margin="18rpx 0 0 0" :text="`已有${orderList.haveRegistered}人报名A1栋`"></u--text>
 			</view>
 		</view>
 		<view class="description">
@@ -56,39 +45,38 @@
 			</text>
 			<rich-text :nodes="nodeText" class="rText"></rich-text>
 		</view>
-		<writeTodayRecord :show="recordShow" @todayRecord="todayRecord"></writeTodayRecord>
+		<view class="occupy" style="width: 100vw; height: 173rpx;">
+		</view>		
 	</view>
 </template>
 
 <script>
-	import {queryOrderbyJxzId} from "@/api/my.js"
-	import writeTodayRecord from './componments/writeTodayRecord.vue'
+	import {casualOrderEngineer} from '@/api/user.js'
+	import {casualOrder} from '@/api/index.js'
 	export default {
-		components: {
-			writeTodayRecord
-		},
 		data() {
 			return {
-				id:"2",
-				orderList:[],
-				recordShow: false,
 				nodeText: '',
+				circleStyle:{
+					width: '521rpx',
+					height:' 89rpx',
+					position: 'absolute',
+					left:'187rpx',
+					bottom:'65rpx',
+				},
+				orderList:[]
 			}
-		},
-		created() {
-
 		},
 		onLoad(options){
-			let params={
-				id:this.id
-			}
-			queryOrderbyJxzId(params).then(res=>{
-				const list=res.data.filter(item=>{
-					return item.id===options.id
+			console.log(options);
+			casualOrder().then(res=>{
+				
+					const list=res.data.list.filter(item=>item.id===options.id)
+					this.orderList=list[0]?list[0]:[],
+					this.nodeText= this.orderList.description == null ? '' : this.orderList.description
+					console.log(this.orderList)
 				})
-				this.orderList=list[0]
-				this.nodeText= this.orderList.description == null ? '' : this.orderList.description
-			})
+		// this.submitTo()	
 		},
 		methods: {
 			rightClick() {
@@ -96,10 +84,10 @@
 					url: '/pages/homePage/index'
 				});
 			},
-			todayRecord() {
-				console.log(1111);
-				this.recordShow = !this.recordShow
-			}
+		
+			
+			
+			
 		}
 	}
 </script>
@@ -126,26 +114,12 @@
 		position: relative;
 		z-index: 100;
 		//top: 100rpx;
-		width: 95%;
-		height: auto;
+		width: 686rpx;
+		height: 415rpx;
 		background: #ffffff;
 		border-radius: 15rpx;
 		margin: 134rpx auto 34rpx;
-
-		.statusBox {
-			width: 100%;
-			height: 78rpx;
-			background: #FFF0D6;
-			border-radius: 15rpx;
-			color: #B28C53;
-			display: flex;
-			align-items: center;
-			padding-left: 30rpx;
-		}
-
-		.content {
-			padding: 20rpx 30rpx;
-		}
+		padding: 35rpx 32rpx;
 
 		.top {
 			display: flex;
@@ -174,18 +148,6 @@
 				width: fit-content;
 				display: inline-block;
 				margin-right: 13rpx;
-			}
-		}
-
-		.bottom-box {
-			display: flex;
-			margin: 0 auto;
-			justify-content: space-between;
-			align-items: center;
-
-			.bottom-right {
-				width: 149rpx;
-				height: 55rpx;
 			}
 		}
 
@@ -220,4 +182,10 @@
 		color: #333333;
 		line-height: 48rpx;
 	}
+
+	// .img{
+	// 	width:36rpx;
+	// 	height:36rpx;
+	// }
+	
 </style>
