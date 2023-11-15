@@ -81,13 +81,14 @@
 				<u-cell title="推广列表" isLink url="" rightIconStyle="fontSize:32rpx">
 					<u-icon slot="icon" size="32" name="search"></u-icon>
 				</u-cell>
-				<u-cell title="咨询客服" isLink url="" rightIconStyle="fontSize:32rpx">
+				<u-cell title="咨询客服" isLink url="" @click="showCard"   rightIconStyle="fontSize:32rpx">
 					<u-icon slot="icon" size="32" name="search"></u-icon>
 				</u-cell>
-				<u-cell title="关于我们" isLink url="" rightIconStyle="fontSize:32rpx">
+				<u-cell title="关于我们" isLink url="/pages/my/callMe/callMe" rightIconStyle="fontSize:32rpx">
 					<u-icon slot="icon" size="32" name="search"></u-icon>
 				</u-cell>
 			</u-cell-group>
+				<u-modal :show="show" :title="title" :content='content' :showCancelButton='true' @confirm="closeCard" @cancel="del"></u-modal>
 		</view>
 	</view>
 </template>
@@ -102,6 +103,9 @@
 				avatarSrc: '',
 				id: "2", //我的工程师
 				myList:[],
+				show:false,
+				title:'拨打客服电话进行咨询',
+				content:"15344443333",
 			}
 		},
 		onShow() {
@@ -139,6 +143,19 @@
 					url: '/pages/my/fundDetails',
 				});
 			},
+			showCard(){
+				this.show=  true;
+			},
+			closeCard(){
+				uni.makePhoneCall({
+					phoneNumber: this.content //仅为示例
+				});
+				 this.show = false;
+			},
+			del(){
+				this.show = false;
+			},
+			
 			//我的工程师查询
 			engineerEndList() {
 				const params = {

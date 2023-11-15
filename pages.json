@@ -137,6 +137,13 @@
 				"navigationBarTextStyle": "white"
 			}
 		},
+		{//我的->银行卡
+			"path": "pages/my/callMe/callMe",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
+		},
 		{
 			"path": "pages/my/withdrawal",
 			"style": {
@@ -153,6 +160,14 @@
 		},
 		{
 			"path" : "pages/homePage/search/user/user",
+			"style" : 
+			{
+				"navigationBarTitleText" : "",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/my/callMe/callMe",
 			"style" : 
 			{
 				"navigationBarTitleText" : "",

@@ -30,6 +30,10 @@
 			</view>
 			<view>
 				<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
+					margin="18rpx 0 0 0" :text="orderList.address"></u--text>
+			</view>
+			<view>
+				<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
 					margin="18rpx 0 0 0" :text="`${orderList.orderStatr}-${orderList.orderEnd}`"></u--text>
 			</view>
 				<u-divider></u-divider>
