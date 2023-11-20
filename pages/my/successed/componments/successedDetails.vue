@@ -1,13 +1,13 @@
 <template>
 	<view>
 		<view class="bg"></view>
-		<u-navbar title="用工详情" @rightClick="rightClick" :autoBack="true" leftIconSize="34rpx" bgColor="#3a84f0"
+		<u-navbar title="用工详情" @rightClick="rightClick" :autoBack="true" :placeholder="true" leftIconSize="34rpx" bgColor="#3a84f0"
 			leftIconColor="#ffffff" titleStyle="color: #ffffff;font-size:34rpx" />
 		<view class="blueFixed">
 		</view>
 		<view class="card">
-			<view class="statusBox unsettled">
-				<p>状态：{{LowerList.statusText}}</p>
+			<view :class="LowerList.settlementStatus==0?'statusBox settled':'statusBox unsettled'"> 
+				<p>状态：{{LowerList.settlementStatusText}}</p>
 			</view>
 			<view class="content">
 				<view class="top">
@@ -25,17 +25,24 @@
 					</view>
 				</view>
 				<view>
-					<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
-						margin="18rpx 0 0 0" :text="LowerList.principalName"></u--text>
+					<!-- 	<u--text prefixIcon="/static/homePage/address.png" iconStyle="width: 28rpx;height: 28rpx;margin:0 20rpx 0 0" color="#666666" size="24rpx"
+						margin="18rpx 0 0 0" :text="LowerList.principalName"></u--text> -->
+					
+					<u--text
+						:prefixIcon="LowerList.principalType==0?'/static/homePage/avatar1.png':'/static/homePage/address.png'"
+						iconStyle="width: 28rpx;height: 28rpx;margin:0 20rpx 0 0" color="#666666" size="24rpx" margin="18rpx 0 0 0"
+						:text="LowerList.principalName"></u--text>
 				</view>
 				<view>
-					<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
-						margin="18rpx 0 0 0" :text="LowerList.address"></u--text>
-				</view>
-				<view>
-					<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
+					<u--text prefixIcon="/static/homePage/time.png"
+						iconStyle="width: 28rpx;height: 28rpx;margin:0 20rpx 0 0" color="#666666" size="24rpx"
 						margin="18rpx 0 0 0" :text="`${LowerList.orderStatr}-${LowerList.orderEnd}`"></u--text>
 				</view>
+				<view>
+					<u--text prefixIcon="/static/homePage/coordinate.png"
+						iconStyle="width: 28rpx;height: 28rpx;margin:0 20rpx 0 0" color="#666666" size="24rpx"
+						margin="18rpx 0 0 0" :text="`${LowerList.address}`" :lines="1"></u--text>
+				</view> 
 				<u-divider></u-divider>
 				<view class="bottom-box">
 					<view class="bottom-left">
@@ -64,7 +71,6 @@
 	export default {
 		data() {
 			return {
-				id:"2",
 				nodeText:'',
 				LowerList:[]}
 			},
@@ -72,14 +78,8 @@
 				
 			},
 			onLoad(options){
-				
-				let params = {
-					id: this.id
-				}
 				LowerSingleEndList(params).then(res => {
-					console.log(res,'2222')
 					const list = res.data.filter(item=>item.id===options.id)
-					console.log(list,'')
 					this.LowerList=list[0]
 					this.nodeText= this.LowerList.description == null ? '' : this.LowerList.description
 				})
@@ -119,7 +119,7 @@
 		height: auto;
 		background: #ffffff;
 		border-radius: 15rpx;
-		margin: 134rpx auto 34rpx;
+		margin: 32rpx auto 34rpx;
 		.statusBox {
 			width: 100%;
 			height: 78rpx;

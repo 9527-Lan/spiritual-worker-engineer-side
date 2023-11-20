@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="bg"></view>
-		<view class="myMsg">
+		<view class="myMsg" :style="'margin-top:'+myMsgTop+'rpx'">
 			<view class="left">
 				<u-avatar :src="avatarSrc" size="120"></u-avatar>
 			</view>
@@ -14,7 +14,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="money">
+		<view class="money" style="background: url(/static/my/balance.png) round;">
 			<view class="top">
 				<view class="balance">
 					<view class="balanceTop">余额（元）</view>
@@ -24,10 +24,14 @@
 					</view>
 				</view>
 				<view class="controls">
-					<u--text class="topText" size="24rpx" align="center" color="#FFFFFF"
-						iconStyle="color:#ffffff;size:22rpx" prefixIcon="baidu" text="提现" @click="withdrawal"></u--text>
-					<u--text class="btmText" size="24rpx" align="center" color="#FFFFFF" text="资金明细"
+					<view class="topText">
+					<u--text size="24rpx" align="center" color="#FFFFFF"
+						iconStyle="color:#ffffff;size:22rpx;margin-right:8rpx" prefixIcon="/static/my/withdraw.png" text="提现" @click="withdrawal"></u--text>
+					</view>
+					<view class="btmText">
+					<u--text size="24rpx" align="center" color="#FFFFFF" text="资金明细"
 						@click="fundDetails"></u--text>
+					</view>
 				</view>
 			</view>
 			<view class="btm">
@@ -65,27 +69,27 @@
 		<view class="cell">
 			<u-cell-group :customStyle="{fontSize: '160px'}" :border="false">
 				<u-cell isLink rightIconStyle="fontSize:32rpx" url="/pages/my/myMessage/myMessage">
-					<u-icon slot="icon" size="32" name="search"></u-icon>
-					<view slot="title">
+					<u-icon slot="icon" size="32" name="/static/my/idCard.png"></u-icon>
+					<template slot="title" class="u-slot-title">
 						<text>我的信息</text>
-						<u-tag class="tag" text="待完善" size="mini" type="error" shape="circle">
-						</u-tag>
-					</view>
+						<!-- <u-tag class="tag" text="待完善" size="mini" type="error" shape="circle">
+						</u-tag> -->
+					</template>
 				</u-cell>
 				<u-cell title="银行卡管理" isLink url="/pages/my/card/card" rightIconStyle="fontSize:32rpx">
-					<u-icon slot="icon" size="32" name="search"></u-icon>
+					<u-icon slot="icon" size="32" name="/static/my/bank.png"></u-icon>
 				</u-cell>
 				<u-cell title="我的推广码" isLink url="" rightIconStyle="fontSize:32rpx">
-					<u-icon slot="icon" size="32" name="search"></u-icon>
+					<u-icon slot="icon" size="32" name="/static/my/twoCode.png"></u-icon>
 				</u-cell>
 				<u-cell title="推广列表" isLink url="" rightIconStyle="fontSize:32rpx">
-					<u-icon slot="icon" size="32" name="search"></u-icon>
+					<u-icon slot="icon" size="32" name="/static/my/extendCode.png"></u-icon>
 				</u-cell>
 				<u-cell title="咨询客服" isLink url="" @click="showCard"   rightIconStyle="fontSize:32rpx">
-					<u-icon slot="icon" size="32" name="search"></u-icon>
+					<u-icon slot="icon" size="32" name="/static/my/consult.png"></u-icon>
 				</u-cell>
 				<u-cell title="关于我们" isLink url="/pages/my/callMe/callMe" rightIconStyle="fontSize:32rpx">
-					<u-icon slot="icon" size="32" name="search"></u-icon>
+					<u-icon slot="icon" size="32" name="/static/my/my.png"></u-icon>
 				</u-cell>
 			</u-cell-group>
 				<u-modal :show="show" :title="title" :content='content' :showCancelButton='true' @confirm="closeCard" @cancel="del"></u-modal>
@@ -94,6 +98,7 @@
 </template>
 
 <script>
+	let menuButtonInfo = uni.getMenuButtonBoundingClientRect()
 	import {
 		engineerEnd
 	} from "@/api/my.js"
@@ -106,9 +111,14 @@
 				show:false,
 				title:'拨打客服电话进行咨询',
 				content:"15344443333",
+				menuButtonInfo:menuButtonInfo,
+				myMsgTop:110
 			}
 		},
 		onShow() {
+			if(uni.getSystemInfoSync().statusBarHeight){
+				this.myMsgTop=uni.getSystemInfoSync().statusBarHeight+menuButtonInfo.bottom+menuButtonInfo.height+menuButtonInfo.top
+			}
 			this.engineerEndList() //我的工程师查询
 		},
 		computed: {},
@@ -135,7 +145,7 @@
 			},
 			withdrawal() {
 				uni.navigateTo({
-					url: '/pages/my/withdrawal?id='+this.id,
+					url: '/pages/my/withdrawal?id='+uni.getStorageSync('engineer_id'),
 				});
 			},
 			fundDetails() {
@@ -159,7 +169,7 @@
 			//我的工程师查询
 			engineerEndList() {
 				const params = {
-					id: this.id
+					id: uni.getStorageSync('engineer_id')
 				}
 				engineerEnd(params).then(res => {
 					if (res.code === "00000") {
@@ -189,7 +199,7 @@
 		display: flex;
 		flex-direction: row;
 		//justify-content: space-between;
-		margin: 110rpx 0 56rpx 60rpx;
+		margin: 0 0 56rpx 60rpx;
 
 		.left {
 			width: 120rpx;
@@ -203,7 +213,6 @@
 			font-family: PingFang SC;
 
 			.name {
-				width: 94rpx;
 				font-size: 32rpx;
 				font-weight: bold;
 				color: #333333;
@@ -211,7 +220,6 @@
 			}
 
 			.phone {
-				width: 244rpx;
 				font-size: 24rpx;
 				font-family: PingFang SC;
 				font-weight: 500;
@@ -225,13 +233,11 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
-		width: 686rpx;
-		height: 323rpx;
-		background: linear-gradient(-34deg, #426BDD, #3A84F0);
-		box-shadow: 0rpx 13rpx 29rpx 1rpx rgba(66, 108, 222, 0.4);
-		border-radius: 15rpx;
+		width: 100%;
+		height: 396rpx;
+		background-repeat: round;
 		margin: 0 auto 45rpx;
-		padding: 26rpx 0 40rpx 42rpx;
+		padding: 60rpx 28rpx 80rpx 70rpx;
 		color: #FFFFFF;
 		font-family: PingFang SC;
 
@@ -253,6 +259,7 @@
 				.balanceBtm {
 					display: flex;
 					justify-content: flex-start;
+					align-items: center;
 
 					.symbol {
 						font-size: 40rpx;
@@ -270,6 +277,7 @@
 				width: 20%;
 
 				.topText {
+					display: flex;
 					height: 55rpx;
 					background: #1e46b370;
 					border-radius: 28rpx 0 0 28rpx;
@@ -277,6 +285,7 @@
 				}
 
 				.btmText {
+					display: flex;
 					height: 55rpx;
 					background: #1e46b370;
 					border-radius: 28rpx 0 0 28rpx;

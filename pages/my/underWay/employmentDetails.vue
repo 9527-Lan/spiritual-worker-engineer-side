@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="bg"></view>
-		<u-navbar title="用工详情" @rightClick="rightClick" :autoBack="true" leftIconSize="34rpx" bgColor="#3a84f0"
+		<u-navbar title="用工详情" @rightClick="rightClick" :autoBack="true" :placeholder="true" leftIconSize="34rpx" bgColor="#3a84f0"
 			leftIconColor="#ffffff" titleStyle="color: #ffffff;font-size:34rpx" />
 		<view class="blueFixed">
 		</view>
@@ -10,46 +10,62 @@
 				<p>状态：进行中</p>
 			</view>
 			<view class="content">
-			<view class="top">
-				<text class="topTextBlack">{{orderList.name}}</text>
-				<text class="topTextBlue">{{orderList.price}}元/天</text>
-			</view>
-			<view class="tagRow">
-				<view class="tag">
-					<u-tag :text="`岗位量${orderList.orderQuantity}`" size="mini" bgColor="#E6F0FF"
-						borderColor="#E6F0FF" plain></u-tag>
+				<view class="top">
+					<text class="topTextBlack">{{orderList.name}}</text>
+					<text class="topTextBlue">{{orderList.price}}元/天</text>
 				</view>
-				<view class="tag">
-					<u-tag :text="`${orderList.labelName}`" size="mini" bgColor="#E6F0FF"
-						borderColor="#E6F0FF" color="#333333" plain></u-tag>
+				<view class="tagRow">
+					<view class="tag">
+						<u-tag :text="`岗位量${orderList.orderQuantity}`" size="mini" bgColor="#E6F0FF"
+							borderColor="#E6F0FF" plain></u-tag>
+					</view>
+					<view class="tag">
+						<u-tag :text="`${orderList.labelName}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
+							color="#333333" plain></u-tag>
+					</view>
 				</view>
-			</view>
-			<view>
-				<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
-					margin="18rpx 0 0 0" :text="orderList.principalName"></u--text>
-			</view>
-			<view>
-				<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
-					margin="18rpx 0 0 0" :text="orderList.address"></u--text>
-			</view>
-			<view>
-				<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
-					margin="18rpx 0 0 0" :text="`${orderList.orderStatr}-${orderList.orderEnd}`"></u--text>
-			</view>
+				<view>
+					<u--text
+						:prefixIcon="orderList.principalType==0?'/static/homePage/avatar1.png':'/static/homePage/address.png'"
+						iconStyle="width: 28rpx;height: 28rpx;margin:0 20rpx 0 0" color="#666666" size="24rpx"
+						margin="18rpx 0 0 0" :text="orderList.principalName"></u--text>
+				</view>
+				<view>
+					<u--text prefixIcon="/static/homePage/coordinate.png"
+						iconStyle="width: 28rpx;height: 28rpx;margin:0 20rpx 0 0" color="#666666" size="24rpx"
+						margin="18rpx 0 0 0" :text="`${orderList.address}`" :lines="1"></u--text>
+				</view>
+				<view>
+					<u--text prefixIcon="/static/homePage/time.png"
+						iconStyle="width: 28rpx;height: 28rpx;margin:0 20rpx 0 0" color="#666666" size="24rpx"
+						margin="18rpx 0 0 0" :text="`${orderList.orderStatr}-${orderList.orderEnd}`"></u--text>
+				</view>
 				<u-divider></u-divider>
 				<view class="bottom-box">
 					<view class="bottom-left">
-						<u-steps current="1" dot direction="column">
-							<u-steps-item title="已下单 10:30 10:30">
+						<u-steps :current="stepsCurrent(orderList.casualOrderRecords)" direction="column" dot>
+							<u-steps-item v-for="(pItem, pIndex) in orderList.casualOrderRecords" :key="pIndex">
+								<view slot="desc" class="flex-center">
+									<view class="progress-item">
+										<view class="progress-item-left">
+											<view v-if="pItem.order_img" class="record-tag isRecord">已记录</view>
+											<view v-else class="record-tag">待记录</view>
+										</view>	
+										<view class="progress-item-right">
+											<view class="day">{{ pItem.orderDate }}</view>
+										</view>
+										<view class="bottom-right" @click.stop="todayRecord" v-if="pItem.sign==1&&(!pItem.orderImgUrl||pItem.orderImgUrl.length==0)">
+											<u-button style="width: 100%;height: 100%;" size="mini" shape="circle" color="#3A84F0"
+												text="今日记录"></u-button>
+										</view>
+									</view>
+									<view style="margin-left: 84rpx;">
+										<!-- <view v-if="pItem.remark"class="remark">{{ pItem.remark }}</view> -->
+										<u-album v-if="pItem.orderImgUrl && pItem.orderImgUrl.length > 0" :rowCount="3" :urls="pItem.orderImgUrl"></u-album>
+									</view>
+								</view>
 							</u-steps-item>
-							<u-steps-item title="已出库" desc="10:35">
-							</u-steps-item>
-							<u-steps-item title="运输中" desc="11:40"></u-steps-item>
 						</u-steps>
-					</view>
-					<view class="bottom-right" @click.stop="todayRecord">
-						<u-button style="width: 100%;height: 100%;" size="mini" shape="circle" color="#3A84F0"
-							text="今日记录"></u-button>
 					</view>
 				</view>
 			</view>
@@ -65,7 +81,10 @@
 </template>
 
 <script>
-	import {queryOrderbyJxzId} from "@/api/my.js"
+	import {
+		queryOrderbyJxzId,
+		engineerEndListOrderItem
+	} from "@/api/my.js"
 	import writeTodayRecord from './componments/writeTodayRecord.vue'
 	export default {
 		components: {
@@ -73,8 +92,8 @@
 		},
 		data() {
 			return {
-				id:"2",
-				orderList:[],
+				id: "2",
+				orderList: [],
 				recordShow: false,
 				nodeText: '',
 			}
@@ -82,16 +101,19 @@
 		created() {
 
 		},
-		onLoad(options){
-			let params={
-				id:this.id
+		onLoad(options) {
+			let params = {
+				id:uni.getStorageSync('engineer_id')
 			}
-			queryOrderbyJxzId(params).then(res=>{
-				const list=res.data.filter(item=>{
-					return item.id===options.id
+			queryOrderbyJxzId(params).then(res => {
+				const list = res.data.filter(item => {
+					return item.id === options.id
 				})
-				this.orderList=list[0]
-				this.nodeText= this.orderList.description == null ? '' : this.orderList.description
+				this.orderList = list[0]
+				this.nodeText = this.orderList.description == null ? '' : this.orderList.description
+				engineerEndListOrderItem({order_id:this.orderList.id,engineer_id:uni.getStorageSync('engineer_id')}).then(res=>{
+					this.orderList.casualOrderRecords = res.data
+				})
 			})
 		},
 		methods: {
@@ -101,8 +123,15 @@
 				});
 			},
 			todayRecord() {
-				console.log(1111);
 				this.recordShow = !this.recordShow
+			},
+			stepsCurrent(item){
+				if(!item) return
+				let current = 0
+				item.forEach((el,index)=>{
+					if(el.sign==1) current = index
+				})
+				return current
 			}
 		}
 	}
@@ -134,18 +163,7 @@
 		height: auto;
 		background: #ffffff;
 		border-radius: 15rpx;
-		margin: 134rpx auto 34rpx;
-
-		.statusBox {
-			width: 100%;
-			height: 78rpx;
-			background: #FFF0D6;
-			border-radius: 15rpx;
-			color: #B28C53;
-			display: flex;
-			align-items: center;
-			padding-left: 30rpx;
-		}
+		margin: 32rpx auto 34rpx;
 
 		.content {
 			padding: 20rpx 30rpx;
@@ -180,19 +198,71 @@
 				margin-right: 13rpx;
 			}
 		}
+				.bottom-box {
+					margin: 30rpx auto;
+					justify-content: space-between;
+					align-items: center;
+					border-bottom: 1px solid #F0F0F0;
 
-		.bottom-box {
-			display: flex;
-			margin: 0 auto;
-			justify-content: space-between;
-			align-items: center;
-
-			.bottom-right {
-				width: 149rpx;
-				height: 55rpx;
-			}
-		}
-
+					.bottom-left{
+						.progress-item {
+							display: flex;
+							flex-direction: row;
+							min-height: 80rpx;
+								.progress-item-left {
+									height: 100%;
+										.record-tag {
+											border: 1px solid #999999;
+											color: #999999;
+											border-radius: 3rpx;
+											padding: 5rpx 10rpx;
+											font-size: 20rpx;
+											font-weight: 500;
+											line-height: 28rpx;
+											text-align: center;
+											&.isRecord {
+												border: 1px solid #3a84f0;
+												color: #3a84f0;
+											}
+										}
+									}
+								.progress-item-right {
+									flex: 1;
+									margin-left: 10rpx;
+									/deep/.u-album {
+										margin-top: 10rpx;
+										image {
+											width: 132rpx !important;
+											height: 114rpx !important;
+										}
+									}
+									.remark {
+										margin-top: 29rpx;
+										font-size: 24rpx;
+										font-weight: 500;
+										color: #333333;
+									}
+									.day {
+										font-size: 24rpx;
+										font-weight: 500;
+										color: #333333;
+									}
+									.time {
+										margin-top: 24rpx;
+										font-size: 20rpx;
+										font-weight: 500;
+										color: #666666;
+									}
+								}
+								.bottom-right {
+									float: right;
+									width: 120rpx;
+									height: 56rpx;
+								}
+						}
+					}
+				}
+			
 		/deep/.u-divider {
 			margin: 24rpx 0 !important;
 		}
@@ -223,5 +293,17 @@
 		font-weight: 500;
 		color: #333333;
 		line-height: 48rpx;
+	}
+
+	.statusBox {
+		width: 100%;
+		height: 78rpx;
+		background: #FFF0D6;
+		border-radius: 15rpx;
+		color: #B28C53;
+		display: flex;
+		align-items: center;
+		padding-left: 30rpx;
+		font-size: 24rpx;
 	}
 </style>

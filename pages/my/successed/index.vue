@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="bg"></view>
-		<u-navbar title="已完成" @leftClick="leftClick" :autoBack="true" leftIconSize="34rpx" bgColor="#F2F6FF"
+		<u-navbar title="已完成" @leftClick="leftClick" :autoBack="true" :placeholder="true" leftIconSize="34rpx" bgColor="#F2F6FF"
 			ftIconColor="#000000" titleStyle="color: #000000;font-size:34rpx" />
 		<view class="picker">
 			<view class="after" @click="typeShow = true">{{typeValue.label}}</view>
@@ -32,16 +32,22 @@
 									</view>
 								</view>
 								<view>
-									<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
-										margin="18rpx 0 0 0" :text="item.principalName"></u--text>
+									<!-- 	<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
+										margin="18rpx 0 0 0" :text="item.principalName"></u--text> -->
+									<u--text
+										:prefixIcon="item.principalType==0?'/static/homePage/avatar1.png':'/static/homePage/address.png'"
+										iconStyle="width: 28rpx;height: 28rpx;margin:0 20rpx 0 0" color="#666666"
+										size="24rpx" margin="18rpx 0 0 0" :text="item.principalName"></u--text>
 								</view>
 								<view>
-									<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
-										margin="18rpx 0 0 0" :text="`${item.orderStatr}-${item.orderEnd}`"></u--text>
+									<u--text prefixIcon="/static/homePage/time.png"
+										iconStyle="width: 28rpx;height: 28rpx;margin:0 20rpx 0 0" color="#666666"
+										size="24rpx" margin="18rpx 0 0 0"
+										:text="`${item.orderStatr}-${item.orderEnd}`"></u--text>
 								</view>
 							</view>
-							<view class="statusBox fail">
-								<p>您的订单状态{{item.statusText}}</p>
+							<view :class="item.settlementStatus==0?'statusBox settled':'statusBox unsettled'"> 
+								<p>状态：{{item.settlementStatusText}}</p>
 							</view>
 						</view>
 
@@ -68,20 +74,7 @@
 					label: '全部',
 					value: 0
 				},
-				typeColumns: [
-					[{
-							label: '全部',
-							value: 0
-						},
-						{
-							label: '保安',
-							value: 1
-						}, {
-							label: '保洁',
-							value: 2
-						}
-					]
-				],
+				typeColumns: [],
 				statusShow: false,
 				statusValue: {
 					label: '全部',
@@ -93,20 +86,17 @@
 							value: 0
 						},
 						{
-							label: '抢单中',
+							label: '未结算',
 							value: 1
 						}, {
-							label: '抢单成功',
+							label: '已结算',
 							value: 2
-						}, {
-							label: '抢单失败',
-							value: 3
 						}
 					]
 				],
 				LowerList: [],
 				id: "2",
-				typeId:''
+				typeId: ''
 			}
 		},
 		onReady() {
@@ -115,7 +105,7 @@
 		},
 		onLoad() {
 			this.loadmore(),
-			this.findLowerSingleEndList(this.typeId)
+				this.findLowerSingleEndList(this.typeId)
 			this.casualServiceTypeList()
 		},
 		computed: {
@@ -127,20 +117,20 @@
 					url: '/pages/my/index',
 				});
 			},
-		typeConfirm(columnIndex) {
-			this.typeValue = columnIndex.value[0]
-			console.log(this.typeValue, ...columnIndex.value);
-			if(this.typeValue.value==='0'){
-				this.typeId="",
+			typeConfirm(columnIndex) {
+				this.typeValue = columnIndex.value[0]
+				console.log(this.typeValue, ...columnIndex.value);
+				if (this.typeValue.value === '0') {
+					this.typeId = "",
+						this.findLowerSingleEndList(this.typeId)
+					this.typeShow = false
+					return;
+				}
+				this.typeId = this.typeValue.value
 				this.findLowerSingleEndList(this.typeId)
 				this.typeShow = false
-				return ;
-			}
-			this.typeId=this.typeValue.value
-			this.findLowerSingleEndList(this.typeId)
-			this.typeShow = false
-			
-		},
+
+			},
 			statusConfirm(columnIndex) {
 				this.statusValue = columnIndex.value[0]
 				console.log(this.statusValue, ...columnIndex.value);
@@ -155,13 +145,13 @@
 			},
 			details(e) {
 				uni.navigateTo({
-					url: '/pages/my/successed/componments/successedDetails?id='+e,
+					url: '/pages/my/successed/componments/successedDetails?id=' + e,
 				});
 			},
 			findLowerSingleEndList(e) {
 				let params = {
-					typeId:e,
-					id: this.id
+					typeId: e,
+					id: uni.getStorageSync('engineer_id')
 				}
 				LowerSingleEndList(params).then(res => {
 					this.LowerList = res.data
@@ -171,14 +161,14 @@
 				casualServiceType().then(res => {
 					if (res.code === "00000") {
 						const list = res.data
-			
+
 						list.unshift({
 							label: '全部',
 							value: '0',
 						});
 						this.typeColumns = [list];
 						console.log(this.typeColumns, '111')
-					
+
 						console.log(this.tabList)
 					}
 				})
@@ -188,6 +178,9 @@
 </script>
 
 <style lang="scss" scoped>
+	/deep/.u-popup{
+		position: absolute;
+	}
 	.bg {
 		position: fixed;
 		width: 100%;
@@ -203,7 +196,7 @@
 		display: flex;
 		justify-content: space-between;
 		width: 686rpx;
-		margin: 100rpx auto 0;
+		margin: 32rpx auto 0;
 		padding: 0 35rpx;
 
 		.after::after {
@@ -230,7 +223,7 @@
 				width: 686rpx;
 				height: auto;
 				background: #ffffff;
-				padding: 35rpx 25rpx 0 25rpx;
+				padding: 35rpx 25rpx 25rpx 25rpx;
 
 				.top-box {
 					border-bottom: 1px solid #F0F0F0;
@@ -274,9 +267,9 @@
 				border-radius: 15rpx;
 				display: flex;
 				align-items: center;
+				margin-top: 20rpx;
 				padding-left: 30rpx;
 				font-size: 24rpx;
-				font-weight: 500;
 			}
 
 			.settled {

@@ -189,6 +189,9 @@
 </script>
 
 <style lang="scss" scoped>
+	/deep/.u-popup{
+		position: absolute;
+	}
 	.bg {
 		position: fixed;
 		width: 100%;

@@ -1,8 +1,8 @@
 <template>
 	<view>
 		<view class="bg"></view>
-		<u-navbar title="抢单中" @leftClick="leftClick" :autoBack="true" leftIconSize="34rpx" bgColor="#F2F6FF"
-			ftIconColor="#000000" titleStyle="color: #000000;font-size:34rpx" />
+		<u-navbar title="抢单中" @leftClick="leftClick" :autoBack="true" :placeholder="true" leftIconSize="34rpx" bgColor="#F2F6FF"
+			ftIconColor="#000000" titleStyle="color: #000000;font-size:34rpx"/>
 		<view class="picker">
 			<view class="after" @click="typeShow = true">{{typeValue.label}}</view>
 			<u-picker :show="typeShow" :columns="typeColumns" keyName="label" @confirm="typeConfirm"
@@ -37,16 +37,18 @@
 									</view>
 								</view>
 								<view>
-									<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
+									<u--text prefixIcon="/static/homePage/address.png"
+										iconStyle="width: 28rpx;height: 28rpx;margin:0 20rpx 0 0" color="#666666" size="24rpx"
 										margin="18rpx 0 0 0" :text="item.principalName"></u--text>
 								</view>
 								<view>
-									<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
+									<u--text prefixIcon="/static/homePage/time.png"
+										iconStyle="width: 28rpx;height: 28rpx;margin:0 20rpx 0 0" color="#666666" size="24rpx"
 										margin="18rpx 0 0 0" :text="`${item.orderStatr}-${item.orderEnd}`"></u--text>
 								</view>
 							</view>
-							<view class="statusBox fail">
-								<p>您的订单状态</p>
+							<view :class="'statusBox '+statusClass(item).class">
+								<p>{{statusClass(item).text}}</p>
 							</view>
 						</view>
 
@@ -65,57 +67,23 @@
 		LowerSingleEnd,
 		engineerEndList
 	} from "@/api/my.js"
+	import {friendlyDate} from '@/utils/date-format.js'
 	export default {
 		data() {
 			return {
 				defaultIndex: [0, 0, 0, 0],
 				typeShow: false,
-				typeValue: {
-					label: '全部',
-					value: 1
-				},
-				typeColumns: [
-					[{
-							label: '全部',
-							value: 0
-						},
-						{
-							label: '保安',
-							value: 1
-						}, {
-							label: '保洁',
-							value: 2
-						}
-					]
-				],
+				typeValue: {},
+				typeColumns: [],
+				typeId: "",
 				statusShow: false,
-				statusValue: {
-					label: '全部',
-					value: 0
-				},
-				statusColumns: [
-					// [{
-					// 		label: '全部',
-					// 		value: 0
-					// 	},
-					// 	{
-					// 		label: '抢单中',
-					// 		value: 1
-					// 	}, {
-					// 		label: '抢单成功',
-					// 		value: 2
-					// 	}, {
-					// 		label: '抢单失败',
-					// 		value: 3
-					// 	}
-					// ]
-				],
+				statusValue: {},
+				statusColumns: [],
+				statusId: "",
 				dateShow: false,
 				dateValue: Number(new Date()),
 				LowerList: [],
 				id: "2",
-				statusName: "",
-				typeId:""
 			}
 		},
 		onReady() {
@@ -123,14 +91,13 @@
 			//this.$refs.datetimePicker.setFormatter(this.formatter)
 		},
 		onLoad(options) {
-			this.loadmore()
-			this.LowerSingleEndList(this.typeId)
 			this.engineerEndListButtom()
+			this.casualServiceTypeList()
+			this.LowerSingleEndList()
 			if (options.id) {
 				this.LowerList = this.LowerList.filter(item => item.id !== options.id)
 				this.LowerSingleEndList()
 			}
-			this.casualServiceTypeList()
 		},
 		computed: {
 
@@ -151,85 +118,84 @@
 				return value
 			},
 			dateConfirm(v, m) {
-				console.log(v, m)
 				this.dateValue = v.value
+				this.LowerSingleEndList()
 				this.dateShow = false
 			},
 			typeConfirm(columnIndex) {
 				this.typeValue = columnIndex.value[0]
-				console.log(this.typeValue, ...columnIndex.value);
-				if(this.typeValue.value==='0'){
-					this.typeId="",
-					this.LowerSingleEndList(this.typeId)
-					this.typeShow = false
-					return ;
-				}
-				this.typeId=this.typeValue.value
-				this.LowerSingleEndList(this.typeId)
+				this.typeId = this.typeValue.value
+				this.LowerSingleEndList()
 				this.typeShow = false
-				
 			},
 			statusConfirm(columnIndex) {
 				this.statusValue = columnIndex.value[0]
-				console.log(this.statusValue, ...columnIndex.value);
-				
+				this.statusId = this.statusValue.value
+				this.LowerSingleEndList()
 				this.statusShow = false
-			},
-
-			scrolltolower() {
-				this.loadmore()
-			},
-			//查询list数据
-			loadmore() {
-
 			},
 			details(e) {
 				uni.navigateTo({
 					url: '/pages/my/seizeOrdering/componments/seizeDetails?id=' + e,
 				});
 			},
-			LowerSingleEndList(e) {
+			LowerSingleEndList() {
 				const params = {
-					typeId:e,
-					id: this.id,
+					id: uni.getStorageSync('engineer_id')
 				}
+				if (this.statusId && this.statusId != '0') params.orderGrabbingStatus = this.statusId
+				if (this.typeId && this.typeId != '0') params.typeId = this.typeId
+				//if (this.dateValue) params.createTime = friendlyDate(this.dateValue,{format: 'yyyy-MM-dd'})
 				LowerSingleEnd(params).then(res => {
-					console.log(res)
 					this.LowerList = res.data
 				})
 			},
 			// 抢单中下拉框
 			engineerEndListButtom() {
 				engineerEndList().then(res => {
-					const statusList=res.data
-					statusList.unshift({
-						label: '全部',
-						value: '0',
-					})
-					this.statusColumns = [statusList]
+					if (res.code === "00000") {
+						const statusList = res.data
+						statusList.unshift({
+							label: '全部',
+							value: '0',
+						})
+						this.statusColumns = [statusList]
+						this.statusValue = {
+							label: '全部',
+							value: '0',
+						}
+					}
 				})
 			},
 			casualServiceTypeList() {
 				casualServiceType().then(res => {
 					if (res.code === "00000") {
 						const list = res.data
-
 						list.unshift({
 							label: '全部',
 							value: '0',
 						});
 						this.typeColumns = [list];
-						console.log(this.typeColumns, '111')
-					
-						console.log(this.tabList)
+						this.typeValue = {
+							label: '全部',
+							value: '0',
+						}
 					}
 				})
+			},
+			statusClass(item){
+				if(item.orderGrabbingStatus==1)return {class:'inProgress',text:'您的抢单正在进行中...'}
+				if(item.orderGrabbingStatus==2)return {class:'success',text:'您的抢单已成功'}
+				if(item.orderGrabbingStatus==3)return {class:'fail',text:'您的抢单已失败'}
 			}
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
+	/deep/.u-popup{
+		position: absolute;
+	}
 	.bg {
 		position: fixed;
 		width: 100%;
@@ -239,13 +205,13 @@
 		z-index: -1;
 		background-color: #F2F6FF;
 	}
-
+	
 	.picker {
 		position: relative;
 		display: flex;
 		justify-content: space-between;
 		width: 686rpx;
-		margin: 100rpx auto 0;
+		margin: 32rpx auto 0;
 		padding: 0 35rpx;
 
 		.after::after {
@@ -272,7 +238,7 @@
 				width: 686rpx;
 				height: auto;
 				background: #ffffff;
-				padding: 35rpx 25rpx 0 25rpx;
+				padding: 35rpx 25rpx 20rpx 25rpx;
 
 				.top-box {
 					border-bottom: 1px solid #F0F0F0;
@@ -316,6 +282,7 @@
 				border-radius: 15rpx;
 				display: flex;
 				align-items: center;
+				margin-top: 20rpx;
 				padding-left: 30rpx;
 				font-size: 24rpx;
 			}

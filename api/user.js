@@ -22,7 +22,7 @@ export function login(mobile, code) {
 // 点击立刻抢单
 export function casualOrderEngineer(params) {
 	return request({
-		url: '/web/casualOrder/casualOrderEngineer',
+		url: '/engineerEnd/web/casualOrder/casualOrderEngineer',
 		method: 'get',
 		params: params,
 	})

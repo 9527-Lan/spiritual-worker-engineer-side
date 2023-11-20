@@ -34,22 +34,41 @@
 									</view>
 								</view>
 								<view>
-									<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
-										margin="18rpx 0 0 0" :text="item.principalName"></u--text>
+									<!-- 			<u--text prefixIcon="baidu" iconStyle="width: 28rpx;height: 28rpx;margin:0 20rpx 0 0" color="#666666" size="24rpx"
+										margin="18rpx 0 0 0" :text="item.principalName"></u--text> -->
+
+									<u--text
+										:prefixIcon="item.principalType==0?'/static/homePage/avatar1.png':'/static/homePage/address.png'"
+										iconStyle="width: 28rpx;height: 28rpx;margin:0 20rpx 0 0" color="#666666" size="24rpx" margin="18rpx 0 0 0"
+										:text="item.principalName"></u--text>
 								</view>
 								<view>
-									<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
-										margin="18rpx 0 0 0" :text="`${item.orderStatr}-${item.orderEnd}`"></u--text>
+									<u--text prefixIcon="/static/homePage/time.png"
+										iconStyle="width: 28rpx;height: 28rpx;margin:0 20rpx 0 0" color="#666666"
+										size="24rpx" margin="18rpx 0 0 0"
+										:text="`${item.orderStatr}-${item.orderEnd}`"></u--text>
 								</view>
 							</view>
 							<view class="bottom-box">
 								<view class="bottom-left">
-									<u-steps current="1" dot direction="column">
-										<u-steps-item title="已下单 10:30 10:30">
+									<u-steps :current="stepsCurrent(item.casualOrderRecords)" direction="column" dot>
+										<u-steps-item v-for="(pItem, pIndex) in item.casualOrderRecords" :key="pIndex">
+											<view slot="desc" class="flex-center">
+												<view class="progress-item">
+													<view class="progress-item-left">
+														<view v-if="pItem.order_img" class="record-tag isRecord">已记录</view>
+														<view v-else class="record-tag">待记录</view>
+													</view>
+													<view class="progress-item-right">
+														<view class="day">{{ pItem.order_date }}</view>
+													</view>
+												</view>
+											<!-- 	<view>
+													<view v-if="pItem.remark"class="remark">{{ pItem.remark }}</view>
+													<u-album v-if="pItem.imgs && pItem.imgs.length > 0" :rowCount="3" :urls="pItem.imgs"></u-album>
+												</view> -->
+											</view>
 										</u-steps-item>
-										<u-steps-item title="已出库" desc="10:35">
-										</u-steps-item>
-										<u-steps-item title="运输中" desc="11:40"></u-steps-item>
 									</u-steps>
 								</view>
 								<view class="bottom-right" @click.stop="todayRecord">
@@ -58,9 +77,9 @@
 									</u-button>
 								</view>
 							</view>
-						</view>
-						<view class="statusBox">
-							<p>状态：进行中</p>
+							<view class="statusBox">
+								<p>状态：进行中</p>
+							</view>
 						</view>
 					</view>
 				</u-list-item>
@@ -116,8 +135,8 @@
 			this.$refs.datetimePicker.setFormatter(this.formatter)
 		},
 		onLoad() {
-			this.loadmore(),
-				this.queryOrderbyJxzIdList(this.typeId)
+			//this.loadmore(),
+			this.queryOrderbyJxzIdList(this.typeId)
 			this.casualServiceTypeList()
 		},
 		computed: {},
@@ -155,11 +174,7 @@
 			},
 
 			scrolltolower() {
-				this.loadmore()
-			},
-			//查询list数据
-			loadmore() {
-
+				//this.loadmore()
 			},
 			stepAhead(e) {
 				uni.navigateTo({
@@ -167,13 +182,12 @@
 				});
 			},
 			todayRecord() {
-				console.log(1111);
 				this.recordShow = !this.recordShow
 			},
 			queryOrderbyJxzIdList(e) {
 				const params = {
 					typeId: e,
-					id: this.id
+					id: uni.getStorageSync('engineer_id')
 				}
 				queryOrderbyJxzId(params).then(res => {
 					this.indexList = res.data
@@ -193,6 +207,13 @@
 
 					}
 				})
+			},
+			stepsCurrent(item){
+				let current = 0
+				item.forEach((el,index)=>{
+					if(el.order_img) current = index
+				})
+				return current
 			}
 		},
 	}
@@ -241,7 +262,7 @@
 				width: 686rpx;
 				height: auto;
 				background: #ffffff;
-				padding: 35rpx 25rpx 0 25rpx;
+				padding: 35rpx 25rpx 25rpx 25rpx;
 
 				.top-box {
 					border-bottom: 1px solid #F0F0F0;
@@ -280,10 +301,63 @@
 
 				.bottom-box {
 					display: flex;
-					margin: 0 auto;
+					margin: 30rpx auto;
 					justify-content: space-between;
 					align-items: center;
+				border-bottom: 1px solid #F0F0F0;
 
+					.bottom-left{
+						.progress-item {
+							display: flex;
+							flex-direction: row;
+							min-height: 80rpx;
+								.progress-item-left {
+									height: 100%;
+										.record-tag {
+											border: 1px solid #999999;
+											color: #999999;
+											border-radius: 3rpx;
+											padding: 5rpx 10rpx;
+											font-size: 20rpx;
+											font-weight: 500;
+											line-height: 28rpx;
+											text-align: center;
+											&.isRecord {
+												border: 1px solid #3a84f0;
+												color: #3a84f0;
+											}
+										}
+									}
+								.progress-item-right {
+									flex: 1;
+									margin-left: 10rpx;
+									/deep/.u-album {
+										margin-top: 10rpx;
+										image {
+											width: 132rpx !important;
+											height: 114rpx !important;
+										}
+									}
+									.remark {
+										margin-top: 29rpx;
+										font-size: 24rpx;
+										font-weight: 500;
+										color: #333333;
+									}
+									.day {
+										font-size: 24rpx;
+										font-weight: 500;
+										color: #333333;
+									}
+									.time {
+										margin-top: 24rpx;
+										font-size: 20rpx;
+										font-weight: 500;
+										color: #666666;
+									}
+								}
+						}
+					}
 					.bottom-right {
 						width: 149rpx;
 						height: 55rpx;
@@ -300,6 +374,7 @@
 				display: flex;
 				align-items: center;
 				padding-left: 30rpx;
+				font-size: 24rpx;
 			}
 		}
 

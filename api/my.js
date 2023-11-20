@@ -1,5 +1,13 @@
 import request from '@/utils/request'
 
+// 工程师端-进行中-查看详情
+export function engineerEndListOrderItem(params) {
+	return request({
+		url: '/engineerEnd/listOrderItem',
+		method: 'get',
+		params: params,
+	})
+}
 // 我的
 export function engineerEnd(params) {
 	return request({
@@ -11,7 +19,15 @@ export function engineerEnd(params) {
 // 抢单中
 export function LowerSingleEnd(params) {
 	return request({
-		url: '/LowerSingleEnd/queryOrderbyId',
+		url: '/engineerEnd/queryOrderbyId',
+		method: 'get',
+		params: params,
+	})
+}
+// 工程师端-工程师抢单成功后退出当前订单
+export function LowerSingleEndExit(params) {
+	return request({
+		url: '/engineerEnd/casualEngineer/exit',
 		method: 'get',
 		params: params,
 	})
@@ -19,7 +35,7 @@ export function LowerSingleEnd(params) {
 // 进行中
 export function queryOrderbyJxzId(params) {
 	return request({
-		url: '/LowerSingleEnd/queryOrderbyJxzId',
+		url: '/engineerEnd/queryOrderbyJxzId',
 		method: 'get',
 		params: params,
 	})
@@ -43,7 +59,7 @@ export function engineerEndList(params) {
 // 完成订单
 export function LowerSingleEndList(params) {
 	return request({
-		url: '/LowerSingleEnd/queryOrderbyWcId',
+		url: '/engineerEnd/queryOrderbyWcId',
 		method: 'get',
 		params: params,
 	})
@@ -51,7 +67,7 @@ export function LowerSingleEndList(params) {
 // 异常订单
 export function queryOrderbyYcIdList(params) {
 	return request({
-		url: '/LowerSingleEnd/queryOrderbyYcId',
+		url: '/engineerEnd/queryOrderbyYcId',
 		method: 'get',
 		params: params,
 	})

@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="bg"></view>
-		<u-navbar title="用工详情" @rightClick="rightClick" :autoBack="true" leftIconSize="34rpx" bgColor="#3a84f0"
+		<u-navbar title="用工详情" @rightClick="rightClick" :autoBack="true" :placeholder="true" leftIconSize="34rpx" bgColor="#3a84f0"
 			leftIconColor="#ffffff" titleStyle="color: #ffffff;font-size:34rpx" />
 		<view class="blueFixed">
 		</view>
@@ -10,15 +10,14 @@
 				<text class="topTextBlack">{{orderList.name}}</text>
 				<text class="topTextBlue">{{orderList.price}}元/天</text>
 			</view>
-			
+
 			<view class="tagRow">
 				<view class="tag">
-					<u-tag :text="orderList.typeName" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-						plain></u-tag>
+					<u-tag :text="orderList.principalName" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF" plain></u-tag>
 				</view>
 				<view class="tag">
-					<u-tag :text="`岗位量${orderList.orderQuantity}`" size="mini" bgColor="#E6F0FF"
-						borderColor="#E6F0FF" plain></u-tag>
+					<u-tag :text="`岗位量${orderList.orderQuantity}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
+						plain></u-tag>
 				</view>
 				<view class="tag">
 					<u-tag :text="orderList.labelName" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
@@ -26,20 +25,29 @@
 				</view>
 			</view>
 			<view>
-				<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
-					margin="18rpx 0 0 0" :text="orderList.principalName"></u--text>
+				<!-- 			<u--text prefixIcon="/static/homePage/address.png" iconStyle="width: 28rpx;height: 28rpx;margin:0 20rpx 0 0" color="#666666" size="24rpx"
+					margin="18rpx 0 0 0" :text="orderList.principalName"></u--text> -->
+
+				<u--text
+					:prefixIcon="item.principalType==0?'/static/homePage/avatar1.png':'/static/homePage/address.png'"
+					iconStyle="width: 28rpx;height: 28rpx;margin:0 20rpx 0 0" color="#666666" size="24rpx" margin="18rpx 0 0 0"
+					:text="item.principalName"></u--text>
 			</view>
 			<view>
-				<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
+				<u--text prefixIcon="/static/homePage/coordinate.png"
+					iconStyle="width: 28rpx;height: 28rpx;margin:0 20rpx 0 0" color="#666666" size="24rpx"
+					margin="18rpx 0 0 0" :text="`${orderList.address}`" :lines="1"></u--text>
+			</view>
+			<view>
+				<u--text prefixIcon="/static/homePage/time.png"
+					iconStyle="width: 28rpx;height: 28rpx;margin:0 20rpx 0 0" color="#666666" size="24rpx"
 					margin="18rpx 0 0 0" :text="`${orderList.orderStatr}-${orderList.orderEnd}`"></u--text>
 			</view>
+			<u-divider />
 			<view>
-				<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
-					margin="18rpx 0 0 0" :text="`${orderList.address}`"></u--text>
-			</view>
-			<view>
-				<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#3B85F0" size="24rpx"
-					margin="18rpx 0 0 0" :text="`已有${orderList.haveRegistered}人报名A1栋`"></u--text>
+				<u--text prefixIcon="/static/homePage/avatar.png"
+					iconStyle="width: 28rpx;height: 28rpx;margin:0 20rpx 0 0" color="#3B85F0" size="24rpx"
+					margin="18rpx 0 0 0" :text="`已有${orderList.haveRegistered?orderList.haveRegistered:0}人报名`"></u--text>
 			</view>
 		</view>
 		<view class="description">
@@ -48,47 +56,46 @@
 			</text>
 			<rich-text :nodes="nodeText" class="rText"></rich-text>
 		</view>
-		<view class="occupy" style="width: 100vw; height: 173rpx;">
-		</view>
-		<view>
-			<view class="bottomImg">
-				<!-- <i src="" class="img"></i>
-				<u--text :text="`平台客服`"></u--text> -->
-				<u-button shape="circle"  type="primary" @click="submitTo">立刻抢单</u-button>
-			</view>
-		</view>
+		<u-tabbar :value="value6" @change="name => value6 = name" :fixed="true" :placeholder="false"
+			:safeAreaInsetBottom="true">
+			<u-tabbar-item class="icon-size" text="平台客服" icon="phone"></u-tabbar-item>
+			<u-button type="primary" shape="circle" text="立即抢单" @click="submitTo"></u-button>
+		</u-tabbar>
 	</view>
 </template>
 
 <script>
-	import {casualOrderEngineer} from '@/api/user.js'
-	import {casualOrder} from '@/api/index.js'
+	import {
+		casualOrderEngineer
+	} from '@/api/user.js'
+	import {
+		casualOrder
+	} from '@/api/index.js'
 	export default {
 		data() {
 			return {
 				nodeText: '',
 				order_id: 9,
 				engineer_id: 2,
-				circleStyle:{
+				circleStyle: {
 					width: '521rpx',
-					height:' 89rpx',
+					height: ' 89rpx',
 					position: 'absolute',
-					left:'187rpx',
-					bottom:'65rpx',
+					left: '187rpx',
+					bottom: '65rpx',
 				},
-				orderList:[]
+				orderList: []
 			}
 		},
-		onLoad(options){
-			console.log(options);
-			casualOrder().then(res=>{
-				
-					const list=res.data.list.filter(item=>item.id===options.id)
-					this.orderList=list[0]?list[0]:[],
-					this.nodeText= this.orderList.description == null ? '' : this.orderList.description
-					console.log(this.orderList)
-				})
-		// this.submitTo()	
+		onLoad(options) {
+			this.engineer_id = uni.getStorageSync('engineer_id')
+			casualOrder().then(res => {
+				const list = res.data.list.filter(item => item.id === options.id)
+				this.orderList = list[0] ? list[0] : [],
+				this.nodeText = this.orderList.description == null ? '' : this.orderList.description
+				this.order_id = this.orderList.id
+			})
+			// this.submitTo()	
 		},
 		methods: {
 			rightClick() {
@@ -96,15 +103,15 @@
 					url: '/pages/homePage/index'
 				});
 			},
-			submitTo(){
+			submitTo() {
 				let params = {
 					engineer_id: this.engineer_id,
 					order_id: this.order_id,
 				}
-				casualOrderEngineer(params).then(res =>{
-					if(res.code == '00000'){
+				casualOrderEngineer(params).then(res => {
+					if (res.code == '00000') {
 						uni.showToast({
-							duration:2000,
+							duration: 2000,
 							title: '抢单成功',
 							success: () => {
 								setTimeout(() => {
@@ -115,8 +122,8 @@
 					}
 				})
 			},
-			
-			
+
+
 		}
 	}
 </script>
@@ -144,10 +151,10 @@
 		z-index: 100;
 		//top: 100rpx;
 		width: 686rpx;
-		height: 415rpx;
+		//height: 415rpx;
 		background: #ffffff;
 		border-radius: 15rpx;
-		margin: 134rpx auto 34rpx;
+		margin: 32rpx auto 34rpx;
 		padding: 35rpx 32rpx;
 
 		.top {
@@ -212,9 +219,17 @@
 		line-height: 48rpx;
 	}
 
-	// .img{
-	// 	width:36rpx;
-	// 	height:36rpx;
-	// }
-	
+	/deep/.u-tabbar {
+		height: 120rpx;
+
+		.u-icon__icon {
+			font-size: 20px !important;
+		}
+	}
+
+	/deep/.u-tabbar__content {
+		height: 130rpx;
+		padding: 20rpx 30rpx 0 0;
+		justify-content: inherit;
+	}
 </style>

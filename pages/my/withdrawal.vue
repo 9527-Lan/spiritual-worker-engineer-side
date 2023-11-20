@@ -6,8 +6,8 @@
 		<view class="blueFixed">
 			<view class="money-sum">
 				<p class="text">可提现金额（元）</p>
-				<view style="display: flex;">
-					<p style="font-size: 40rpx;">￥</p>
+				<view style="display: flex;align-items: center;">
+					<p style="font-size: 40rpx;margin-right: 10rpx;">￥</p>
 					<p style="font-size: 60rpx;font-weight: 800;">{{balance}}</p>
 				</view>
 			</view>
@@ -21,10 +21,10 @@
 					<u-form-item 
 						leftIcon="rmb"
 						:leftIconStyle="leftIconStyle"
-						labelWidth="50"
+						labelWidth="70"
 						borderBottom prop="money">
-						<u--input border="none" type="number" v-model="form.money" ></u--input>
-						<p slot="right" style="font-size: 32rpx;color: #3A84F0;" >全部提现</p>
+						<u--input border="none" type="number" v-model="form.money" fontSize="40"></u--input>
+						<p slot="right" style="font-size: 32rpx;color: #3A84F0;" @click="allWithdraw">全部提现</p>
 					</u-form-item>
 				</u--form>
 			</view>
@@ -55,7 +55,7 @@
 				},
 				balance:"",
 				form: {
-					
+					money:0
 				},
 				id:"",
 			}
@@ -72,6 +72,10 @@
 		methods: {
 			rightClick() {
 				uni.navigateBack(1)
+			},
+			allWithdraw(){
+				console.log(123);
+				this.form.money = this.balance
 			},
 			applyWithdrawal() {
 				
@@ -139,9 +143,9 @@
 		}
 		.card-button {
 			background: #3A84F0;
-			border-radius: 45rpx;
+			border-radius: 44rpx;
 			overflow: hidden;
-			height: 89rpx;
+			height: 88rpx;
 		}
 	}
 	

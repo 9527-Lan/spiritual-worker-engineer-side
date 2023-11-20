@@ -1,10 +1,10 @@
 <template>
 	<view>
 		<view class="bg"></view>
-		<view class="search" @click="toSearch">
+		<view class="search" :style="'padding-top:'+(top+statusBarHeight)+'rpx;height:'+(64+(top+statusBarHeight)+30)+'rpx'">
 			<u-search placeholder="搜索用工信息..." v-model="keyword" :showAction="false" height="64rpx"
-				margin="100rpx 0 39rpx 48rpx" bgColor="#FFFFFF" style="pointer-events: none" 
-				disabled @click="toSearch"></u-search>
+				margin="0 219rpx 0 48rpx" bgColor="#FFFFFF" style="pointer-events: none;overflow-y: overlay;" disabled @click="toSearch"
+				shape="round"></u-search>
 		</view>
 		<view class="wrap">
 			<u-swiper :list="wrapList" height="277rpx" radius="15rpx"></u-swiper>
@@ -12,46 +12,45 @@
 		<u-row customStyle="margin: 42rpx 32rpx" gutter="15">
 			<u-col span="4">
 				<view class="titlePink">
-					<u--text color="#F86464" :bold="true" size="28rpx" margin="30rpx 0 0 32rpx" suffixIcon="baidu"
-						iconStyle="font-size: 19px" text="热门岗位"></u--text>
-					<u--text color="#F86464" size="24rpx" margin="0 0 0 32rpx" text="快速更新"></u--text>
+					<u--text color="#F86464" :bold="true" size="28rpx" suffixIcon="/static/homePage/fire.png" iconStyle="font-size: 19px"
+						text="热门岗位"></u--text>
+					<u--text color="#F86464" size="24rpx" text="快速更新"></u--text>
 				</view>
 			</u-col>
 			<u-col span="4">
 				<view class="titleYello">
-					<u--text color="#DC8208" :bold="true" size="28rpx" margin="30rpx 0 0 32rpx" suffixIcon="baidu"
-						iconStyle="font-size: 19px" text="认证企业"></u--text>
-					<u--text color="#DC8208" size="24rpx" margin="0 0 0 32rpx" text="安全可靠"></u--text>
+					<u--text color="#DC8208" :bold="true" size="28rpx" suffixIcon="/static/homePage/medal.png" iconStyle="font-size: 19px"
+						text="认证企业"></u--text>
+					<u--text color="#DC8208" size="24rpx" text="安全可靠"></u--text>
 				</view>
 			</u-col>
 			<u-col span="4">
 				<view class="titleBlue">
-					<u--text color="#3A84F0" :bold="true" size="28rpx" margin="30rpx 0 0 32rpx" suffixIcon="baidu"
-						iconStyle="font-size: 19px" text="双选会"></u--text>
-					<u--text color="#3A84F0" size="24rpx" margin="0 0 0 32rpx" text="灵活可控"></u--text>
+					<u--text color="#3A84F0" :bold="true" size="28rpx" suffixIcon="/static/homePage/handshake.png" iconStyle="font-size: 19px"
+						text="双选会"></u--text>
+					<u--text color="#3A84F0" size="24rpx" text="灵活可控"></u--text>
 				</view>
 			</u-col>
 		</u-row>
-		<u-sticky bgColor="#fff">
-			<view class="tab">
-				<u-tabs @click="changeOption" :list="tabList" lineWidth="35" lineHeight="20" :scrollable="false"  :activeStyle="{
+		<u-sticky bgColor="#fff" :offsetTop="(64+(top+statusBarHeight)+30)" zIndex="10000000" ref="stickyFixed">
+			<u-tabs class="tab" @click="changeOption" :list="tabList" lineWidth="35" lineHeight="20" :scrollable="false"
+				:activeStyle="{
 						color: '#333333',
 						fontWeight: 'bold',
 						transform: 'scale(1.05)',
 						fontFamily: 'PingFang SC'
 					}">
-				</u-tabs>
-			</view>
+			</u-tabs>
 		</u-sticky>
 		<view class="list">
-			<u-list @scrolltolower="scrolltolower">
+			<u-list @scrolltolower="scrolltolower" lowerThreshold="20" :scrollable="false" :showScrollbar="true" :upperThreshold="4000">
 				<u-list-item v-for="(item, index) in OrderList" :key="index">
 					<view class="listBlok" @click="toStepAhead(item.id)">
 						<view class="top">
 							<text class="topTextBlack">{{item.name}}</text>
 							<text class="topTextBlue">{{item.price}}元/天</text>
 						</view>
-						
+
 						<view class="tagRow">
 							<view class="tag">
 								<u-tag :text="item.typeName" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
@@ -67,11 +66,11 @@
 							</view>
 						</view>
 						<view>
-							<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
+							<u--text :prefixIcon="item.principalType==0?'/static/homePage/avatar1.png':'/static/homePage/address.png'" iconStyle="width: 28rpx;height: 28rpx;margin:0 20rpx 0 0" color="#666666" size="24rpx"
 								margin="18rpx 0 0 0" :text="item.principalName"></u--text>
 						</view>
 						<view>
-							<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
+							<u--text prefixIcon="/static/homePage/time.png" iconStyle="width: 28rpx;height: 28rpx;margin:0 20rpx 0 0" color="#666666" size="24rpx"
 								margin="18rpx 0 0 0" :text="`${item.orderStatr}-${item.orderEnd}`"></u--text>
 						</view>
 					</view>
@@ -82,8 +81,9 @@
 </template>
 
 <script>
+let menuButtonInfo = uni.getMenuButtonBoundingClientRect()?uni.getMenuButtonBoundingClientRect():{top:40}
 	import {
-		casualOrder,
+		queryOrderbyIdPages,
 		casualServiceType
 	} from "@/api/index.js"
 	export default {
@@ -91,41 +91,37 @@
 			return {
 				keyword: "",
 				wrapList: [
-					'/static/1.jpg',
-					'/static/1.jpg',
-					'/static/1.jpg'
+					'/static/1.png',
+					'/static/1.png',
+					'/static/1.png'
 				],
 				tabList: [],
 				OrderList: [],
 				pageNum: 1,
 				pageSize: 10,
 				typeId: "",
+				tatal: 0,
+				top:menuButtonInfo.top,
+				statusBarHeight:0
 			}
 		},
 		onShow() {
-			this.loadmore()
-			this.casualOrderList(this.typeId)
+			this.statusBarHeight=uni.getSystemInfoSync().statusBarHeight?uni.getSystemInfoSync().statusBarHeight:40
 			this.casualServiceTypeList()
-			
-		},		
-		onReachBottom(){
-			this.pageNum++
-			
-			this.casualOrderList()
 		},
-		onPullDownRefresh(){
-			this.pageNum = 1
+		onHide(){
 			this.OrderList = []
-			this.casualOrderList()
 		},
+		// onReachBottom() {
+		// 	this.pageNum++
+		// 	this.loadmore()
+		// },
+		// onPullDownRefresh() {
+		// 	this.pageNum = 1
+		// 	this.OrderList = []
+		// 	this.loadmore()
+		// },
 		methods: {
-			scrolltolower() {
-				this.loadmore()
-			},
-			//查询list数据
-			loadmore() {
-
-			},
 			//抢单、
 			toStepAhead(e) {
 				uni.navigateTo({
@@ -139,53 +135,52 @@
 					url: '/pages/homePage/search/search',
 				});
 			},
-			changeOption(e){
-			if(this.tabList[e.index].value==="0"){
-				this.typeId = '';
-				this.casualOrderList(this.typeId);
-				return;
-			}
-			// 其他的按钮
-				console.log(e,'111')
-				this.pageNum = 1
-				this.OrderList = []
-				this.typeId = this.tabList[e.index].value
-				this.casualOrderList(this.typeId)
+			scrolltolower() {
+				if (this.tatal == this.OrderList.length) return
+				this.pageNum++
+				this.loadmore()
 			},
 			// 任务订单信息
-			casualOrderList(e) {
+			loadmore() {
 				let params = {
-					typeId: e,
 					pageNum: this.pageNum,
-					pageSize: this.pageSize
+					pageSize: this.pageSize,
+					id: uni.getStorageSync('engineer_id'),
 				}
-				
-				casualOrder(params).then(res => {
+				if (this.typeId != 0) params.typeId = this.typeId
+				queryOrderbyIdPages(params).then(res => {
 					if (res.code === '00000') {
 						let dataList = res.data.list;
 						this.OrderList = this.OrderList.concat(dataList)
-						console.log(this.OrderList)
+						this.tatal = res.data.total
 					}
 				})
 			},
-			// 服务类型下拉框
+			//切换tab
+			changeOption(e) {
+				this.pageNum = 1
+				this.OrderList = []
+				this.typeId = this.tabList[e.index].value
+				this.loadmore()
+			},
+			// 服务类型下拉框 
 			casualServiceTypeList() {
 				casualServiceType().then(res => {
 					if (res.code === "00000") {
-					const list= res.data.map(item => {
+						const list = res.data.map(item => {
 							return {
 								name: item.label,
 								value: item.value,
 							}
 						})
-					 list.unshift({
-							name:'推荐',
-							value:'0',
+						list.unshift({
+							name: '推荐',
+							value: '0',
 						});
-						this.tabList = list;		
-						this.typeId = res.data[0].value
-						this.casualOrderList()
-						console.log(this.tabList) 
+						this.tabList = list;
+						this.typeId = this.tabList[0].value
+						console.log(this.typeId);
+						this.loadmore()
 					}
 				})
 			}
@@ -205,7 +200,10 @@
 	}
 
 	.search {
-		width: 483rpx;
+		position: sticky;
+		top: 0;
+		z-index: 10000;
+		background-color: #F2F6FF;
 	}
 
 	.wrap {
@@ -216,6 +214,7 @@
 		font-family: PingFang SC;
 		width: 100%;
 		height: 140rpx;
+		padding: 30rpx 0 0 32rpx;
 		border-radius: 25rpx;
 		background: linear-gradient(120deg, #FFF0F0, #FDD9D9, #FEBCBD);
 	}
@@ -224,6 +223,7 @@
 		font-family: PingFang SC;
 		width: 100%;
 		height: 140rpx;
+		padding: 30rpx 0 0 32rpx;
 		border-radius: 25rpx;
 		background: linear-gradient(120deg, #FEF8E1, #FCEFCC, #F9E4AB);
 	}
@@ -232,6 +232,7 @@
 		font-family: PingFang SC;
 		width: 100%;
 		height: 140rpx;
+		padding: 30rpx 0 0 32rpx;
 		border-radius: 25rpx;
 		background: linear-gradient(120deg, #E3EFFF, #C8DCFF, #9CC2FA);
 	}

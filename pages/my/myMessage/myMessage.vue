@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="bg"></view>
-		<u-navbar title="我的信息" @leftClick="leftClick" :autoBack="true" leftIconSize="34rpx" bgColor="#F2F6FF"
+		<u-navbar title="我的信息" @leftClick="leftClick"  :placeholder="true" :autoBack="true" leftIconSize="34rpx" bgColor="#F2F6FF"
 			ftIconColor="#000000" titleStyle="color: #000000;font-size:34rpx" />
 		<view class="from">
 			<view class="title">完善我的信息</view>
@@ -172,7 +172,7 @@
 			},
 			casualEngineerMyList(){
 				let params={
-					id:this.id
+					id:uni.getStorageSync('engineer_id')
 				}
 				casualEngineerMy(params).then(res=>{
 					console.log(res.data)
@@ -198,7 +198,7 @@
 	.from {
 		position: relative;
 		width: 686rpx;
-		margin: 116rpx auto 0;
+		margin: 32rpx auto 0;
 		padding: 53rpx 36rpx 36rpx 36rpx;
 		background: #FFFFFF;
 		border-radius: 15rpx;
