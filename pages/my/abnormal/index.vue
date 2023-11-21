@@ -114,7 +114,6 @@
 			//this.$refs.datetimePicker.setFormatter(this.formatter)
 		},
 		onLoad() {
-			this.loadmore();
 			this.findQueryOrderbyYcIdList(this.typeId)
 			this.casualServiceTypeList()
 		},
@@ -129,7 +128,6 @@
 			},
 			typeConfirm(columnIndex) {
 				this.typeValue = columnIndex.value[0]
-				console.log(this.typeValue, ...columnIndex.value);
 				if(this.typeValue.value==='0'){
 					this.typeId="",
 					this.findQueryOrderbyYcIdList(this.typeId)
@@ -146,13 +144,6 @@
 				console.log(this.statusValue, ...columnIndex.value);
 				this.statusShow = false
 			},
-			scrolltolower() {
-				this.loadmore()
-			},
-			//查询list数据
-			loadmore() {
-
-			},
 			details(e) {
 				uni.navigateTo({
 					url: '/pages/my/abnormal/componments/abnormalDetails?id='+e,
@@ -161,8 +152,7 @@
 			// 订单异常
 			findQueryOrderbyYcIdList(e) {
 				let params = {
-					typeId:e,
-					id: this.id
+					id: uni.getStorageSync('engineer_id')
 				}
 				queryOrderbyYcIdList(params).then(res => {
 					this.indexList=res.data
@@ -178,9 +168,6 @@
 							value: '0',
 						});
 						this.typeColumns = [list];
-						console.log(this.typeColumns, '111')
-					
-						console.log(this.tabList)
 					}
 				})
 			}

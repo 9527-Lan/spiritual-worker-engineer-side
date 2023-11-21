@@ -50,6 +50,7 @@
 								</view>
 							</view>
 							<view class="bottom-box">
+										<scroll-view :scroll-top="0" scroll-y="true" style="height: 300rpx" >
 								<view class="bottom-left">
 									<u-steps :current="stepsCurrent(item.casualOrderRecords)" direction="column" dot>
 										<u-steps-item v-for="(pItem, pIndex) in item.casualOrderRecords" :key="pIndex">
@@ -57,7 +58,7 @@
 												<view class="progress-item">
 													<view class="progress-item-left">
 														<view v-if="pItem.order_img" class="record-tag isRecord">已记录</view>
-														<view v-else class="record-tag">待记录</view>
+														<view v-else class="record-tag">未记录</view>
 													</view>
 													<view class="progress-item-right">
 														<view class="day">{{ pItem.order_date }}</view>
@@ -69,9 +70,10 @@
 												</view> -->
 											</view>
 										</u-steps-item>
-									</u-steps>
+										</u-steps>
 								</view>
-								<view class="bottom-right" @click.stop="todayRecord">
+								</scroll-view>
+								<view class="bottom-right" @click.stop="todayRecord(item)">
 									<u-button style="width: 100%;height: 100%;" size="mini" shape="circle"
 										color="#3A84F0" text="今日记录">
 									</u-button>
@@ -85,7 +87,7 @@
 				</u-list-item>
 			</u-list>
 		</view>
-		<writeTodayRecord :show="recordShow" @todayRecord="todayRecord"></writeTodayRecord>
+		<writeTodayRecord :show="recordShow" :orderId="recordId" @close="close"></writeTodayRecord>
 	</view>
 </template>
 
@@ -104,6 +106,7 @@
 		data() {
 			return {
 				recordShow: false,
+				recordId: undefined,
 				typeShow: false,
 				typeValue: {
 					label: '全部',
@@ -141,6 +144,10 @@
 		},
 		computed: {},
 		methods: {
+			close(){
+				this.recordShow = !this.recordShow
+				this.queryOrderbyJxzIdList(this.typeId)
+			},
 			leftClick() {
 				uni.switchTab({
 					url: '/pages/my/index',
@@ -161,7 +168,6 @@
 			},
 			typeConfirm(columnIndex) {
 				this.typeValue = columnIndex.value[0]
-				console.log(this.typeValue, ...columnIndex.value);
 				if (this.typeValue.value === '0') {
 					this.typeId = "",
 						this.casualServiceTypeList(this.typeId)
@@ -181,8 +187,9 @@
 					url: '/pages/my/underWay/employmentDetails?id=' + e,
 				});
 			},
-			todayRecord() {
+			todayRecord(item) {
 				this.recordShow = !this.recordShow
+				this.recordId = item.casualOrderRecords[this.stepsCurrent(item.casualOrderRecords)].id
 			},
 			queryOrderbyJxzIdList(e) {
 				const params = {
@@ -211,7 +218,7 @@
 			stepsCurrent(item){
 				let current = 0
 				item.forEach((el,index)=>{
-					if(el.order_img) current = index
+					if(el.sign) current = index
 				})
 				return current
 			}

@@ -20,8 +20,8 @@
 							borderColor="#E6F0FF" plain></u-tag>
 					</view>
 					<view class="tag">
-						<u-tag :text="`${orderList.labelName}`" size="mini" bgColor="#E6F0FF"
-							borderColor="#E6F0FF" color="#333333" plain></u-tag>
+						<u-tag :text="`${orderList.labelName}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
+							color="#333333" plain></u-tag>
 					</view>
 				</view>
 				<view>
@@ -39,12 +39,30 @@
 				<u-divider></u-divider>
 				<view class="bottom-box">
 					<view class="bottom-left">
-						<u-steps current="1" dot direction="column">
-							<u-steps-item title="已下单 10:30 10:30" >
+						<u-steps :current="stepsCurrent(orderList.casualOrderRecords)" direction="column" dot>
+							<u-steps-item v-for="(pItem, pIndex) in orderList.casualOrderRecords" :key="pIndex">
+								<view slot="desc" class="flex-center">
+									<view class="progress-item">
+										<view class="progress-item-left">
+											<view v-if="pItem.orderImgUrl.length > 0"" class=" record-tag isRecord">已记录
+											</view>
+											<view v-else class="record-tag">未记录</view>
+										</view>
+										<view class="progress-item-right">
+											<view class="day">{{ pItem.orderDate }}</view>
+										</view>
+										<view class="bottom-right" @click.stop="todayRecord" v-if="pItem.sign==1">
+											<u-button style="width: 100%;height: 100%;" size="mini" shape="circle"
+												color="#3A84F0" text="今日记录"></u-button>
+										</view>
+									</view>
+									<view style="margin-left: 84rpx;">
+										<!-- <view v-if="pItem.remark"class="remark">{{ pItem.remark }}</view> -->
+										<u-album v-if="pItem.orderImgUrl && pItem.orderImgUrl.length > 0"
+											:multipleSize="150" :rowCount="3" :urls="pItem.orderImgUrl"></u-album>
+									</view>
+								</view>
 							</u-steps-item>
-							<u-steps-item title="已出库" desc="10:35">
-							</u-steps-item>
-							<u-steps-item title="运输中" desc="11:40"></u-steps-item>
 						</u-steps>
 					</view>
 				</view>
@@ -66,46 +84,60 @@
 	export default {
 		data() {
 			return {
-				orderList:[],
-				id:'1',
-				nodeText:'',
-				}
-			},
-			created() {
-				
-			},
-			onLoad(options){
-				let params={
-					id:this.id
-				}
-				queryOrderbyYcIdList(params).then(res=>{
-					const list=res.data.filter(item=>{
-						return item.id===options.id
-					})
-					this.orderList= list[0] || [];
-					this.nodeText= this.orderList.description == null ? '' : this.orderList.description 
+				orderList: [],
+				id: '1',
+				nodeText: '',
+			}
+		},
+		created() {
+
+		},
+		onLoad(options) {
+			let params = {
+				id: uni.getStorageSync('engineer_id')
+			}
+			queryOrderbyYcIdList(params).then(res => {
+				const list = res.data.filter(item => {
+					return item.id === options.id
 				})
+				this.orderList = list[0] || [];
+				this.nodeText = this.orderList.description == null ? '' : this.orderList.description
+			})
+		},
+		methods: {
+			rightClick() {
+				uni.switchTab({
+					url: '/pages/homePage/index'
+				});
 			},
-			methods: {
-				rightClick() {
-					uni.switchTab({
-						url: '/pages/homePage/index'
-					});
-				}
+
+			stepsCurrent(item) {
+				if (!item) return
+				let current = 0
+				item.forEach((el, index) => {
+					if (el.sign == 1) current = index
+				})
+				return current
 			}
 		}
+	}
 </script>
 
 <style lang="scss" scoped>
-	.bg{
-		   position: fixed;
-		    width: 100%;
-		    height: 100%;
-		    top: 0;
-		    left: 0;
-		    z-index: -1;
-			background-color: #F2F6FF;
+	/deep/.u-steps-item__line {
+		height: 100% !important;
 	}
+
+	.bg {
+		position: fixed;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		z-index: -1;
+		background-color: #F2F6FF;
+	}
+
 	.blueFixed {
 		position: fixed;
 		width: 100%;
@@ -122,6 +154,7 @@
 		background: #ffffff;
 		border-radius: 15rpx;
 		margin: 134rpx auto 34rpx;
+
 		.statusBox {
 			width: 100%;
 			height: 78rpx;
@@ -134,16 +167,17 @@
 			background: #FEF8F8;
 			color: #F37878;
 		}
-		
-		
+
+
 		.unsettled {
 			background: #EAEFF4;
 			color: #333333;
 		}
-		
+
 		.content {
 			padding: 20rpx 30rpx;
 		}
+
 		.top {
 			display: flex;
 			height: 34rpx;
@@ -173,15 +207,79 @@
 				margin-right: 13rpx;
 			}
 		}
-		
+
 		.bottom-box {
-			display: flex;
-			margin: 0 auto;
+			margin: 30rpx auto;
 			justify-content: space-between;
 			align-items: center;
-			.bottom-right {
-				width: 149rpx;
-				height: 55rpx;
+			border-bottom: 1px solid #F0F0F0;
+
+			.bottom-left {
+				.progress-item {
+					display: flex;
+					flex-direction: row;
+					min-height: 80rpx;
+
+					.progress-item-left {
+						height: 100%;
+
+						.record-tag {
+							border: 1px solid #999999;
+							color: #999999;
+							border-radius: 3rpx;
+							padding: 5rpx 10rpx;
+							font-size: 20rpx;
+							font-weight: 500;
+							line-height: 28rpx;
+							text-align: center;
+
+							&.isRecord {
+								border: 1px solid #3a84f0;
+								color: #3a84f0;
+							}
+						}
+					}
+
+					.progress-item-right {
+						flex: 1;
+						margin-left: 10rpx;
+
+						/deep/.u-album {
+							margin-top: 10rpx;
+
+							image {
+								width: 132rpx !important;
+								height: 114rpx !important;
+							}
+						}
+
+						.remark {
+							margin-top: 29rpx;
+							font-size: 24rpx;
+							font-weight: 500;
+							color: #333333;
+						}
+
+						.day {
+							font-size: 24rpx;
+							font-weight: 500;
+							color: #333333;
+						}
+
+						.time {
+							margin-top: 24rpx;
+							font-size: 20rpx;
+							font-weight: 500;
+							color: #666666;
+						}
+					}
+
+					.bottom-right {
+						float: right;
+						width: 120rpx;
+						height: 56rpx;
+					}
+				}
 			}
 		}
 
@@ -208,7 +306,8 @@
 			line-height: 67rpx;
 		}
 	}
-	.rText{
+
+	.rText {
 		font-size: 24rpx;
 		font-family: PingFang SC;
 		font-weight: 500;

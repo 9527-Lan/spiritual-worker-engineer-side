@@ -13,9 +13,6 @@
 
 			<view class="tagRow">
 				<view class="tag">
-					<u-tag :text="orderList.principalName" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF" plain></u-tag>
-				</view>
-				<view class="tag">
 					<u-tag :text="`岗位量${orderList.orderQuantity}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
 						plain></u-tag>
 				</view>
@@ -29,9 +26,9 @@
 					margin="18rpx 0 0 0" :text="orderList.principalName"></u--text> -->
 
 				<u--text
-					:prefixIcon="item.principalType==0?'/static/homePage/avatar1.png':'/static/homePage/address.png'"
+					:prefixIcon="orderList.principalType==0?'/static/homePage/avatar1.png':'/static/homePage/address.png'"
 					iconStyle="width: 28rpx;height: 28rpx;margin:0 20rpx 0 0" color="#666666" size="24rpx" margin="18rpx 0 0 0"
-					:text="item.principalName"></u--text>
+					:text="orderList.principalName"></u--text>
 			</view>
 			<view>
 				<u--text prefixIcon="/static/homePage/coordinate.png"

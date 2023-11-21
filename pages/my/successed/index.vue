@@ -46,7 +46,7 @@
 										:text="`${item.orderStatr}-${item.orderEnd}`"></u--text>
 								</view>
 							</view>
-							<view :class="item.settlementStatus==0?'statusBox settled':'statusBox unsettled'"> 
+							<view :class="item.settlementStatus==1?'statusBox settled':'statusBox unsettled'"> 
 								<p>状态：{{item.settlementStatusText}}</p>
 							</view>
 						</view>

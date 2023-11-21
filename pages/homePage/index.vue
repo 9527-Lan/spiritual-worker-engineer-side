@@ -53,10 +53,6 @@
 
 						<view class="tagRow">
 							<view class="tag">
-								<u-tag :text="item.typeName" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
-									plain></u-tag>
-							</view>
-							<view class="tag">
 								<u-tag :text="`岗位量${item.orderQuantity}`" size="mini" bgColor="#E6F0FF"
 									borderColor="#E6F0FF" plain></u-tag>
 							</view>

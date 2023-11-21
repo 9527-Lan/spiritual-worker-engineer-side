@@ -27,12 +27,12 @@
 			<view>
 				<!-- 注意，如果需要兼容微信小程序，最好通过setRules方法设置rules规则 -->
 				<u--form :labelStyle="labelStyle" labelWidth="140" labelPosition="left" :model="model1.userInfo" :rules="rules" ref="uForm">
-					<u-form-item required label="姓名" prop="engineerRealname" borderBottom ref="item1">
+					<u-form-item required label="姓名" prop="userInfo.name" borderBottom ref="item1">
 						<u--input v-model="model1.userInfo.engineerRealname" border="none" placeholder="请输入姓名"></u--input>
 					</u-form-item>
-					<u-form-item required label="性别" prop="engineerSexName" borderBottom @click="showSex = true"
+					<u-form-item required label="性别" prop="userInfo.sex" borderBottom @click="showSex = true"
 						ref="item1">
-						<u--input v-model="model1.userInfo.engineerSexName" disabled disabledColor="#ffffff" placeholder="请选择性别"
+						<u--input v-model="model1.userInfo.sex" disabled disabledColor="#ffffff" placeholder="请选择性别"
 							border="none"></u--input>
 						<u-icon slot="right" name="arrow-right"></u-icon>
 					</u-form-item>
@@ -41,7 +41,7 @@
 					</u-form-item>
 					<u-form-item required label="服务类型" prop="typeIds" borderBottom @click="showType = true"
 						ref="item1">
-						<u--input v-model="model1.userInfo.typeIds" disabled disabledColor="#ffffff" placeholder="请选择性别"
+						<u--input v-model="model1.userInfo.typeIds" disabled disabledColor="#ffffff" placeholder="请选择服务类型"
 							border="none"></u--input>
 						<u-icon slot="right" name="arrow-right"></u-icon>
 					</u-form-item>
@@ -53,13 +53,13 @@
 					</u-form-item>
 					<u-form-item required label="上传证书" prop="isContract" borderBottom @click="showLabel = true"
 						ref="item1">
-						<u--input v-model="model1.userInfo.isContract" disabled disabledColor="#ffffff" placeholder="请选择服务标签"
+						<u--input v-model="model1.userInfo.isContract" disabled disabledColor="#ffffff" placeholder="请上传证书"
 							border="none"></u--input>
 						<u--text slot="right" type="error" text="审核未通过" size="24"></u--text> 
 					</u-form-item>
-					<u-form-item required label="签署合同" prop="userInfo.sex" borderBottom @click="showLabel = true"
+					<u-form-item required label="签署合同" prop="" borderBottom @click="showLabel = true"
 						ref="item1">
-						<u--input v-model="model1.userInfo.label" disabled disabledColor="#ffffff" placeholder="请选择服务标签"
+						<u--input v-model="model1.userInfo.label" disabled disabledColor="#ffffff" placeholder="请选择签署合同"
 							border="none"></u--input>
 						<u--text slot="right" type="info" text="已签署" size="24"></u--text> 
 					</u-form-item>
@@ -131,7 +131,6 @@
 					},
 					'userInfo.sex': {
 						type: 'string',
-						max: 2,
 						required: true,
 						message: '请选择男或女',
 						trigger: ['blur', 'change']
