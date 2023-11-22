@@ -144,6 +144,20 @@
 				"navigationBarTextStyle": "white"
 			}
 		},
+		{//我的->上传证书
+			"path": "pages/my/myMessage/components/uploadcertificat",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{//我的->上传身份证
+			"path": "pages/my/myMessage/components/uploadIdCard",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
+		},
 		{
 			"path": "pages/my/withdrawal",
 			"style": {

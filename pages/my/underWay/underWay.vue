@@ -204,14 +204,11 @@
 				casualServiceType().then(res => {
 					if (res.code === "00000") {
 						const list = res.data
-
 						list.unshift({
 							label: '全部',
 							value: '0',
 						});
 						this.typeColumns = [list];
-						console.log(this.typeColumns, '111')
-
 					}
 				})
 			},

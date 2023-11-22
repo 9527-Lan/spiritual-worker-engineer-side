@@ -1,8 +1,8 @@
 <template>
 	<view>
 		<view class="bg"></view>
-		<u-navbar title="我的信息" @leftClick="leftClick"  :placeholder="true" :autoBack="true" leftIconSize="34rpx" bgColor="#F2F6FF"
-			ftIconColor="#000000" titleStyle="color: #000000;font-size:34rpx" />
+		<u-navbar title="我的信息" @leftClick="leftClick" :placeholder="true" :autoBack="true" leftIconSize="34rpx"
+			bgColor="#F2F6FF" ftIconColor="#000000" titleStyle="color: #000000;font-size:34rpx" />
 		<view class="from">
 			<view class="title">完善我的信息</view>
 			<view class="tip">为了您更快速的灵活用工，请先我的个人信息</view>
@@ -12,7 +12,7 @@
 					<p>您还未进行身份证认证</p>
 				</view>
 				<view class="right">
-					<u-button <u-button type="primary" color="#3A84F0" text="去认证"></u-button>
+					<u-button type="primary" color="#3A84F0" text="去认证" @click="toIdCard"></u-button>
 				</view>
 			</view>
 			<view class="warn">
@@ -21,58 +21,58 @@
 					<p>您的证书审核未通过</p>
 				</view>
 				<view class="right">
-					<u-button <u-button type="primary" color="#3A84F0" text="重新认证"></u-button>
+					<u-button type="primary" color="#3A84F0" text="重新认证" @click="toCertificate"></u-button>
 				</view>
 			</view>
 			<view>
 				<!-- 注意，如果需要兼容微信小程序，最好通过setRules方法设置rules规则 -->
-				<u--form :labelStyle="labelStyle" labelWidth="140" labelPosition="left" :model="model1.userInfo" :rules="rules" ref="uForm">
-					<u-form-item required label="姓名" prop="userInfo.name" borderBottom ref="item1">
-						<u--input v-model="model1.userInfo.engineerRealname" border="none" placeholder="请输入姓名"></u--input>
+				<u--form :labelStyle="labelStyle" labelWidth="140" labelPosition="left" :model="userInfo" :rules="rules"
+					ref="uForm">
+					<u-form-item required label="姓名" prop="name" borderBottom ref="item1">
+						<u--input v-model="userInfo.name" border="none" placeholder="请输入姓名"></u--input>
 					</u-form-item>
-					<u-form-item required label="性别" prop="userInfo.sex" borderBottom @click="showSex = true"
-						ref="item1">
-						<u--input v-model="model1.userInfo.sex" disabled disabledColor="#ffffff" placeholder="请选择性别"
+					<u-form-item required label="性别" prop="sex" borderBottom @click="showSex = true" ref="item1">
+						<u--input v-model="sex" disabled disabledColor="#ffffff" placeholder="请选择性别"
 							border="none"></u--input>
 						<u-icon slot="right" name="arrow-right"></u-icon>
 					</u-form-item>
-					<u-form-item required label="身份证号" prop="idcard" borderBottom >
-						<u--input v-model="model1.userInfo.idcard" border="none" placeholder="请输入身份证号"></u--input>
+					<u-form-item required label="身份证号" prop="idcard" borderBottom>
+						<u--input v-model="userInfo.idcard" border="none" placeholder="请输入身份证号"></u--input>
 					</u-form-item>
-					<u-form-item required label="服务类型" prop="typeIds" borderBottom @click="showType = true"
-						ref="item1">
-						<u--input v-model="model1.userInfo.typeIds" disabled disabledColor="#ffffff" placeholder="请选择服务类型"
+					<u-form-item required label="服务类型" prop="type" borderBottom @click="showType = true" ref="item1">
+						<u--input v-model="type" disabled disabledColor="#ffffff" placeholder="请选择服务类型"
 							border="none"></u--input>
 						<u-icon slot="right" name="arrow-right"></u-icon>
 					</u-form-item>
-					<u-form-item required label="服务标签" prop="typeName" borderBottom @click="showLabel = true"
+					<u-form-item required label="服务标签" prop="label" borderBottom @click="showLabel = true"
 						ref="item1">
-						<u--input v-model="model1.userInfo.typeName" disabled disabledColor="#ffffff" placeholder="请选择服务标签"
+						<u--input v-model="label" disabled disabledColor="#ffffff" placeholder="请选择服务标签"
 							border="none"></u--input>
 						<u-icon slot="right" name="arrow-right"></u-icon>
 					</u-form-item>
-					<u-form-item required label="上传证书" prop="isContract" borderBottom @click="showLabel = true"
+					<u-form-item required label="上传证书" borderBottom @click="showLabel = true"
 						ref="item1">
-						<u--input v-model="model1.userInfo.isContract" disabled disabledColor="#ffffff" placeholder="请上传证书"
-							border="none"></u--input>
-						<u--text slot="right" type="error" text="审核未通过" size="24"></u--text> 
+						<u--input disabled disabledColor="#ffffff" border="none"></u--input>
+						<u--text slot="right" type="error" text="审核未通过" size="24"></u--text>
 					</u-form-item>
-					<u-form-item required label="签署合同" prop="" borderBottom @click="showLabel = true"
-						ref="item1">
-						<u--input v-model="model1.userInfo.label" disabled disabledColor="#ffffff" placeholder="请选择签署合同"
-							border="none"></u--input>
-						<u--text slot="right" type="info" text="已签署" size="24"></u--text> 
+					<u-form-item required label="签署合同" borderBottom @click="showLabel = true" ref="item1">
+						<u--input disabled disabledColor="#ffffff" border="none"></u--input>
+						<u--text slot="right" type="info" text="已签署" size="24"></u--text>
 					</u-form-item>
 				</u--form>
-				<u-action-sheet :show="showSex" :actions="sexActions" title="请选择性别"
-					@close="showSex = false" @select="sexSelect">
+				<u-action-sheet :show="showSex" :actions="sexActions" title="请选择性别" @close="showSex = false"
+					@select="sexSelect">
 				</u-action-sheet>
-				<u-action-sheet :show="showType" :actions="typeActions" title="请选择服务类型"
-					@close="showType = false" @select="typeSelect">
-				</u-action-sheet>
-				<u-action-sheet :show="showLabel" :actions="labelActions" title="请选择服务标签"
-					@close="showLabel = false" @select="labelSelect">
-				</u-action-sheet>
+				<qianziyu-select :show="showType" type="checkbox" name="label" :showSearch="false"
+					:dataLists="typeActions" popupTitle="请选择服务类型" @cancel="showType=false" @submit="typeSelect" />
+				<!-- 		<u-picker :show="showType" :columns="typeActions" keyName="label" @confirm="typeSelect"
+					@cancel="showType = false">
+				</u-picker> -->
+				<qianziyu-select :show="showLabel" type="checkbox" name="name" :showSearch="false"
+					:dataLists="labelActions" popupTitle="请选择服务标签" @cancel="showLabel=false" @submit="labelSelect" />
+				<!-- 	<u-action-sheet :show="showLabel" :actions="labelActions" title="请选择服务标签" @close="showLabel = false"
+						@select="labelSelect">
+					</u-action-sheet> -->
 			</view>
 			<view class="cn">
 				<u--text align="center" size="24" color="#999999" text="平台承诺，严格保障您的隐私安全"></u--text>
@@ -80,103 +80,162 @@
 		</view>
 		<view class="bottomBox">
 			<view class="bottonBox">
-				<u-button type="primary" color="#3A84F0" text="确认提交"></u-button>
+				<u-button type="primary" color="#3A84F0" text="确认提交" @click="submit"></u-button>
 			</view>
 		</view>
 	</view>
 </template>
 
 <script>
-  import {casualEngineerMy} from "@/api/my.js"
+	import qianziyuSelect from "@/components/qianziyu-select/qianziyu-select.vue"
+	import {
+		casualEngineerMy,
+		casualServiceLabelGetById,
+		casualEngineerGetByIds
+	} from "@/api/my.js"
+	import {
+		casualServiceType
+	} from "@/api/index.js"
 	export default {
+		components: {
+			qianziyuSelect
+		},
 		data() {
 			return {
-				model1: {
-					userInfo: {
-						engineerRealname: '',
-						sex: '',
-						idcard:''
-					},
+				userInfo: {
+					name: '',
 				},
+				sex: '',
+				type: '',
+				label: '',
 				showSex: false,
 				sexActions: [{
 						name: '男',
+						value: '1'
 					},
 					{
 						name: '女',
+						value: '2'
 					}
 				],
 				showType: false,
-				typeActions: [{
-						name: '男',
-					},
-					{
-						name: '女',
-					}
-				],
+				typeActions: [],
 				showLabel: false,
-				labelActions: [{
-						name: '男',
-					},
-					{
-						name: '女',
-					}
-				],
+				labelActions: [],
 				rules: {
-					'userInfo.name': {
+					'name': {
 						type: 'string',
 						required: true,
 						message: '请填写姓名',
 						trigger: ['blur', 'change']
 					},
-					'userInfo.sex': {
-						type: 'string',
+					'sex': {
+						type: 'number',
 						required: true,
 						message: '请选择男或女',
+						trigger: ['blur', 'change']
+					},
+					'idcard':{
+						type: 'string',
+						required: true,
+						message: '请填写身份证号',
+						trigger: ['blur', 'change']
+					},
+					'type':{
+						type: 'string',
+						required: true,
+						message: '请填选择服务类型',
+						trigger: ['blur', 'change']
+					},
+					'label':{
+						type: 'string',
+						required: true,
+						message: '请填选择服务标签',
 						trigger: ['blur', 'change']
 					},
 				},
 				radio: '',
 				switchVal: false,
-				labelStyle:  {
+				labelStyle: {
 					"font-weight": "700",
 					"font-size": "28rpx"
 				},
-				id:"2",
-				formList:[]
+				id: "2",
+				formList: []
 			}
 		},
 		onReady() {
 			//如果需要兼容微信小程序，并且校验规则中含有方法等，只能通过setRules方法设置规则。
 			this.$refs.uForm.setRules(this.rules)
 		},
-		onLoad(){
-			// 
-		this.casualEngineerMyList()
+		onLoad() {
+			this.getTypeDict()
+			this.casualEngineerMyList()
 		},
 		computed: {},
 		methods: {
+			casualEngineerMyList() {
+				let params = {
+					id: uni.getStorageSync('engineer_id')
+				}
+				casualEngineerMy(params).then(res => {
+					this.userInfo = res.data
+				})
+			},
+			getTypeDict() {
+				casualServiceType().then(res => {
+					if (res.code === "00000") {
+						const list = res.data
+						this.typeActions = list;
+					}
+				})
+			},
+			getLabelDict(ids) {
+				console.log(ids);
+				casualEngineerGetByIds({
+					typeIds: ids
+				}).then(res => {
+					if (res.code === "00000") {
+						const list = res.data
+						this.labelActions = list;
+					}
+				})
+			},
 			leftClick() {
 				uni.switchTab({
 					url: "/pages/my/index"
 				})
 			},
+			toIdCard(){
+				uni.navigateTo({
+					url:'/pages/my/myMessage/components/uploadIdCard'
+				})
+			},
+			toCertificate(){
+				uni.navigateTo({
+					url:'/pages/my/myMessage/components/uploadcertificat'
+				})
+			},
 			sexSelect(e) {
-				this.model1.userInfo.sex = e.name
-				this.$refs.uForm.validateField('userInfo.sex')
+				this.userInfo.sex = e.value
+				this.sex = e.name
 			},
 			typeSelect(e) {
-				this.model1.userInfo.type = e.name
-				this.$refs.uForm.validateField('userInfo.type')
+				this.showType = false
+				this.userInfo.type = e.length ? e.map(el => el.value).toString() : ''
+				this.type = e.length ? e.map(el => el.label).toString() : ''
+				this.getLabelDict(this.userInfo.type)
 			},
-			casualEngineerMyList(){
-				let params={
-					id:uni.getStorageSync('engineer_id')
-				}
-				casualEngineerMy(params).then(res=>{
-					console.log(res.data)
-					this.model1.userInfo=res.data
-					console.log(this.model1.userInfo,'111')
+			labelSelect(e) {
+				this.showLabel = false
+				this.userInfo.label = e.length ? e.map(el => el.id).toString() : ''
+				this.label = e.length ? e.map(el => el.name).toString() : ''
+			},
+			submit() {
+				this.$refs.uForm.validate().then(res => {
+					uni.$u.toast(errors, '123')
+				}).catch(errors => {
+					uni.$u.toast(errors, '校验失败')
 				})
 			}
 		}
@@ -252,14 +311,17 @@
 			}
 
 		}
+
 		.cn {
 			padding: 30rpx 0 0 0;
 		}
 	}
-	.bottomBox{
+
+	.bottomBox {
 		padding: 40rpx 0;
 		border-top: 2rpx solid #DDDDDD;
 		background-color: #FFFFFF;
+
 		.bottonBox {
 			width: 80%;
 			background: #3A84F0;

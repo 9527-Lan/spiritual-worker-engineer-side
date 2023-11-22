@@ -84,9 +84,18 @@ export function LowerSingleEndCasualOrder(params) {
 // 我的信息渲染
 export function casualEngineerMy(params) {
 	return request({
-		url: '/web/casualEngineer/querybyId',
+		url: '/engineerEnd/web/casualEngineer/querybyId',
 		method: 'get',
 		params: params,
+	})
+}
+
+// 我的信息保存
+export function casualEngineerEdit(params) {
+	return request({
+		url: '/engineerEnd/web/casualEngineer/edit',
+		method: 'post',
+		data: params,
 	})
 }
 
@@ -94,6 +103,33 @@ export function casualEngineerMy(params) {
 export function listOrderItemAdd(params) {
 	return request({
 		url: '/engineerEnd/listOrderItemAdd',
+		method: 'get',
+		params: params,
+	})
+}
+
+// 多服务类型查标签
+export function casualEngineerGetByIds(params) {
+	return request({
+		url: '/engineerEnd/web/casualEngineer/getByIds',
+		method: 'get',
+		params: params,
+	})
+}
+
+// 文件删除
+export function download(params) {
+	return request({
+		url: '/file/download',
+		method: 'get',
+		params: params,
+	})
+}
+
+// 文件删除
+export function authentication(params) {
+	return request({
+		url: '/engineerEnd/authentication',
 		method: 'get',
 		params: params,
 	})

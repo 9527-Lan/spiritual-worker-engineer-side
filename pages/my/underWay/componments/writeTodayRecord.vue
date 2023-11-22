@@ -120,7 +120,6 @@
 					}))
 					fileListLen++
 				}
-				
 			},
 			uploadFilePromise(url) {
 				return new Promise((resolve, reject) => {
