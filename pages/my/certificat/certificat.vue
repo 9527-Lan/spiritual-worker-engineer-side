@@ -1,43 +1,17 @@
 <template>
 	<view>
 		<view class="bg"></view>
-		<u-navbar title="上传证书" @leftClick="leftClick" :autoBack="true" leftIconSize="34rpx" bgColor="#F2F6FF"
+		<u-navbar title="我的证书" @leftClick="leftClick" :autoBack="true" leftIconSize="34rpx" bgColor="#F2F6FF"
 			ftIconColor="#000000" titleStyle="color: #000000;font-size:34rpx" />
 		<view class="from">
-			<view class="title">请上传证书照片</view>
-			<view class="tip">我确认该证书影像是本人名下最新且有效的证书影像</view>
 			<view class="upImg">
-				<u-upload :fileList="contraryList" @afterRead="aftContrary" name="6" multiple :maxCount="1"
-					width="370rpx" height="242rpx">
-					<image src="/static/my/certificate.png" mode="widthFix" style="width: 370rpx;height: 242rpx;">
-					</image>
-					<view class="imgText">点击上传</view>
-				</u-upload>
-			</view>
-			<view class="upImg">
-				<u-upload :fileList="frontList" disabled @delete="delFront" name="6" multiple width="370rpx"
-					height="242rpx" :maxCount="frontList.length">
+				<u-upload :fileList="frontList" disabled name="6" multiple width="370rpx"
+					height="242rpx" :maxCount="frontList.length" :deletable="false">
 				</u-upload>
 			</view>
 			<view class="fromText">平台承诺，严格保障您的隐私安全</view>
-			<!-- 		<u-button type="primary" shape="circle" text="保存" @click="save"></u-button> -->
 		</view>
-		<u-popup :show="show" mode="center" @close="show=false" round="10" :closeOnClickOverlay="false">
-			<view style="width: 600rpx;padding:40rpx 20rpx;">
-				<view style="font-size: 16px;color: #303133;font-weight: bold;text-align: center;">证书信息</view>
-				<u--form :labelStyle="labelStyle" :model="form" ref="uForm" :rules="rules">
-					<u-form-item labelPosition="top" labelWidth="240" :borderBottom="false" label="填写证书名称:" prop="name">
-						<u--input v-model="form.name" border="none" placeholder="填写证书名称"></u--input>
-					</u-form-item>
-					<u-form-item labelPosition="top" labelWidth="240" :borderBottom="false" label="填写备注:" prop="remark">
-						<u--textarea v-model="form.remark" border='none' count height="240" maxlength="200"
-							placeholder="填写备注">
-						</u--textarea>
-					</u-form-item>
-				</u--form>
-				<u-button type="primary" shape="circle" text="确认" @click="popupSub"></u-button>
-			</view>
-		</u-popup>
+	</view>
 	</view>
 </template>
 
@@ -45,8 +19,7 @@
 	import service from '@/utils/request.js'
 	import {
 		certificate,
-		casualEngineerMy,
-		delcertificate
+		casualEngineerMy
 	} from '@/api/my.js'
 	export default {
 		data() {
@@ -84,21 +57,19 @@
 			},
 		},
 		onLoad(options) {
-			if (options) {
-				let params = {
-					id: uni.getStorageSync('engineer_id')
-				}
-				casualEngineerMy(params).then(res => {
-					this.frontList = res.data.casualEngineerCertificateList
-						.filter(el => el.states != 3)
-						.map(el => {
-							return {
-								...el,
-								url: el.certificateImgUrl
-							}
-						})
-				})
+			let params = {
+				id: uni.getStorageSync('engineer_id')
 			}
+			casualEngineerMy(params).then(res => {
+				this.frontList = res.data.casualEngineerCertificateList
+					.filter(el => el.states != 3)
+					.map(el => {
+						return {
+							...el,
+							url: el.certificateImgUrl
+						}
+					})
+			})
 		},
 		methods: {
 			leftClick() {
@@ -150,17 +121,11 @@
 			},
 			delFront(event) {
 				this.frontList = this.frontList.filter(el => el.id != event.file.id)
-				delcertificate({
-					ids: event.file.id
-				}).then(res => {
-					uni.$u.toast('删除成功')
-				})
 			},
 			popupSub() {
 				let pramas = {
 					certificateImg: this.frontList[this.frontList.length - 1].id,
 					certificateName: this.form.name,
-					engineerId: uni.getStorageSync('engineer_id'),
 					remark: this.form.remark
 				}
 				certificate(pramas).then(res => {

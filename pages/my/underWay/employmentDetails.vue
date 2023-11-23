@@ -48,7 +48,7 @@
 								<view slot="desc" class="flex-center">
 									<view class="progress-item">
 										<view class="progress-item-left">
-											<view v-if="pItem.orderImgUrl.length > 0"" class="record-tag isRecord">已记录</view>
+											<view v-if="pItem.orderImgUrl.length > 0" class="record-tag isRecord">已记录</view>
 											<view v-else class="record-tag">未记录</view>
 										</view>
 										<view class="progress-item-right">
@@ -60,7 +60,7 @@
 										</view>
 									</view>
 									<view style="margin-left: 84rpx;">
-										<!-- <view v-if="pItem.remark"class="remark">{{ pItem.remark }}</view> -->
+										<view v-if="pItem.orderDesc" class="remark">备注：{{ pItem.orderDesc }}</view>
 										<u-album v-if="pItem.orderImgUrl && pItem.orderImgUrl.length > 0"
 											:multipleSize="150" :rowCount="3" :urls="pItem.orderImgUrl"></u-album>
 									</view>

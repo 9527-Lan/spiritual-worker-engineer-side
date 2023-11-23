@@ -134,3 +134,21 @@ export function authentication(params) {
 		params: params,
 	})
 }
+
+// 工程师端-上传其他证件
+export function certificate(params) {
+	return request({
+		url: '/engineerEnd/web/casualEngineer/certificate',
+		method: 'post',
+		data: params,
+	})
+}
+
+// 工程师端-删除其他证件
+export function delcertificate(params) {
+	return request({
+		url: '/engineerEnd/web/casualEngineer/delcertificate',
+		method: 'get',
+		params: params,
+	})
+}

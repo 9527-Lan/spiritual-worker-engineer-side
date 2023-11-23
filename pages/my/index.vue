@@ -76,6 +76,9 @@
 						</u-tag> -->
 					</template>
 				</u-cell>
+				<u-cell title="我的证书" isLink url="/pages/my/certificat/certificat" rightIconStyle="fontSize:32rpx">
+					<u-icon slot="icon" size="32" name="/static/my/bank.png"></u-icon>
+				</u-cell>
 				<u-cell title="银行卡管理" isLink url="/pages/my/card/card" rightIconStyle="fontSize:32rpx">
 					<u-icon slot="icon" size="32" name="/static/my/bank.png"></u-icon>
 				</u-cell>

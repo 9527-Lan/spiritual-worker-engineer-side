@@ -1,13 +1,13 @@
 <template>
 	<view>
 		<u-popup :show="show" @close="cancel">
-			<view class="title">{{popupTitle}}</view>
+			<view class="title" style="font-size: 16px;color: #303133;font-weight: bold;text-align: center;">{{popupTitle}}</view>
 			<view style="padding: 20rpx;">
 				<u-search v-if="showSearch" @custom="search" @search="search" :placeholder="placeholder"
 					v-model="keyword"></u-search>
 				<u-gap v-if="showSearch" height="15"></u-gap>
 				<scroll-view :scroll-top="scrollTop" scroll-y="true" class="scroll-Y" @scrolltolower="$emit('lower')">
-				
+
 					<!--单选-->
 					<u-radio-group v-if="type == 'radio'" :borderBottom="true" iconPlacement="right" placement="column"
 						@change="groupChange" v-model="radioValue">
@@ -15,15 +15,15 @@
 							:label="item[name]" :name="index">
 						</u-radio>
 					</u-radio-group>
-				
+
 					<!--多选-->
 					<u-checkbox-group v-if="type == 'checkbox'" :borderBottom="true" placement="column"
 						iconPlacement="right" @change="checkboxChange" v-model="checkboxValue">
-						<u-checkbox :customStyle="{marginBottom: '12px',paddingBottom:'12px'}"
+						<u-checkbox :customStyle="{marginBottom: '20px',padding:'0 12px 18px 12px'}" labelSize="16px"
 							v-for="(item, index) in dataLists" :key="index" :label="item[name]" :name="index">
 						</u-checkbox>
 					</u-checkbox-group>
-				
+
 				</scroll-view>
 				<u-gap height="45"></u-gap>
 				<view class="bottons">
@@ -32,7 +32,8 @@
 							<u-button @click="cancel">取消</u-button>
 						</u-col>
 						<u-col customStyle="padding:0 20rpx 20rpx 10rpx" span="6">
-							<u-button @click="submit" type="primary" throttleTime="1000" :disabled="(JSON.stringify(radioData) === '{}') && (checkboxData.length === 0)">确认</u-button>
+							<u-button @click="submit" type="primary" throttleTime="1000"
+								:disabled="(JSON.stringify(radioData) === '{}') && (checkboxData.length === 0)">确认</u-button>
 						</u-col>
 					</u-row>
 				</view>
@@ -96,15 +97,15 @@
 				keyword: '',
 				scrollTop: 0,
 				checkboxData: [],
-				checkboxValue:[],
+				checkboxValue: [],
 				radioData: {},
 				radioValue: ''
 			};
 		},
 		methods: {
 			checkboxChange(n) {
-				this.checkboxData=[]
-				n.forEach(key=>{
+				this.checkboxData = []
+				n.forEach(key => {
 					this.checkboxData.push(this.dataLists[key])
 				})
 			},
@@ -162,5 +163,10 @@
 		right: 0;
 		bottom: constant(safe-area-inset-bottom);
 		bottom: env(safe-area-inset-bottom);
+	}
+
+	/deep/.u-checkbox__icon-wrap {
+		width: 32rpx !important;
+		height: 32rpx !important;
 	}
 </style>
