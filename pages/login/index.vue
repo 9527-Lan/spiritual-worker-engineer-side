@@ -11,7 +11,6 @@
 			<u-button type="primary" :disabled="logining" color="#3A84F0" shape="circle" text="微信登录"
 				@click="toLogin"></u-button>
 		</view>
-
 		<u-popup :show="show" mode="center" :round="24" overlayOpacity="0.4" :customStyle="popupStyle">
 			<view>
 				<view class="popup-container">
