@@ -2,6 +2,7 @@ import Vue from 'vue'
 import store from './store'
 import App from './App'
 import * as filters from './filters' // global filter
+import dayjs from '@/utils/dayjs.min.js'
 
 import uView from '@/uni_modules/uview-ui'
 Vue.use(uView)
@@ -41,6 +42,7 @@ Vue.config.productionTip = false
 Vue.prototype.$fire = new Vue();
 Vue.prototype.$store = store;
 Vue.prototype.$api = {msg, prePage};
+Vue.prototype.$dayjs = dayjs;
 
 App.mpType = 'app'
 

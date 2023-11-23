@@ -7,9 +7,9 @@
 			<view class="after" @click="typeShow = true">{{typeValue.label}}</view>
 			<u-picker :show="typeShow" :columns="typeColumns" keyName="label" @confirm="typeConfirm"
 				@cancel="typeShow = false"></u-picker>
-			<view class="after" @click="statusShow = true">{{statusValue.label}}</view>
+<!-- 			<view class="after" @click="statusShow = true">{{statusValue.label}}</view>
 			<u-picker :show="statusShow" :columns="statusColumns" keyName="label" @confirm="statusConfirm"
-				@cancel="statusShow = false"></u-picker>
+				@cancel="statusShow = false"></u-picker> -->
 		</view>
 		<view class="list">
 			<u-list @scrolltolower="scrolltolower">
@@ -128,12 +128,6 @@
 			},
 			typeConfirm(columnIndex) {
 				this.typeValue = columnIndex.value[0]
-				if(this.typeValue.value==='0'){
-					this.typeId="",
-					this.findQueryOrderbyYcIdList(this.typeId)
-					this.typeShow = false
-					return ;
-				}
 				this.typeId=this.typeValue.value
 				this.findQueryOrderbyYcIdList(this.typeId)
 				this.typeShow = false
@@ -154,6 +148,7 @@
 				let params = {
 					id: uni.getStorageSync('engineer_id')
 				}
+				if (this.typeId && this.typeId != '0') params.typeId = this.typeId
 				queryOrderbyYcIdList(params).then(res => {
 					this.indexList=res.data
 				})

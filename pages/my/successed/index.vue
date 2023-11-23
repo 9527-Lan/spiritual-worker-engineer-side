@@ -96,7 +96,8 @@
 				],
 				LowerList: [],
 				id: "2",
-				typeId: ''
+				typeId: '',
+				statusId:''
 			}
 		},
 		onReady() {
@@ -119,13 +120,6 @@
 			},
 			typeConfirm(columnIndex) {
 				this.typeValue = columnIndex.value[0]
-				console.log(this.typeValue, ...columnIndex.value);
-				if (this.typeValue.value === '0') {
-					this.typeId = "",
-						this.findLowerSingleEndList(this.typeId)
-					this.typeShow = false
-					return;
-				}
 				this.typeId = this.typeValue.value
 				this.findLowerSingleEndList(this.typeId)
 				this.typeShow = false
@@ -133,7 +127,8 @@
 			},
 			statusConfirm(columnIndex) {
 				this.statusValue = columnIndex.value[0]
-				console.log(this.statusValue, ...columnIndex.value);
+				this.statusId = this.statusValue.value
+				this.findLowerSingleEndList(this.statusId)
 				this.statusShow = false
 			},
 			scrolltolower() {
@@ -150,9 +145,10 @@
 			},
 			findLowerSingleEndList(e) {
 				let params = {
-					typeId: e,
 					id: uni.getStorageSync('engineer_id')
 				}
+				if (this.typeId && this.typeId != '0') params.typeId = this.typeId
+				if (this.statusId && this.statusId != '0') params.settlementStatus = this.statusId
 				LowerSingleEndList(params).then(res => {
 					this.LowerList = res.data
 				})

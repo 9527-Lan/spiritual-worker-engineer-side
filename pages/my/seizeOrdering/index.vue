@@ -67,7 +67,6 @@
 		LowerSingleEnd,
 		engineerEndList
 	} from "@/api/my.js"
-	import {friendlyDate} from '@/utils/date-format.js'
 	export default {
 		data() {
 			return {
@@ -145,7 +144,7 @@
 				}
 				if (this.statusId && this.statusId != '0') params.orderGrabbingStatus = this.statusId
 				if (this.typeId && this.typeId != '0') params.typeId = this.typeId
-				//if (this.dateValue) params.createTime = friendlyDate(this.dateValue,{format: 'yyyy-MM-dd'})
+				if (this.dateValue) params.createTime = this.$dayjs(this.dateValue).format('YYYY-MM')
 				LowerSingleEnd(params).then(res => {
 					this.LowerList = res.data
 				})
