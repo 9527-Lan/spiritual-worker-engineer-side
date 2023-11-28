@@ -19,7 +19,7 @@
 	import service from '@/utils/request.js'
 	import {
 		certificate,
-		casualEngineerMy
+		engineerEndMyCertificate
 	} from '@/api/my.js'
 	export default {
 		data() {
@@ -60,15 +60,11 @@
 			let params = {
 				id: uni.getStorageSync('engineer_id')
 			}
-			casualEngineerMy(params).then(res => {
-				this.frontList = res.data.casualEngineerCertificateList
-					.filter(el => el.states != 3)
-					.map(el => {
-						return {
-							...el,
-							url: el.certificateImgUrl
-						}
-					})
+			engineerEndMyCertificate(params).then(res => {
+				this.frontList = res.data.map(el=>{
+					return {url:el}
+				})
+				console.log(this.frontList);
 			})
 		},
 		methods: {
@@ -77,61 +73,6 @@
 					url: 'pages/my/myMessage/myMessage',
 				});
 			},
-			async aftContrary(event) {
-				let lists = [].concat(event.file)
-				let fileListLen = this.frontList.length
-				lists.map((item) => {
-					this.frontList.push({
-						...item,
-						status: 'uploading',
-						message: '上传中'
-					})
-				})
-				for (let i = 0; i < lists.length; i++) {
-					const result = await this.uploadFilePromise(lists[i].url)
-					this.frontList.push()
-					let item = this.frontList[fileListLen]
-					this.frontList.splice(fileListLen, 1, Object.assign(item, {
-						status: 'success',
-						message: '',
-						url: JSON.parse(result).data.fileUrl,
-						id: JSON.parse(result).data.id,
-					}))
-					fileListLen++
-					this.show = true
-					console.log();
-				}
-			},
-			uploadFilePromise(url) {
-				return new Promise((resolve, reject) => {
-					let a = uni.uploadFile({
-						url: service.defaults.baseURL + '/file/upload', // 仅为示例，非真实的接口地址
-						filePath: url,
-						name: 'file',
-						formData: {
-							user: 'test'
-						},
-						success: (res) => {
-							setTimeout(() => {
-								resolve(res.data)
-							}, 1000)
-						}
-					});
-				})
-			},
-			delFront(event) {
-				this.frontList = this.frontList.filter(el => el.id != event.file.id)
-			},
-			popupSub() {
-				let pramas = {
-					certificateImg: this.frontList[this.frontList.length - 1].id,
-					certificateName: this.form.name,
-					remark: this.form.remark
-				}
-				certificate(pramas).then(res => {
-					this.show = false
-				})
-			}
 		}
 	}
 </script>

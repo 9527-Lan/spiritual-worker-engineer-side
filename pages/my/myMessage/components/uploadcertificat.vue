@@ -84,21 +84,6 @@
 			},
 		},
 		onLoad(options) {
-			if (options) {
-				let params = {
-					id: uni.getStorageSync('engineer_id')
-				}
-				casualEngineerMy(params).then(res => {
-					this.frontList = res.data.casualEngineerCertificateList
-						.filter(el => el.states != 3)
-						.map(el => {
-							return {
-								...el,
-								url: el.certificateImgUrl
-							}
-						})
-				})
-			}
 		},
 		methods: {
 			leftClick() {

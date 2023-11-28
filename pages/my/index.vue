@@ -3,7 +3,8 @@
 		<view class="bg"></view>
 		<view class="myMsg" :style="'margin-top:'+myMsgTop+'rpx'">
 			<view class="left">
-				<u-avatar :src="avatarSrc" size="120"></u-avatar>
+				<u-avatar :src="myList.headSculptureUrl" size="120" @click="upAvatar"></u-avatar>
+				<avatar @upload="myUpload" ref="avatar" style="width: 0;height: 0;"></avatar>
 			</view>
 			<view class="right">
 				<view class="name">
@@ -77,7 +78,7 @@
 					</template>
 				</u-cell>
 				<u-cell title="我的证书" isLink url="/pages/my/certificat/certificat" rightIconStyle="fontSize:32rpx">
-					<u-icon slot="icon" size="32" name="/static/my/bank.png"></u-icon>
+					<u-icon slot="icon" size="32" name="/static/my/certificate1.png"></u-icon>
 				</u-cell>
 				<u-cell title="银行卡管理" isLink url="/pages/my/card/card" rightIconStyle="fontSize:32rpx">
 					<u-icon slot="icon" size="32" name="/static/my/bank.png"></u-icon>
@@ -102,10 +103,17 @@
 
 <script>
 	let menuButtonInfo = uni.getMenuButtonBoundingClientRect()
+	import avatar from "../../components/yq-avatar/yq-avatar.vue";
+	import service from '@/utils/request.js'
 	import {
-		engineerEnd
+		engineerEnd,
+		casualEngineerAvatar,
+		consultCustomerService
 	} from "@/api/my.js"
 	export default {
+        components: {
+            avatar
+        },
 		data() {
 			return {
 				avatarSrc: '',
@@ -126,6 +134,40 @@
 		},
 		computed: {},
 		methods: {
+			upAvatar(){
+                this.$refs.avatar.fChooseImg(0,{
+                    selWidth: "300upx", selHeight: "300upx",
+                    expWidth: '260upx', expHeight: '260upx'
+                });
+			},
+			myUpload(rsp) {
+				console.log(rsp,'rsp');
+				let that = this
+				return new Promise((resolve, reject) => {
+					let a = uni.uploadFile({
+						url: service.defaults.baseURL+'/file/upload', // 仅为示例，非真实的接口地址
+						filePath: rsp.base64,
+						name: 'file',
+						formData: {
+							user: 'test',
+						},
+						success: (res) => {
+							console.log(JSON.parse(res.data).data);
+							let parmas = {
+								id:uni.getStorageSync('engineer_id'),
+								img:JSON.parse(res.data).data.id
+							}
+							casualEngineerAvatar(parmas).then(res=>{
+								uni.$u.toast('上传成功')
+								this.engineerEndList()
+							})
+						},
+						fail() {
+							
+						}
+					});
+				})
+			},
 			successed() {
 				uni.navigateTo({
 					url: '/pages/my/successed/index',
@@ -179,6 +221,9 @@
 						console.log(res.data)
 						this.myList=res.data
 					}
+				})
+				consultCustomerService().then(res => {
+						this.content=res.data
 				})
 
 			}

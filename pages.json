@@ -138,6 +138,13 @@
 			}
 		},
 		{//我的->银行卡
+			"path": "pages/my/card/components/addCard",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{//我的->银行卡
 			"path": "pages/my/callMe/callMe",
 			"style": {
 				"navigationStyle": "custom",

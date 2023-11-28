@@ -122,6 +122,7 @@
 				}
 			},
 			uploadFilePromise(url) {
+				console.log(url);
 				return new Promise((resolve, reject) => {
 					let a = uni.uploadFile({
 						url: service.defaults.baseURL+'/file/upload', // 仅为示例，非真实的接口地址
