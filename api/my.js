@@ -134,3 +134,66 @@ export function authentication(params) {
 		params: params,
 	})
 }
+
+// 工程师端-上传其他证件
+export function certificate(params) {
+	return request({
+		url: '/engineerEnd/web/casualEngineer/certificate',
+		method: 'post',
+		data: params,
+	})
+}
+
+// 工程师端-删除其他证件
+export function delcertificate(params) {
+	return request({
+		url: '/engineerEnd/web/casualEngineer/delcertificate',
+		method: 'get',
+		params: params,
+	})
+}
+
+//头像上传 
+export function casualEngineerAvatar(params) {
+	return request({
+		url: '/engineerEnd/web/casualEngineer/avatar',
+		method: 'get',
+		params: params,
+	})
+}
+
+//工程师端-关于我们
+export function engineerEndAboutUs(params) {
+	return request({
+		url: '/engineerEnd/aboutUs',
+		method: 'get',
+		params: params,
+	})
+}
+
+//工程师端-咨询客服
+export function consultCustomerService(params) {
+	return request({
+		url: '/engineerEnd/consultCustomerService',
+		method: 'get',
+		params: params,
+	})
+}
+
+//工程师端-我的证书
+export function engineerEndMyCertificate(params) {
+	return request({
+		url: '/engineerEnd/myCertificate',
+		method: 'get',
+		params: params,
+	})
+}
+
+//工程师-添加银行卡
+export function casualBankCardsAdd(params) {
+	return request({
+		url: '/engineerEnd/web/casualBankCards/add',
+		method: 'get',
+		params: params,
+	})
+}

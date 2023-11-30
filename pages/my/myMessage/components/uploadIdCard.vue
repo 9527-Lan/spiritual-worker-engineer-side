@@ -21,7 +21,7 @@
 				</u-upload>
 			</view>
 			<view class="fromText">平台承诺，严格保障您的隐私安全</view>
-			<u-button type="primary" shape="circle" text="保存" @click="save"></u-button>
+			<u-button type="primary" shape="circle" text="认证" @click="save"></u-button>
 		</view>
 	</view>
 </template>
@@ -44,7 +44,7 @@
 		methods: {
 			leftClick() {
 				uni.navigateTo({
-					url: '/pages/my/myMessage/myMessage',
+					url: 'pages/my/myMessage/myMessage',
 				});
 			},
 			async aftFront(event) {
@@ -115,19 +115,21 @@
 				})
 			},
 			save() {
+				if(this.frontList.length==0) return uni.$u.toast('请上传身份证人像面再提交')
+				if(this.contraryList==0) return uni.$u.toast('请上传身份证国徽面再提交')
 				let parmas = {
 					cardImgNegative: this.frontList[0].id,
 					cardImgPositive: this.contraryList[0].id,
 					id: uni.getStorageSync('engineer_id')
 				}
 				let parmas1 = {
-					// phone: 
-					// name: 
-					// idnum: 
-					// engineerId:
+					phone: uni.getStorageSync('msgItem').phone,
+					name: uni.getStorageSync('msgItem').engineerRealname,
+					idnum: uni.getStorageSync('msgItem').idcard,
+					engineerId: uni.getStorageSync('msgItem').id
 				}
 				casualEngineerEdit(parmas).then(res => {
-					authentication(parmas).then(res => {
+					authentication(parmas1).then(res => {
 						uni.navigateTo({
 							url: '/pages/my/myMessage/myMessage',
 						});

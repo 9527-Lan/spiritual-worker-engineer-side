@@ -2,9 +2,11 @@
 	<view>
 		<view class="bg"></view>
 		<view class="search" :style="'padding-top:'+(top+statusBarHeight)+'rpx;height:'+(64+(top+statusBarHeight)+30)+'rpx'">
+			<view style="margin:0 219rpx 0 48rpx" @click="toSearch">
 			<u-search placeholder="搜索用工信息..." v-model="keyword" :showAction="false" height="64rpx"
-				margin="0 219rpx 0 48rpx" bgColor="#FFFFFF" style="pointer-events: none;overflow-y: overlay;" disabled @click="toSearch"
+				 bgColor="#FFFFFF" style="pointer-events: none;overflow-y: overlay;" disabled @click="toSearch"
 				shape="round"></u-search>
+			</view>
 		</view>
 		<view class="wrap">
 			<u-swiper :list="wrapList" height="277rpx" radius="15rpx"></u-swiper>

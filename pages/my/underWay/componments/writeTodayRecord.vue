@@ -21,7 +21,7 @@
 			</view>
 			<view class="bottomBox">
 				<u-icon labelPos="bottom " label="平台客服" labelSize="20" labelColor="#333333" size="40" name="phone"></u-icon>
-				<view class="bottonBox" @click.stop="submit">
+				<view class="bottonBox">
 					<u-button type="primary" color="#3A84F0" text="确认提交" @click="submit"></u-button>
 				</view>
 			</view>
@@ -122,6 +122,7 @@
 				}
 			},
 			uploadFilePromise(url) {
+				console.log(url);
 				return new Promise((resolve, reject) => {
 					let a = uni.uploadFile({
 						url: service.defaults.baseURL+'/file/upload', // 仅为示例，非真实的接口地址

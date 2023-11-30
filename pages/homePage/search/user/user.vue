@@ -39,7 +39,7 @@
 			</view>
 			<view>
 				<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#3B85F0" size="24rpx"
-					margin="18rpx 0 0 0" :text="`已有${orderList.haveRegistered}人报名A1栋`"></u--text>
+					margin="18rpx 0 0 0" :text="`已有${orderList.haveRegistered?orderList.haveRegistered:0}人报名`"></u--text>
 			</view>
 		</view>
 		<view class="description">

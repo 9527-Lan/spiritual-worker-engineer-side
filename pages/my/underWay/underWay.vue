@@ -164,16 +164,11 @@
 			},
 			dateConfirm(v, m) {
 				this.dateValue = v.value
+				this.queryOrderbyJxzIdList(this.typeId)
 				this.dateShow = false
 			},
 			typeConfirm(columnIndex) {
 				this.typeValue = columnIndex.value[0]
-				if (this.typeValue.value === '0') {
-					this.typeId = "",
-						this.casualServiceTypeList(this.typeId)
-					this.typeShow = false
-					return;
-				}
 				this.typeId = this.typeValue.value
 				this.queryOrderbyJxzIdList(this.typeId)
 				this.typeShow = false
@@ -193,9 +188,10 @@
 			},
 			queryOrderbyJxzIdList(e) {
 				const params = {
-					typeId: e,
 					id: uni.getStorageSync('engineer_id')
 				}
+				if (this.typeId && this.typeId != '0') params.typeId = this.typeId
+				if (this.dateValue) params.createTime = this.$dayjs(this.dateValue).format('YYYY-MM')
 				queryOrderbyJxzId(params).then(res => {
 					this.indexList = res.data
 				})

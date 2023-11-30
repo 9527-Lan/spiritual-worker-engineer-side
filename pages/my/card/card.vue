@@ -1,18 +1,15 @@
 <template>
-	<view class="cardMange">
-		<u-navbar title="银行卡管理"  :autoBack="true" leftIconSize="34rpx" bgColor="#F2F6FF"
-			ftIconColor="#000000" titleStyle="color: #000000;font-size:34rpx" />
+	<view>
+		<view class="bg"></view>
+		<u-navbar title="银行卡管理" @leftClick="leftClick" :autoBack="true" leftIconSize="34rpx" bgColor="#F2F6FF"
+			ftIconColor="#000000" titleStyle="color: #000000;font-size:34rpx" placeholder />
 		<view class="manage">
 			<view class="card1">
 				<text class="china">中国银行</text>
 				<text class="chinaBank">6214 **** **** 4463</text>
 			</view>
-			<view class="card2">
-				<text class="bank">建设银行</text>
-				<text class="BankName">6231 **** **** 1116</text>
-			</view>
-			<view class="addCard">
-				<text class="cardName">+添加银行卡</text>
+			<view class="addCard" @click="addCard">
+				+添加银行卡
 			</view>
 		</view>
 
@@ -27,19 +24,34 @@
 			}
 		},
 		methods: {
-
+			leftClick() {
+				uni.switchTab({
+					url: "/pages/my/index"
+				})
+			},
+			addCard(){
+				uni.navigateTo({
+					url: '/pages/my/card/components/addCard',
+				});
+			}
 		}
 	}
 </script>
 
 <style>
-	.cardMange {
-		position: relative;
+	.bg {
+		position: fixed;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		z-index: -1;
+		background-color: #F2F6FF;
 	}
 
 	.manage {
-		position: absolute;
-		top: 224rpx;
+		position: relative;
+		top: 20rpx;
 		left: 32rpx;
 	}
 
@@ -48,7 +60,7 @@
 		height: 225rpx;
 		width: 686rpx;
 		background-size: 100%;
-		margin-bottom:25rpx;
+		margin-bottom: 25rpx;
 		position: relative;
 	}
 
@@ -57,30 +69,25 @@
 		height: 225rpx;
 		width: 686rpx;
 		background-size: 100%;
-		margin-bottom:28rpx;
+		margin-bottom: 28rpx;
 		position: relative;
 	}
 
 	.addCard {
 		width: 686rpx;
-		height: 123rpx;
+		height: 120rpx;
 		background: #FFFFFF;
 		border-radius: 15rpx;
 		display: flex;
 		justify-content: center;
 		align-items: center;
-	}
-
-	.cardName {
-		width: 188rpx;
-		height: 31rpx;
 		font-size: 32rpx;
 		font-family: PingFang SC;
 		font-weight: bold;
 		color: #3A84F0;
-		line-height: 67rpx;
 	}
-	.china{
+
+	.china {
 		width: 200rpx;
 		height: 31rpx;
 		font-size: 32rpx;
@@ -89,10 +96,11 @@
 		color: #FFFFFF;
 		line-height: 67rpx;
 		position: absolute;
-		left:60rpx;
-		top:60rpx;
+		left: 60rpx;
+		top: 60rpx;
 	}
-	.bank{
+
+	.bank {
 		width: 200rpx;
 		height: 31rpx;
 		font-size: 32rpx;
@@ -101,10 +109,11 @@
 		color: #FFFFFF;
 		line-height: 67rpx;
 		position: absolute;
-		left:60rpx;
-		top:60rpx;
+		left: 60rpx;
+		top: 60rpx;
 	}
-	.chinaBank{
+
+	.chinaBank {
 		width: 414rpx;
 		height: 32rpx;
 		font-size: 42rpx;
@@ -113,10 +122,11 @@
 		color: #FFFFFF;
 		line-height: 67rpx;
 		position: absolute;
-		left:60rpx;
-		top:123rpx;
+		left: 60rpx;
+		top: 123rpx;
 	}
-	.BankName{
+
+	.BankName {
 		width: 414rpx;
 		height: 32rpx;
 		font-size: 42rpx;
@@ -125,7 +135,7 @@
 		color: #FFFFFF;
 		line-height: 67rpx;
 		position: absolute;
-		left:60rpx;
-		top:123rpx;
+		left: 60rpx;
+		top: 123rpx;
 	}
 </style>
