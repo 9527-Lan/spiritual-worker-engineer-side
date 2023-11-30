@@ -141,7 +141,7 @@ let menuButtonInfo = uni.getMenuButtonBoundingClientRect()?uni.getMenuButtonBoun
 				let params = {
 					pageNum: this.pageNum,
 					pageSize: this.pageSize,
-					id: uni.getStorageSync('engineer_id'),
+					// id: uni.getStorageSync('engineer_id'),
 				}
 				if (this.typeId != 0) params.typeId = this.typeId
 				queryOrderbyIdPages(params).then(res => {

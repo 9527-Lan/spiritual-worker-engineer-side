@@ -57,13 +57,18 @@
 		},
 		methods: {
 			async toLogin() {
+				uni.setStorageSync('engineer_id',2);
+				uni.switchTab({
+					url: '/pages/homePage/index'
+				});
 				if (this.agree) {
 					this.logining = true;
 					uni.login({
 						provider: 'weixin',
 						success: res => {
 							casualOrder(res.code).then(res => {
-								uni.setStorageSync('engineer_id',res.data);
+								uni.setStorageSync('engineer_id',2);
+								console.log(uni.getStorageSync('engineer_id'),'id')
 								uni.switchTab({
 									url: '/pages/homePage/index'
 								});

@@ -169,7 +169,8 @@
 			//我的工程师查询
 			engineerEndList() {
 				const params = {
-					id: uni.getStorageSync('engineer_id')
+					// id: uni.getStorageSync('engineer_id')
+					id:2
 				}
 				engineerEnd(params).then(res => {
 					if (res.code === "00000") {
