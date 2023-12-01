@@ -1,5 +1,6 @@
 import {
-	login
+	login,
+	loginCode
 } from '@/api/user.js'
 
 const state = {
@@ -53,6 +54,32 @@ const actions = {
 		})
 	},
 	// #endif
+	// 验证码登录
+	loginCode({
+		commit
+	}, data) {
+		const {
+			mobile,
+			code
+		} = data
+		return new Promise((resolve, reject) => {
+			loginCode(data).then(response => {
+				const {
+					access_token,
+					token_type
+				} = response.data
+				console.log(response,'jdddddddddddddddddddddd');
+				uni.setStorageSync('engineer_id',response.data);
+				const token = token_type + " " + access_token
+				uni.setStorageSync('token', token)
+				commit('SET_HAS_LOGIN', true)
+				resolve()
+			}).catch(error => {
+				reject(error)
+			})
+		})
+	},
+
 }
 
 export default {

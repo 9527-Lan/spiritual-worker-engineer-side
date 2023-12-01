@@ -19,6 +19,14 @@ export function login(mobile, code) {
 		}
 	})
 }
+// 验证码登录
+export function loginCode(params) {
+	return request({
+		url: '/engineerEnd/engineerLoginMsg',
+		method: 'get',
+		params:params
+	})
+}
 // 点击立刻抢单
 export function casualOrderEngineer(params) {
 	return request({
@@ -58,5 +66,13 @@ export function casualServiceLabel(params) {
 		url: '/web/casualServiceLabel/getByIds',
 		method: 'get',
 		params: params,
+	})
+}
+// 选择获取验证码
+export function getnumcode(params) {
+	return request({
+		url: '/engineerEnd/sendMsg',
+		method: 'get',
+		params:params
 	})
 }

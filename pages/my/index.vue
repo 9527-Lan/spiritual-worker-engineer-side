@@ -86,7 +86,7 @@
 				<u-cell title="我的推广码" isLink url="" rightIconStyle="fontSize:32rpx">
 					<u-icon slot="icon" size="32" name="/static/my/twoCode.png"></u-icon>
 				</u-cell>
-				<u-cell title="推广列表" isLink url="" rightIconStyle="fontSize:32rpx">
+				<u-cell title="推广列表" isLink url="" @click="proto" rightIconStyle="fontSize:32rpx">
 					<u-icon slot="icon" size="32" name="/static/my/extendCode.png"></u-icon>
 				</u-cell>
 				<u-cell title="咨询客服" isLink url="" @click="showCard"   rightIconStyle="fontSize:32rpx">
@@ -201,6 +201,11 @@
 			showCard(){
 				this.show=  true;
 			},
+			proto(){
+				// uni.navigateTo({
+				// 	url:'/pages/my/promotion'
+				// })
+			},
 			closeCard(){
 				uni.makePhoneCall({
 					phoneNumber: this.content //仅为示例
@@ -214,8 +219,8 @@
 			//我的工程师查询
 			engineerEndList() {
 				const params = {
-					// id: uni.getStorageSync('engineer_id')
-					id:2
+					id: uni.getStorageSync('engineer_id')
+					// id:2
 				}
 				engineerEnd(params).then(res => {
 					if (res.code === "00000") {
