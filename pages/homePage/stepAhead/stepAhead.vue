@@ -51,7 +51,7 @@
 			<text class="title">
 				用工描述
 			</text>
-			<rich-text :nodes="nodeText" class="rText"></rich-text>
+			<rich-text :nodes="orderList.description" class="rText"></rich-text>
 		</view>
 		<u-tabbar :value="value6" @change="name => value6 = name" :fixed="true" :placeholder="false"
 			:safeAreaInsetBottom="true">
@@ -72,8 +72,8 @@
 		data() {
 			return {
 				nodeText: '',
-				order_id: 9,
-				engineer_id: 2,
+				order_id: null,
+				engineer_id: null,
 				circleStyle: {
 					width: '521rpx',
 					height: ' 89rpx',
@@ -81,7 +81,8 @@
 					left: '187rpx',
 					bottom: '65rpx',
 				},
-				orderList: []
+				orderList: {},
+				value6: ""
 			}
 		},
 		
