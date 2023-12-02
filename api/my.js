@@ -193,7 +193,7 @@ export function engineerEndMyCertificate(params) {
 export function casualBankCardsAdd(params) {
 	return request({
 		url: '/engineerEnd/web/casualBankCards/add',
-		method: 'get',
+		method: 'post',
 		params: params,
 	})
 }
@@ -203,5 +203,66 @@ export function fundDetails(params) {
 		url: '/engineerEnd/fundDetails',
 		method: 'get',
 		params:params
+	})
+}
+// 推广列表
+export function casualPromotions(params) {
+	return request({
+		url: '/engineerEnd/web/casualPromotions/pages',
+		method: 'get',
+		params:params
+	})
+}
+// 生成二维码
+export function myPromotionCode(id) {
+	return request({
+		url: '/web/casualPromotions/myPromotionCode',
+		method: 'get',
+		params:{id:id}
+	})
+}
+
+// 添加银行卡
+export function CardsAdd(params) {
+	console.log(params,'jdjddj');
+	return request({
+		url: '/engineerEnd/web/casualBankCards/add',
+		method: 'post',
+		data: params,
+	})
+}
+
+// 银行卡列表
+export function getcardList(params) {
+	console.log(params,'jdjddj');
+	return request({
+		url: '/engineerEnd/web/casualBankCards/pages',
+		method: 'get',
+		params: params,
+	})
+}
+
+// 根据银行卡查询id
+export function getbyId(params) {
+	return request({
+		url: '/engineerEnd/casualBankCards/getbyId',
+		method: 'get',
+	 params:params,
+	})
+}
+
+// 资金明细下拉框
+export function getzjoptions() {
+	return request({
+		url: '/engineerEnd/fundDetails/options',
+		method: 'get',
+	})
+}
+// 银行卡删除
+export function carddel(id) {
+	return request({
+		url: '/engineerEnd/casualBankCards/del',
+		method: 'get',
+		params:{id:id}
 	})
 }

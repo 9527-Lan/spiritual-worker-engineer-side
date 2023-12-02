@@ -11,19 +11,19 @@
 				<u--form :labelStyle="labelStyle" labelWidth="140" labelPosition="left" :model="form" :rules="rules"
 					ref="uForm">
 					<u-form-item required label="开户名" prop="cardName" borderBottom ref="item1">
-						<u--input v-model="form.cardName" border="none" placeholder="请输入开户名"></u--input>
+						<u--input v-model="form.cardName" :disabled="id" border="none" placeholder="请输入开户名"></u--input>
 					</u-form-item>
 					<u-form-item required label="开户行" prop="cardAddress" borderBottom ref="item1">
-						<u--input v-model="form.cardAddress" border="none" placeholder="请输入开户行"></u--input>
+						<u--input v-model="form.cardAddress" :disabled="id" border="none" placeholder="请输入开户行"></u--input>
 					</u-form-item>
 					<u-form-item required label="银行卡号" prop="cardNo" borderBottom ref="item1">
-						<u--input v-model="form.cardNo" border="none" placeholder="请输入银行卡号" @blur="blur"></u--input>
+						<u--input v-model="form.cardNo" border="none" :disabled="id" placeholder="请输入银行卡号" @blur="blur"></u--input>
 					</u-form-item>
 					<u-form-item required label="银行类型" prop="cardType" borderBottom ref="item1">
-						<u--input v-model="form.cardType" border="none" placeholder="请输入银行类型"></u--input>
+						<u--input v-model="form.cardType" border="none" :disabled="id" placeholder="请输入银行类型"></u--input>
 					</u-form-item>
 					<u-form-item required label="手机号" prop="phone" borderBottom ref="item1">
-						<u--input v-model="form.phone" border="none" placeholder="请输入手机号"></u--input>
+						<u--input v-model="form.phone" border="none" :disabled="id" placeholder="请输入手机号"></u--input>
 					</u-form-item>
 				</u--form>
 			</view>
@@ -31,8 +31,8 @@
 				<u--text align="center" size="24" color="#999999" text="平台承诺，严格保障您的隐私安全"></u--text>
 			</view>
 		</view>
-		<u-tabbar :fixed="true" :placeholder="false" :safeAreaInsetBottom="true">
-			<u-button type="primary" shape="circle" text="撤销抢单" @click="submit"></u-button>
+		<u-tabbar :fixed="true" v-if="!id" :placeholder="false" :safeAreaInsetBottom="true">
+			<u-button  type="primary" shape="circle" text="确认添加" @click="submit"></u-button>
 		</u-tabbar>
 	</view>
 </template>
@@ -40,9 +40,10 @@
 <script>
 	import qianziyuSelect from "@/components/qianziyu-select/qianziyu-select.vue"
 	import {
-		casualBankCardsAdd
+		CardsAdd,
+		getbyId
 	} from "@/api/my.js"
-	import bank from "@/utils/bank.js"
+	import bankUtils from "@/utils/bank.js"
 	export default {
 		components: {
 			qianziyuSelect
@@ -52,6 +53,7 @@
 				form: {
 					engineerRealname: '',
 				},
+				id:'',//银行卡id
 
 				rules: {
 					'cardName': {
@@ -95,26 +97,48 @@
 			//如果需要兼容微信小程序，并且校验规则中含有方法等，只能通过setRules方法设置规则。
 			this.$refs.uForm.setRules(this.rules)
 		},
-		async onLoad() {},
+		async onLoad(options) {
+			this.id=options.id
+			if(options.id){
+			getbyId({id:options.id}).then((res)=>{
+				console.log(res);
+				this.form=res.data
+			})	
+			}
+		},
 		computed: {},
 		methods: {
 			blur(val) {
-				bank.getBankBin(val).then(res => {
-					console.log(res);
+				console.log(val);
+				bankUtils.getBankBin(val).then(res => {
+					console.log(res,'res');
 					this.form.cardType = res.data.bankName
 				}).catch((err) => {
 					uni.$u.toast(err.msg, '银行类型校验失败')
 				})
 			},
+
+
 			submit() {
+				console.log(this.form);
+				this.form.engineerId=uni.getStorageSync('engineer_id')
+
 				this.$refs.uForm.validate().then(res => {
-					casualEngineerEdit(this.userInfo).then(res => {
-						uni.$u.toast('提交成功')
+					// CardsAdd(this.form).then((res)=>{
+					// 	console.log(res,'33333');
+					// })
+
+
+					CardsAdd(this.form).then(res => {
+						if(res.code='00000'){
+							uni.$u.toast('提交成功')
 						setTimeout(() => {
 							uni.switchTab({
 								url: "/pages/my/card/card"
 							})
 						}, 1000)
+						}
+					
 					})
 				}).catch(errors => {
 					uni.$u.toast(errors, '校验失败')

@@ -130,6 +130,13 @@
 				"navigationBarTextStyle": "white"
 			}
 		},
+			{//我的->推广列表
+			"path": "pages/my/promotion",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
+		},
 		{//我的->银行卡
 			"path": "pages/my/card/card",
 			"style": {
@@ -151,6 +158,7 @@
 				"navigationBarTextStyle": "white"
 			}
 		},
+
 		{//我的->上传证书
 			"path": "pages/my/myMessage/components/uploadcertificat",
 			"style": {

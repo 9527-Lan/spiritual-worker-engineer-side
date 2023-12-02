@@ -4,13 +4,13 @@
 			leftIconColor="#000" titleStyle="color: #000;font-size:34rpx">
 		</u-navbar>
 		<view class="query-box">
-			<view class="query-item">
+			<view class="query-item" @click="showSex=!showSex">
 				<p>全部</p>
-				<u-icon v-if="!queryTypeShow" name="arrow-down-fill" color="#333333" size="14"></u-icon>
+				<u-icon v-if="!showSex" name="arrow-down-fill" color="#333333" size="14"></u-icon>
 				<u-icon v-else name="arrow-down-fill" color="#333333" size="14"></u-icon>
 			</view>
-			<view class="query-item">
-				<p>{{queryYear}}.{{queryMouth}}</p>
+			<view class="query-item" @click="DateShow=true">
+				<p>{{params.createDate}}</p>
 				<u-icon v-if="!queryDateShow" name="arrow-down-fill" color="#333333" size="14"></u-icon>
 				<u-icon v-else name="arrow-down-fill" color="#333333" size="14"></u-icon>
 			</view>
@@ -29,54 +29,102 @@
 		</view>
 		<view class="bottom">
 		</view>
+		<u-action-sheet :show="showSex" :actions="options" title="请选择状态" @close="showSex = false"
+			@select="typeSelect">
+		</u-action-sheet>
+		<u-datetime-picker :show="DateShow" mode="year-month" @cancel='DateShow=false' @confirm="getEndTimes"
+			:formatter="formatter" ref="endPicker"></u-datetime-picker>
 	</view>
 </template>
 
 <script>
-import {fundDetails} from "@/api/my.js"
+import {fundDetails,getzjoptions} from "@/api/my.js"
 	export default {
 		data() {
 			return {
 				queryYear: '2023',
 				queryMouth: '09',
+				showSex:false,
+				DateShow:false,
 				params: {
 					engineerId:'',
 					pageNum:1,
-					pageSize:10
+					pageSize:10,
+					fundDetails:'',
+					createDate:''
 				},
+				options:[],
 				queryDateShow: false,
 				queryTypeShow: false,
 				list: [
-					{
-						'type': '结算',
-						'time': '2023.09.18 12:05:14',
-						"money": '+200',
-						'tradeType': "存入余额"
-					},
-					{
-						'type': '结算',
-						'time': '2023.09.18 12:05:14',
-						"money": '+200',
-						'tradeType': "存入余额"
-					},
-					{
-						'type': '结算',
-						'time': '2023.09.18 12:05:14',
-						"money": '+200',
-						'tradeType': "存入余额"
-					}
+					
 				]
 			}
 		},
 		onLoad() {
-			this.params.engineerId= 2
-			fundDetails(this.params).then((res)=>{
-				this.list=res.data.list
+			this.params.engineerId= uni.getStorageSync('engineer_id')
+			getzjoptions().then((res)=>{
+				this.options= res.data.map(item=>{
+					return {
+						name: item.label,
+						value: item.value
+					}
+				})
+				
 			})
+			let date= new Date()
+			let Year = date.getFullYear();
+				let Moth = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1);
+				console.log(Year+'-'+Moth)
+				this.params.createDate=Year+'-'+Moth
+		this.getlist()
+
 		},
 		methods: {
 			rightClick() {
 				uni.navigateBack(1)
+			},
+
+			getEndTimes(e) {
+				console.log(e.vlaue);
+				this.params.createDate = this.timestampToTime(e.value);
+				this.DateShow=false
+				this.getlist()
+			},
+
+			formatter(type, value) {
+				if (type === 'year') {
+					return `${value}年`
+				}
+				if (type === 'month') {
+					return `${value}月`
+				}
+				return value
+			},
+
+			timestampToTime(timestamp) {
+				// 时间戳为10位需*1000，时间戳为13位不需乘1000
+				let date = new Date(parseInt(timestamp));
+				let Year = date.getFullYear();
+				let Moth = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1);
+				
+				
+				let GMT = Year + '-' + Moth
+				return GMT;
+			},
+
+			getlist(){
+				fundDetails(this.params).then((res)=>{
+				this.list=res.data.list
+				if(!res.data.list.length){
+					uni.$u.toast( '暂无数据')
+				}
+			})
+			},
+			typeSelect(e) {
+				this.params.fundDetails = e.value;
+				this.getlist()
+
 			},
 		}
 	}

@@ -5,78 +5,106 @@
 		</u-navbar>
 		<view class="query-box">
 			<view class="query-item">
-				<p>全部</p>
-				<u-icon v-if="!queryTypeShow" name="arrow-down-fill" color="#333333" size="14"></u-icon>
-				<u-icon v-else name="arrow-down-fill" color="#333333" size="14"></u-icon>
+				<p>推广总量：{{ list.length }}</p>
+				
 			</view>
-			<view class="query-item">
-				<p>{{queryYear}}.{{queryMouth}}</p>
+			<view class="query-item" @click="DateShow=true">
+				<p>{{params.date}}</p>
 				<u-icon v-if="!queryDateShow" name="arrow-down-fill" color="#333333" size="14"></u-icon>
 				<u-icon v-else name="arrow-down-fill" color="#333333" size="14"></u-icon>
 			</view>
 		</view>
 		<view class="list-box">
 			<view class="list-item" v-for="(item, index) in list" :key="index">
-				<view class="item">
-					<p style="margin-bottom: 10rpx;font-size: 32rpx;font-weight: bold;color: #333333;">{{item.type}}</p>
-					<p style="font-size: 24rpx;font-weight: 500;color: #999999;">{{item.time}}</p>
+				<view class="item-img">
+				<u-image :src="item.headSculptureUrl" mode="aspectFit"  width="108rpx" height="108rpx"></u-image>
+				<view style="line-height: 50px; margin-left: 20px; font-weight: bold; font-size: 32rpx;">{{item.engineerName }}</view>
 				</view>
 				<view class="item" style="text-align: right;">
-					<p style="margin-bottom: 10rpx;font-size: 32rpx;font-weight: bold;color: #3A84F0;">{{item.money}}</p>
-					<p style="font-size: 24rpx;font-weight: 500;color: #999999;">{{item.tradeType}}</p>
+					<p style="font-size: 32rpx;font-weight: bold;color: #ccc; line-height: 50px;">{{ item.passivityDate }}</p>
+					
 				</view>
 			</view>
 		</view>
 		<view class="bottom">
 		</view>
+		<u-datetime-picker :show="DateShow" mode="year-month" @cancel='DateShow=false' @confirm="getEndTimes"
+			:formatter="formatter" ref="endPicker"></u-datetime-picker>
 	</view>
 </template>
 
 <script>
-import {fundDetails} from "@/api/my.js"
+import {casualPromotions} from "@/api/my.js"
+import {getBankBin
+} from "@/utils/bank"
 	export default {
 		data() {
 			return {
 				queryYear: '2023',
 				queryMouth: '09',
+				DateShow:false,
 				params: {
 					engineerId:'',
 					pageNum:1,
-					pageSize:10
+					pageSize:10,
+					date:''
 				},
 				queryDateShow: false,
 				queryTypeShow: false,
 				list: [
-					{
-						'type': '结5算',
-						'time': '2023.09.18 12:05:14',
-						"money": '+200',
-						'tradeType': "存入余额"
-					},
-					{
-						'type': '结算',
-						'time': '2023.09.18 12:05:14',
-						"money": '+200',
-						'tradeType': "存入余额"
-					},
-					{
-						'type': '结算',
-						'time': '2023.09.18 12:05:14',
-						"money": '+200',
-						'tradeType': "存入余额"
-					}
-				]
+		
+				],
 			}
 		},
 		onLoad() {
+			let date= new Date()
+			let Year = date.getFullYear();
+				let Moth = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1);
+				console.log(Year+'-'+Moth)
+				this.params.date=Year+'-'+Moth
 			this.params.engineerId= uni.getStorageSync('engineer_id')
-			fundDetails(this.params).then((res)=>{
-				console.log(res,'res');
-			})
+		this.getlist()
 		},
 		methods: {
 			rightClick() {
 				uni.navigateBack(1)
+			},
+
+
+			getEndTimes(e) {
+				console.log(e.vlaue);
+				this.params.date = this.timestampToTime(e.value);
+				this.DateShow=false
+				this.getlist()
+			},
+
+			getlist(){
+				casualPromotions(this.params).then((res)=>{
+					this.list=res.data.list
+					console.log(this.list,'2020220');
+			})
+			},
+			
+			formatter(type, value) {
+				if (type === 'year') {
+					return `${value}年`
+				}
+				if (type === 'month') {
+					return `${value}月`
+				}
+				return value
+			},
+
+
+			timestampToTime(timestamp) {
+				// 时间戳为10位需*1000，时间戳为13位不需乘1000
+				let date = new Date(parseInt(timestamp));
+				let Year = date.getFullYear();
+				let Moth = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1);
+				
+				
+				let GMT = Year + '-' + Moth
+				return GMT;
 			},
 		}
 	}
@@ -119,6 +147,9 @@ import {fundDetails} from "@/api/my.js"
 			justify-content: space-between;
 			padding: 36rpx;
 			height: 160rpx;
+			.item-img{
+				display: flex;
+			}
 		}
 	}
 </style>

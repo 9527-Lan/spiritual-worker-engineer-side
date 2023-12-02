@@ -46,6 +46,17 @@
 			</view>
 			<!-- #endif -->
 		</view>
+
+		<view class="footer-tip">
+				<!-- <view class="circle"></view> -->
+				<u-checkbox-group v-model="isAgree" @change="checkboxChange">
+					<u-checkbox size="28rpx" label='' name='' shape="circle"></u-checkbox>
+				</u-checkbox-group>
+				我已阅读并理解
+				<text class="link">《服务协议》</text>
+				和
+				<text class="link">《隐私协议》</text>
+			</view>
 		<!-- <view class="register-section">
 			还没有账号?
 			<text @click="toRegist">马上注册</text>
@@ -68,6 +79,11 @@ export default {
 			logining: false,
 			countdown: 0,
 			timer: null,
+			id:'',
+			agree: false,
+			isAgree: [{
+					nema : 'argree'
+				}],
 			code: undefined
 		};
 	},
@@ -77,7 +93,11 @@ export default {
 			return /^1[3456789]\d{9}$/.test(this.mobile);
 		}
 	},
-	onLoad() {
+	onLoad(options) {
+		if(options.id){
+			this.id=options.id
+		}
+		
 		// #ifdef MP
 		this.getCode()
 		// #endif
@@ -113,7 +133,9 @@ export default {
 		getSmsCode() {
 
 			getnumcode({ phone: this.mobile }).then((res) => {
-				console.log(res, 'res');
+				if(res.code==='00000'){
+					this.$api.msg('验证码已发送');
+					console.log(res, 'res');
 				this.countdown = 60
 				var setTimeouts = setInterval(() => {
 					this.countdown--;
@@ -121,20 +143,30 @@ export default {
 						clearInterval(setTimeouts)
 					}
 				}, 1000)
+				}
+			
 			})
 		},
+		checkboxChange() {
+				console.log(this.isAgree)
+				this.agree = !this.agree
+			},
 
 		//  #ifndef MP
 		async toLogin() {
-			console.log('123123123');
-			this.logining = true;
+			if (this.agree) {
+				this.logining = true;
 			// uni.switchTab({
 			// 	url: '/pages/homePage/index'
 			// });
-			this.$store.dispatch('user/loginCode', {
+			let params={
 				code: this.verifyCode,
-				phone: this.mobile
-			}).then(res => {
+				phone: this.mobile,
+			}
+			if(this.id){
+				params.engineer_id=this.id
+			}
+			this.$store.dispatch('user/loginCode', params).then(res => {
 				const pages = getCurrentPages();
 				
 				console.log(pages.length>1,'pages');
@@ -155,6 +187,14 @@ export default {
 				console.log(err)
 				this.logining = false;
 			});
+
+			}else{
+				this.$api.msg('请仔细阅读协议后登录');
+
+			}
+
+
+		
 		},
 		// #endif
 	}
@@ -362,4 +402,19 @@ page {
 	font-family: yticon;
 	font-weight: bold;
 }
+.footer-tip {
+				margin-top: 154rpx;
+				font-size: 24rpx;
+				color: #666666;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+
+				.circle {}
+
+				.link {
+					cursor: pointer;
+					color: #3a84f0;
+				}
+			}
 </style>

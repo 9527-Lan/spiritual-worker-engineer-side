@@ -1578,8 +1578,8 @@ const getBankBin = (cardNum) =>{
     });
 }
  
-const bankCardInfo = {
+const bankUtils = {
     getBankBin: getBankBin
 }
  
-export default bankCardInfo
+export default bankUtils
