@@ -1,6 +1,6 @@
 <template>
 	<view class="container">
-		<u-navbar title="资金明细" @rightClick="rightClick" :autoBack="true" leftIconSize="34rpx" bgColor="#F2F6FF"
+		<u-navbar title="推广列表" @rightClick="rightClick" :autoBack="true" leftIconSize="34rpx" bgColor="#F2F6FF"
 			leftIconColor="#000" titleStyle="color: #000;font-size:34rpx">
 		</u-navbar>
 		<view class="query-box">
@@ -18,12 +18,12 @@
 		<view class="list-box">
 			<view class="list-item" v-for="(item, index) in list" :key="index">
 				<view class="item">
-					<p style="margin-bottom: 10rpx;font-size: 32rpx;font-weight: bold;color: #333333;">结算</p>
-					<p style="font-size: 24rpx;font-weight: 500;color: #999999;">{{item.createTime}}</p>
+					<p style="margin-bottom: 10rpx;font-size: 32rpx;font-weight: bold;color: #333333;">{{item.type}}</p>
+					<p style="font-size: 24rpx;font-weight: 500;color: #999999;">{{item.time}}</p>
 				</view>
 				<view class="item" style="text-align: right;">
-					<p style="margin-bottom: 10rpx;font-size: 32rpx;font-weight: bold;color: #3A84F0;">{{item.type===1?'+':'-'}}{{item.balanceLess}}</p>
-					<p style="font-size: 24rpx;font-weight: 500;color: #999999;">{{item.orderName}}</p>
+					<p style="margin-bottom: 10rpx;font-size: 32rpx;font-weight: bold;color: #3A84F0;">{{item.money}}</p>
+					<p style="font-size: 24rpx;font-weight: 500;color: #999999;">{{item.tradeType}}</p>
 				</view>
 			</view>
 		</view>
@@ -48,7 +48,7 @@ import {fundDetails} from "@/api/my.js"
 				queryTypeShow: false,
 				list: [
 					{
-						'type': '结算',
+						'type': '结5算',
 						'time': '2023.09.18 12:05:14',
 						"money": '+200',
 						'tradeType': "存入余额"
@@ -69,9 +69,9 @@ import {fundDetails} from "@/api/my.js"
 			}
 		},
 		onLoad() {
-			this.params.engineerId= 2
+			this.params.engineerId= uni.getStorageSync('engineer_id')
 			fundDetails(this.params).then((res)=>{
-				this.list=res.data.list
+				console.log(res,'res');
 			})
 		},
 		methods: {

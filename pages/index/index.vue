@@ -2,7 +2,7 @@
 	<view class="content">
 		<image class="logo" src="/static/logo@1x.png"></image>
 		<view class="text-area">
-			<u-button type="primary" text="确定" @click="hasLogin == false && navTo('/pages/login/login')"></u-button>
+			<u-button type="primary" text="确定" @click="hasLogin == false && navTo('pages/login/login')"></u-button>
 		</view>
 	</view>
 </template>
@@ -28,10 +28,19 @@
 			 */
 			navTo(url) {
 				console.log('跳转路径', url);
-				if (!this.hasLogin) {
+				 /*#ifdef H5*/
+				 if (!this.hasLogin) {
+					url = '/pages/login/login';
+				}
+				uni.$u.route(url)
+            /*#endif*/
+			/*#ifdef MP*/
+			if (!this.hasLogin) {
 					url = '/pages/login/index';
 				}
 				uni.$u.route(url)
+            /*#endif*/
+				
 			},
 		}
 	}

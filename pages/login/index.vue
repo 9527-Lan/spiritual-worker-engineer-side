@@ -1,92 +1,34 @@
 <template>
-	<view class="container">
-		<view class="top-box">
-			<u--image class="logo" :showLoading="true" src="/static/logo@2x.png" width="112rpx"
-				height="112rpx"></u--image>
-			<view class="title">灵活用工服务平台</view>
-			<p>工程师端</p>
-		</view>
-
-		<view class="bottom-box">
-			<u-button type="primary" :disabled="logining" color="#3A84F0" shape="circle" text="微信登录"
-				@click="toLogin"></u-button>
-		</view>
-		<u-popup :show="show" mode="center" :round="24" overlayOpacity="0.4" :customStyle="popupStyle">
-			<view>
-				<view class="popup-container">
-					<view class="popup-top-box">
-						登录【灵活用工服务平台】前，请仔细阅读
-						<text class="link">《服务协议》</text>和
-						<text class="link">《服务协议》</text>
-						，如你同意该 两个协议，请点击“同意”开始使用
-					</view>
-					<view class="popup-bottom-box">
-						<view class="popup-button">
-							<u-button type="primary" style="color: #3A84F0;" color="#F4F4F4" text="拒绝"
-								@click="refuse()"></u-button>
-						</view>
-						<view class="popup-button">
-							<u-button type="primary" color="#3A84F0" text="确定" @click="confirm()"></u-button>
-						</view>
-					</view>
-				</view>
-			</view>
-		</u-popup>
+	<view>
+		 <!-- #ifdef MP -->
+		 <uniLogin></uniLogin>
+		  <!-- #endif -->
+		<!-- #ifdef H5 -->
+		<login></login>
+		  <!-- #endif -->
 	</view>
 </template>
 
 <script>
-	import {
-		casualOrder
-	} from '@/api/login.js'
+	import 
+		uniLogin
+	 from '@/pages/login/uniLogin.vue'
+	 import login from "@/pages/login/login"
 	export default {
 		data() {
 			return {
-				logining: false,
-				show: false,
-				popupStyle: {
-					width: '622rpx',
-					height: '400rpx',
-					background: '#FFFFFF'
-				},
-				agree: false
+				
 			}
+		},
+		components:{
+			uniLogin,
+			login
 		},
 		onLoad() {
 
 		},
 		methods: {
-			async toLogin() {
-				if (this.agree) {
-					this.logining = true;
-					uni.login({
-						provider: 'weixin',
-						success: res => {
-							casualOrder(res.code).then(res => {
-								uni.setStorageSync('engineer_id',res.data);
-								uni.switchTab({
-									url: '/pages/homePage/index'
-								});
-							})
-						},
-						fail: err => {
-							console.log(err)
-						}
-					})
-				} else {
-					this.show = true;
-				}
-			},
-			confirm() {
-				// console.log('open');
-				this.show = false
-				this.agree = true
-			},
-			refuse() {
-				this.show = false
-				this.agree = false
-				// console.log('close');
-			}
+		
 		}
 	}
 </script>

@@ -205,6 +205,7 @@
 				}).then(res => {
 					if (res.code === "00000") {
 						const list = res.data
+						console.log(list,'222222');
 						this.labelActions = list;
 					}
 				})

@@ -197,3 +197,11 @@ export function casualBankCardsAdd(params) {
 		params: params,
 	})
 }
+// 资金明细
+export function fundDetails(params) {
+	return request({
+		url: '/engineerEnd/fundDetails',
+		method: 'get',
+		params:params
+	})
+}

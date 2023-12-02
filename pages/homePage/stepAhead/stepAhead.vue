@@ -66,7 +66,7 @@
 		casualOrderEngineer
 	} from '@/api/user.js'
 	import {
-		casualOrder
+		casualOrder,getdetail
 	} from '@/api/index.js'
 	export default {
 		data() {
@@ -86,12 +86,15 @@
 		},
 		
 		onLoad(options) {
+			console.log(options,'22222');
+			this.order_id = options.id
 			this.engineer_id = uni.getStorageSync('engineer_id')
-			casualOrder().then(res => {
-				const list = res.data.list.filter(item => item.id === options.id)
-				this.orderList = list[0] ? list[0] : [],
-				this.nodeText = this.orderList.description == null ? '' : this.orderList.description
-				this.order_id = this.orderList.id
+			getdetail({id:options.id}).then(res => {
+				this.orderList = res.data
+				// const list = res.data.list.filter(item => item.id === options.id)
+				// this.orderList = res.data.list
+				// this.nodeText = this.orderList.description == null ? '' : this.orderList.description
+				// this.order_id = this.orderList.id
 			})
 			// this.submitTo()	
 		},
@@ -117,7 +120,15 @@
 								}, 1000)
 							}
 						})
+					}else{
+						uni.showToast({
+							duration: 2000,
+							title: res.msg,
+							icon:'error'
+						
+						})
 					}
+					
 				})
 			},
 

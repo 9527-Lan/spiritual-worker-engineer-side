@@ -25,3 +25,11 @@ export function casualServiceType(params) {
 		params: params,
 	})
 }
+// 查看订单详情
+export function getdetail(params) {
+	return request({
+		url: '/LowerSingleEnd/web/casualOrder/getById',
+		method: 'get',
+		params: params,
+	})
+}

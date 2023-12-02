@@ -45,7 +45,7 @@
 			</u-tabs>
 		</u-sticky>
 		<view class="list">
-			<u-list @scrolltolower="scrolltolower" lowerThreshold="20" :scrollable="false" :showScrollbar="true" :upperThreshold="4000">
+			<u-list @scrolltolower="scrolltolower" >
 				<u-list-item v-for="(item, index) in OrderList" :key="index">
 					<view class="listBlok" @click="toStepAhead(item.id)">
 						<view class="top">
@@ -96,7 +96,7 @@ let menuButtonInfo = uni.getMenuButtonBoundingClientRect()?uni.getMenuButtonBoun
 				tabList: [],
 				OrderList: [],
 				pageNum: 1,
-				pageSize: 10,
+				pageSize: 4,
 				typeId: "",
 				tatal: 0,
 				top:menuButtonInfo.top,
@@ -134,6 +134,7 @@ let menuButtonInfo = uni.getMenuButtonBoundingClientRect()?uni.getMenuButtonBoun
 				});
 			},
 			scrolltolower() {
+		
 				if (this.tatal == this.OrderList.length) return
 				this.pageNum++
 				this.loadmore()
@@ -143,6 +144,7 @@ let menuButtonInfo = uni.getMenuButtonBoundingClientRect()?uni.getMenuButtonBoun
 				let params = {
 					pageNum: this.pageNum,
 					pageSize: this.pageSize,
+					// id: uni.getStorageSync('engineer_id'),
 				}
 				if (this.typeId != 0) params.typeId = this.typeId
 				queryOrderbyIdPages(params).then(res => {
