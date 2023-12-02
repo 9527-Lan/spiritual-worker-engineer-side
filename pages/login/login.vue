@@ -403,7 +403,6 @@ page {
 	font-weight: bold;
 }
 .footer-tip {
-				margin-top: 154rpx;
 				font-size: 24rpx;
 				color: #666666;
 				display: flex;

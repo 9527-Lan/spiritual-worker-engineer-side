@@ -96,13 +96,15 @@
 		background-color: #F2F6FF;
 	}
 	.blueFixed {
-		position: fixed;
 		width: 100%;
 		height: 480rpx;
 		background-color: #3A84F0;
+		overflow: hidden;
 		.money-sum {
+			margin: auto;
+    margin-top: 65px;
 			display: grid;
-			margin: 180rpx 0 0 60rpx;
+			width: 656rpx;
 			color: #fff;
 			.text {
 				font-size: 28rpx;
@@ -118,7 +120,7 @@
 		height: 505rpx;
 		background: #ffffff;
 		border-radius: 15rpx;
-		margin: 400rpx auto 34rpx;
+		margin: -120rpx auto 34rpx;
 		padding: 36rpx 32rpx 42rpx 32rpx;
 		
 		.card-title {

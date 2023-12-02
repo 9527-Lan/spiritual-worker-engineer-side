@@ -110,10 +110,9 @@
 					</view>
 					<view style="height: 150rpx; width: 622rpx; padding: 10px 20px; margin-bottom: 30px;">
 						<view class="item-img" style="display: flex;">
-							<u-image src="/static/logo@2x.png" mode="aspectFit" style="margin-right: 15px;" width="108rpx"
-								height="108rpx"></u-image>
+							<u-avatar :src="myList.headSculptureUrl" mode="aspectFit" size="108" style="margin-right: 15px;"></u-avatar>
 							<view>
-								<view style=" font-weight: bold; font-size: 32rpx; margin: 5px 0;">张三三
+								<view style=" font-weight: bold; font-size: 32rpx; margin: 5px 0;">	{{ myList.engineerRealname }}
 								</view>
 								<p>邀请你访问灵活用工小程序</p>
 							</view>
@@ -126,8 +125,8 @@
 					<p style="text-align: center; font-size: 32rpx;font-family: PingFang SC;margin-bottom: 109rpx;font-weight: bold;color: #333333;">长按识别二维码</p>
 
 					<view style="display: flex;">
-						<u-button text="取消" style="width: 125px; font-size: 32rpx;font-family: PingFang SC;font-weight: 500;color: #3A84F0;" @click="cardShow = !cardShow"></u-button>
-						<u-button text="保存图片" type="primary" style="width: 125px;"></u-button>
+						<u-button text="关闭" style=" font-size: 32rpx;font-family: PingFang SC;font-weight: 500;color: #3A84F0;" @click="cardShow = !cardShow"></u-button>
+						<!-- <u-button text="保存图片" type="primary" style="width: 125px;"></u-button> -->
 					</view>
 				</view>
 			</view>

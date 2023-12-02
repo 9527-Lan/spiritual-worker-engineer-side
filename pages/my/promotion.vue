@@ -17,11 +17,15 @@
 		<view class="list-box">
 			<view class="list-item" v-for="(item, index) in list" :key="index">
 				<view class="item-img">
-				<u-image :src="item.headSculptureUrl" mode="aspectFit"  width="108rpx" height="108rpx"></u-image>
+				<u-avatar :src="item.headSculptureUrl" mode="aspectFit" size="108" ></u-avatar>
 				<view style="line-height: 50px; margin-left: 20px; font-weight: bold; font-size: 32rpx;">{{item.engineerName }}</view>
 				</view>
 				<view class="item" style="text-align: right;">
-					<p style="font-size: 32rpx;font-weight: bold;color: #ccc; line-height: 50px;">{{ item.passivityDate }}</p>
+					<p style="font-size: 24rpx;
+font-family: PingFang SC;
+font-weight: 500;
+
+color: #999999; line-height: 58px;">{{ item.passivityDate }}</p>
 					
 				</view>
 			</view>
@@ -145,7 +149,7 @@ import {getBankBin
 			display: flex;
 			border-bottom: 2rpx solid #F0F0F0;
 			justify-content: space-between;
-			padding: 36rpx;
+			padding:24rpx 36rpx ;
 			height: 160rpx;
 			.item-img{
 				display: flex;
