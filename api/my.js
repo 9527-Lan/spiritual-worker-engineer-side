@@ -268,3 +268,12 @@ export function carddel(id) {
 }
 
 // 待审核证书
+
+// 待审核证书
+export function myDaiCertificate(params) {
+	return request({
+		url: '/engineerEnd/myDaiCertificate',
+		method: 'get',
+		params:params
+	})
+}

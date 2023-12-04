@@ -166,6 +166,13 @@
 				"navigationBarTextStyle": "white"
 			}
 		},
+		{//我的->上传证书
+		"path": "pages/my/myMessage/components/list",
+		"style": {
+			"navigationStyle": "custom",
+			"navigationBarTextStyle": "white"
+		}
+	},
 		{//我的->上传身份证
 			"path": "pages/my/myMessage/components/uploadIdCard",
 			"style": {
