@@ -46,30 +46,11 @@ import {fundDetails} from "@/api/my.js"
 				},
 				queryDateShow: false,
 				queryTypeShow: false,
-				list: [
-					{
-						'type': '结算',
-						'time': '2023.09.18 12:05:14',
-						"money": '+200',
-						'tradeType': "存入余额"
-					},
-					{
-						'type': '结算',
-						'time': '2023.09.18 12:05:14',
-						"money": '+200',
-						'tradeType': "存入余额"
-					},
-					{
-						'type': '结算',
-						'time': '2023.09.18 12:05:14',
-						"money": '+200',
-						'tradeType': "存入余额"
-					}
-				]
+				list: []
 			}
 		},
 		onLoad() {
-			this.params.engineerId= 2
+			this.params.engineerId = uni.getStorageSync('engineer_id')
 			fundDetails(this.params).then((res)=>{
 				this.list=res.data.list
 			})

@@ -205,3 +205,11 @@ export function fundDetails(params) {
 		params:params
 	})
 }
+// 提现申请
+export function addwithdrawal(params) {
+	return request({
+		url: '/engineerEnd/addwithdrawal',
+		method: 'get',
+		params:params
+	})
+}
