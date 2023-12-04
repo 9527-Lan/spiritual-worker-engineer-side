@@ -44,7 +44,7 @@
 </template>
 
 <script>
-	import {engineerEnd} from "@/api/my.js"
+	import {engineerEnd, addwithdrawal} from "@/api/my.js"
 	export default {
 		data() {
 			return {
@@ -60,16 +60,25 @@
 				id:"",
 			}
 		},
-		onLoad(options) {
-			console.log(decodeURIComponent(options.id)) 
-			let params={
-				id:options.id
-			}
-			engineerEnd(params).then(res=>{
-				this.balance=res.data.balance
-			})
+		onLoad() {
+			this.dundDetails()
 		},
 		methods: {
+			async dundDetails() {
+				let params={
+					id: uni.getStorageSync('engineer_id')
+				}
+				let res = await engineerEnd(params)
+				if(res.code == '00000') {
+					this.balance=res.data.balance
+				} else {
+					uni.showToast({
+						title: res.msg,
+						icon:'none'
+					})
+				}
+				
+			},
 			rightClick() {
 				uni.navigateBack(1)
 			},
@@ -77,8 +86,41 @@
 				console.log(123);
 				this.form.money = this.balance
 			},
-			applyWithdrawal() {
-				
+			async applyWithdrawal() {
+				let money = this.form.money
+				if (money <= 0) {
+					uni.showToast({
+						title:'提现金额必须大于0',
+						icon:'none'
+					})
+					return
+				}
+				if (money > this.balance) {
+					uni.showToast({
+						title:'提现金额不大于当前余额',
+						icon:'none'
+					})
+					return
+				}
+				let userInfo = this.$store.state.user.userInfo
+				let params = {
+					"engineerId": uni.getStorageSync('engineer_id'),
+					"money": this.form.money
+				}
+				let res = await addwithdrawal(params);
+				if(res.code == '00000') {
+					
+					uni.showToast({
+						title:'提现申请成功',
+						icon:'none'
+					})
+					this.dundDetails()
+				} else {
+					uni.showToast({
+						title: res.msg,
+						icon:'none'
+					})
+				}
 			},
 		
 		}
