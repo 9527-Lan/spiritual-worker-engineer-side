@@ -130,9 +130,22 @@
 				}
 				casualEngineerEdit(parmas).then(res => {
 					authentication(parmas1).then(res => {
-						uni.navigateTo({
+						if(res.data.status===1){
+							uni.showToast({
+							title: res.data.msg,
+							duration: 2000,
+						})
+							uni.navigateTo({
 							url: '/pages/my/myMessage/myMessage',
 						});
+						}else{
+							uni.showToast({
+							title: res.data.msg,
+							duration: 2000,
+							icon:fail
+						})
+						}
+						
 					})
 				})
 			}

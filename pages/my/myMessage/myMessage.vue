@@ -6,7 +6,7 @@
 		<view class="from">
 			<view class="title">完善我的信息</view>
 			<view class="tip">为了您更快速的灵活用工，请先完善我的个人信息</view>
-			<view class="warn" v-if="!userInfo.cardImgNegative">
+			<view class="warn" v-if="userInfo.isAuthentication===1||userInfo.isAuthentication===3">
 				<view class="left">
 					<u-icon name="../../../static/my/zj-icon.png" color="#2979ff" size="28"></u-icon>
 					<p>您还未进行身份证认证</p>
@@ -181,6 +181,7 @@
 					this.sex = res.data.engineerSexName
 					this.type = res.data.typeName
 					this.label = res.data.labelName
+					console.log(this.userInfo);
 					res.data.casualEngineerCertificateList.forEach(el => {
 						if (el.states == 3) {
 							this.certificate.push({
