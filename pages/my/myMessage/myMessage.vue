@@ -6,7 +6,9 @@
 		<view class="from">
 			<view class="title">完善我的信息</view>
 			<view class="tip">为了您更快速的灵活用工，请先完善我的个人信息</view>
-			<view class="warn" v-if="userInfo.isAuthentication===1||userInfo.isAuthentication===3">
+			<view class="warn" 
+			v-if="userInfo.isAuthentication===1||userInfo.isAuthentication===3"
+			>
 				<view class="left">
 					<u-icon name="../../../static/my/zj-icon.png" color="#2979ff" size="28"></u-icon>
 					<p>您还未进行身份证认证</p>
@@ -53,7 +55,7 @@
 					</u-form-item>
 					<u-form-item required label="上传证书" borderBottom ref="item1">
 						<u--input disabled disabledColor="#ffffff" border="none"></u--input>
-						<u-button type="primary" color="#3A84F0" text="去查看" @click=" tolistlook"
+						<u-button type="primary" color="#3A84F0" text="审核中" @click=" tolistlook"
 							style="width: 140rpx;height: 48rpx;border-radius: 14px;overflow: hidden;display: flex;align-items: center; margin-right: 30rpx;" />
 						<u-button type="primary" color="#3A84F0" text="去上传" @click="toCertificate"
 							style="width: 140rpx;height: 48rpx;border-radius: 14px;overflow: hidden;display: flex;align-items: center;" />

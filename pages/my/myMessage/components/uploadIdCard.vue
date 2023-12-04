@@ -38,6 +38,7 @@
 			return {
 				frontList: [],
 				contraryList: [],
+				num:0
 			}
 		},
 		computed: {},
@@ -115,6 +116,7 @@
 				})
 			},
 			save() {
+				// uni.setStorageSync('upnum',0);
 				if(this.frontList.length==0) return uni.$u.toast('请上传身份证人像面再提交')
 				if(this.contraryList==0) return uni.$u.toast('请上传身份证国徽面再提交')
 				let parmas = {
@@ -128,7 +130,8 @@
 					idnum: uni.getStorageSync('msgItem').idcard,
 					engineerId: uni.getStorageSync('msgItem').id
 				}
-				casualEngineerEdit(parmas).then(res => {
+			
+	casualEngineerEdit(parmas).then(res => {
 					authentication(parmas1).then(res => {
 						if(res.data.status===1){
 							uni.showToast({
@@ -139,15 +142,13 @@
 							url: '/pages/my/myMessage/myMessage',
 						});
 						}else{
-							uni.showToast({
-							title: res.data.msg,
-							duration: 2000,
-							icon:fail
-						})
+						uni.$u.toast(res.data.msg)
 						}
 						
 					})
 				})
+			
+			
 			}
 		}
 	}

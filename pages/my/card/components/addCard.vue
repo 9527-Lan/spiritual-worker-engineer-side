@@ -112,7 +112,11 @@
 				console.log(val);
 				bankUtils.getBankBin(val).then(res => {
 					console.log(res,'res');
-					this.form.cardType = res.data.bankName
+					this.$nextTick(() => {
+						this.form.cardType = res.data.bankName
+				})
+					
+					
 				}).catch((err) => {
 					uni.$u.toast(err.msg, '银行类型校验失败')
 				})
@@ -133,7 +137,7 @@
 						if(res.code='00000'){
 							uni.$u.toast('提交成功')
 						setTimeout(() => {
-							uni.switchTab({
+							uni.navigateTo({
 								url: "/pages/my/card/card"
 							})
 						}, 1000)

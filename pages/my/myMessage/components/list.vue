@@ -9,9 +9,9 @@
                 <u-list-item v-for="(item, index) in OrderList" :key="index">
                     <view class="listBlok" >
                         <view class="top">
-                            <text class="topTextBlack">{{ item.certificateName }}</text>
+                            <text class="topTextBlack">名称：{{ item.certificateName?item.certificateName:'--' }}</text>
                         </view>
-                        <view class="content">{{ item.remark }}</view>
+                        <view class="content">备注：{{ item.remark?item.remark:'暂无' }}</view>
                         <view style="display: flex;">
                             <image v-for="(item2, index) in item.certificateImgUrl" :src="item2" mode="widthFix"
                                 style="width: 200rpx; height: 150rpx;"></image>
