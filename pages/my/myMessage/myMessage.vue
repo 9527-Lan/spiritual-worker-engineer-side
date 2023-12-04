@@ -53,6 +53,8 @@
 					</u-form-item>
 					<u-form-item required label="上传证书" borderBottom ref="item1">
 						<u--input disabled disabledColor="#ffffff" border="none"></u--input>
+						<u-button type="primary" color="#3A84F0" text="去查看" @click=" tolistlook"
+							style="width: 140rpx;height: 48rpx;border-radius: 14px;overflow: hidden;display: flex;align-items: center; margin-right: 30rpx;" />
 						<u-button type="primary" color="#3A84F0" text="去上传" @click="toCertificate"
 							style="width: 140rpx;height: 48rpx;border-radius: 14px;overflow: hidden;display: flex;align-items: center;" />
 					</u-form-item>
@@ -219,7 +221,7 @@
 				this.submit(true)
 				uni.setStorageSync('msgItem', this.userInfo)
 				uni.navigateTo({
-					url: '/pages/my/myMessage/components/uploadIdCard'
+					url: '/pages/my/myMessage/components/uploadIdCard?id='+this.userInfo.id
 				})
 			},
 			toCertificate() {
@@ -230,7 +232,13 @@
 					}).then(res => {})
 				}
 				uni.navigateTo({
-					url: '/pages/my/myMessage/components/uploadcertificat'
+					url: '/pages/my/myMessage/components/uploadcertificat?id='+this.userInfo.id
+				})
+			},
+			tolistlook(){
+			console.log(	this.userInfo,'id');
+				uni.navigateTo({
+					url: '/pages/my/myMessage/components/list?id='+this.userInfo.id
 				})
 			},
 			sexSelect(e) {

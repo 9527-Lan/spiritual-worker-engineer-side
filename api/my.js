@@ -205,3 +205,11 @@ export function fundDetails(params) {
 		params:params
 	})
 }
+// 待审核证书
+export function myDaiCertificate(params) {
+	return request({
+		url: '/engineerEnd/myDaiCertificate',
+		method: 'get',
+		params:params
+	})
+}
