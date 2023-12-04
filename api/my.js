@@ -153,7 +153,7 @@ export function delcertificate(params) {
 	})
 }
 
-//头像上传 
+//头像上传
 export function casualEngineerAvatar(params) {
 	return request({
 		url: '/engineerEnd/web/casualEngineer/avatar',
@@ -205,10 +205,19 @@ export function fundDetails(params) {
 		params:params
 	})
 }
+
 // 提现申请
 export function addwithdrawal(params) {
 	return request({
 		url: '/engineerEnd/addwithdrawal',
+		method: 'get',
+		params:params
+	})
+}
+// 待审核证书
+export function myDaiCertificate(params) {
+	return request({
+		url: '/engineerEnd/myDaiCertificate',
 		method: 'get',
 		params:params
 	})
