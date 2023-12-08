@@ -133,6 +133,9 @@
 			
 	casualEngineerEdit(parmas).then(res => {
 					authentication(parmas1).then(res => {
+						if(res.code==='B0001'){
+							uni.$u.toast(res.msg)
+						}
 						if(res.data.status===1){
 							uni.showToast({
 							title: res.data.msg,
@@ -144,6 +147,9 @@
 						}else{
 						uni.$u.toast(res.data.msg)
 						}
+						console.log(res.code,'code');
+
+						
 						
 					})
 				})

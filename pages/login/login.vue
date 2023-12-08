@@ -2,8 +2,8 @@
 	<view class="container">
 
 		<view class="top-box">
-			<u-image src="/static/logo@2x.png" mode="aspectFit"  width="108rpx" height="108rpx"></u-image>
-				<!-- <u-image src="@/static/logo.png" mode="aspectFit" width="108rpx" height="108rpx"></u-image> -->
+			<u-image src="/static/logo@2x.png" mode="aspectFit" width="108rpx" height="108rpx"></u-image>
+			<!-- <u-image src="@/static/logo.png" mode="aspectFit" width="108rpx" height="108rpx"></u-image> -->
 			<!-- <u--image class="logo" :showLoading="true" src="/static/logo@2x.png" width="112rpx"
 				height="112rpx"></u--image> -->
 			<view class="title">灵活用工服务平台</view>
@@ -20,7 +20,7 @@
 			<!-- 小程序登录授权界面 -->
 			<!-- #ifdef MP -->
 			<button class="confirm-btn" @click.stop="getUserProfile">小程序登录授权</button>
-			
+
 			<!-- #endif -->
 
 			<!-- H5、Android、IOS登录授权界面 -->
@@ -48,24 +48,45 @@
 		</view>
 
 		<view class="footer-tip">
-				<!-- <view class="circle"></view> -->
-				<u-checkbox-group v-model="isAgree" @change="checkboxChange">
+			<u-radio-group v-model="agree" @change="checkboxChange">
+				<u-radio size="28rpx"></u-radio>
+			</u-radio-group>
+
+
+			<!-- <view class="circle"></view> -->
+			<!-- <u-checkbox-group v-model="agree" @change="checkboxChange">
 					<u-checkbox size="28rpx" label='' name='' shape="circle"></u-checkbox>
-				</u-checkbox-group>
-				我已阅读并理解
-				<text class="link">《服务协议》</text>
-				和
-				<text class="link">《隐私协议》</text>
-			</view>
+				</u-checkbox-group> -->
+			我已阅读并理解
+			<text class="link">《服务协议》</text>
+			和
+			<text class="link" >《隐私协议》</text>
+		</view>
 		<!-- <view class="register-section">
 			还没有账号?
 			<text @click="toRegist">马上注册</text>
 		</view> -->
+		<u-modal :show="cardShow" :showConfirmButton="false" width="622rpx" style="padding-top: 0;">
+			
+			<view class="rich" style="height: 700px; margin:  auto; overflow: scroll">
+				<u-loading-icon v-if="!node" text="加载中" textSize="24"></u-loading-icon>
+				<view v-else>
+					<rich-text :nodes="node"></rich-text>
+				<view style="display: flex;">
+					<u-button text="确认"
+						style=" font-size: 32rpx;font-family: PingFang SC;margin-top: 15px; font-weight: 500;color: #3A84F0;"
+						@click="cardbtn"></u-button>
+				</view>
+				</view>
+				
+			</view>
+		</u-modal>
+
 	</view>
 </template>
 
 <script>
-import { getnumcode } from "@/api/user.js"
+import { getnumcode, getAgreement } from "@/api/user.js"
 import {
 	mapMutations
 } from 'vuex';
@@ -74,16 +95,20 @@ export default {
 	data() {
 		return {
 			mobile: '',
+			cardShow: false,
 			verifyCode: null,
 			password: undefined,
 			logining: false,
+			carloading:true,
+			loginStatus:false,
+			node: ``,
 			countdown: 0,
 			timer: null,
-			id:'',
+			id: '',
 			agree: false,
 			isAgree: [{
-					nema : 'argree'
-				}],
+				nema: 'argree'
+			}],
 			code: undefined
 		};
 	},
@@ -94,17 +119,37 @@ export default {
 		}
 	},
 	onLoad(options) {
-		if(options.id){
-			this.id=options.id
+		console.log(options, 'options');
+		if (options.id) {
+			this.id = options.id
+			console.log(this.id);
 		}
-		
+
 		// #ifdef MP
 		this.getCode()
 		// #endif
 
-		 /*#ifdef H5*/
-		 console.log('H5端')
-            /*#endif*/
+
+	},
+	mounted() {
+
+		let routes = getCurrentPages()
+		console.log(routes[routes.length - 1].options, 'routes');
+		let id = routes[routes.length - 1].options.id
+		console.log(id, 'options');
+		if (id) {
+			this.id = id
+			console.log(this.id);
+		}
+
+		// #ifdef MP
+		this.getCode()
+		// #endif
+
+
+
+
+
 	},
 	methods: {
 		...mapMutations(['login']),
@@ -130,71 +175,79 @@ export default {
 				}
 			})
 		},
+		cardbtn() {
+			this.cardShow = !this.cardShow
+			this.loginStatus=true
+			console.log(this.agree)
+		},
 		getSmsCode() {
 
 			getnumcode({ phone: this.mobile }).then((res) => {
-				if(res.code==='00000'){
+				if (res.code === '00000') {
 					this.$api.msg('验证码已发送');
 					console.log(res, 'res');
-				this.countdown = 60
-				var setTimeouts = setInterval(() => {
-					this.countdown--;
-					if (this.countdown <= 0) {
-						clearInterval(setTimeouts)
-					}
-				}, 1000)
+					this.countdown = 60
+					var setTimeouts = setInterval(() => {
+						this.countdown--;
+						if (this.countdown <= 0) {
+							clearInterval(setTimeouts)
+						}
+					}, 1000)
 				}
-			
+
 			})
 		},
-		checkboxChange() {
-				console.log(this.isAgree)
-				this.agree = !this.agree
-			},
+		checkboxChange(e) {
+			this.cardShow = !this.cardShow
+			getAgreement().then((res) => {
+				this.carloading=!this.carloading
+				this.node = res.data
+			})
+		},
 
 		//  #ifndef MP
 		async toLogin() {
-			if (this.agree) {
+			if (this.loginStatus) {
 				this.logining = true;
-			// uni.switchTab({
-			// 	url: '/pages/homePage/index'
-			// });
-			let params={
-				code: this.verifyCode,
-				phone: this.mobile,
-			}
-			if(this.id){
-				params.engineer_id=this.id
-			}
-			this.$store.dispatch('user/loginCode', params).then(res => {
-				const pages = getCurrentPages();
-				
-				console.log(pages.length>1,'pages');
-				if (pages.length > 1) {
-					// uni.navigateBack()
-					uni.switchTab({
-						url: '/pages/homePage/index'
-					});
-				} else {
-					console.log("跳转首页")
-					// 跳转首页
-					uni.switchTab({
-						url: '/pages/homePage/index'
-					});
+				// uni.switchTab({
+				// 	url: '/pages/homePage/index'
+				// });
+				let params = {
+					code: this.verifyCode,
+					phone: this.mobile,
 				}
-				this.logining = false;
-			}).catch((err) => {
-				console.log(err)
-				this.logining = false;
-			});
+				if (this.id) {
+					params.engineer_id = this.id
+				}
+				this.$store.dispatch('user/loginCode', params).then(res => {
+					const pages = getCurrentPages();
 
-			}else{
+					console.log(pages.length > 1, 'pages');
+					if (pages.length > 1) {
+						// uni.navigateBack()
+						uni.switchTab({
+							url: '/pages/homePage/index'
+						});
+					} else {
+						console.log("跳转首页")
+						// 跳转首页
+						uni.switchTab({
+							url: '/pages/homePage/index'
+						});
+					}
+					this.logining = false;
+				}).catch((err) => {
+					console.log(err)
+					this.logining = false;
+				});
+
+			} else {
 				this.$api.msg('请仔细阅读协议后登录');
 
 			}
 
 
-		
+
 		},
 		// #endif
 	}
@@ -214,30 +267,31 @@ page {
 	overflow: hidden;
 	background: #fff;
 }
+
 .top-box {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		text-align: center;
-		padding-bottom: 200rpx;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	padding-bottom: 200rpx;
 
-		.logo {
-			margin: 0 auto;
-		}
-
-		.title {
-			margin-top: 63rpx;
-			font-size: 52rpx;
-			color: #333333;
-		}
-
-		p {
-			margin-top: 42rpx;
-			font-size: 36rpx;
-			color: #666666;
-		}
+	.logo {
+		margin: 0 auto;
 	}
+
+	.title {
+		margin-top: 63rpx;
+		font-size: 52rpx;
+		color: #333333;
+	}
+
+	p {
+		margin-top: 42rpx;
+		font-size: 36rpx;
+		color: #666666;
+	}
+}
 
 .wrapper {
 	position: relative;
@@ -402,18 +456,30 @@ page {
 	font-family: yticon;
 	font-weight: bold;
 }
+
 .footer-tip {
-				font-size: 24rpx;
-				color: #666666;
-				display: flex;
-				align-items: center;
-				justify-content: center;
+	font-size: 24rpx;
+	color: #666666;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 
-				.circle {}
+	.circle {}
 
-				.link {
-					cursor: pointer;
-					color: #3a84f0;
-				}
-			}
+	.link {
+		cursor: pointer;
+		color: #3a84f0;
+	}
+}
+
+.rich {
+	margin: 10rpx auto 0;
+	width: 500rpx;
+	height: 100%;
+	background: #FFFFFF;
+	border-radius: 15rpx;
+}
+::v-deep .u-radio-group{
+	flex:none
+}
 </style>

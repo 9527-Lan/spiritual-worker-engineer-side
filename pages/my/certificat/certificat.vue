@@ -13,8 +13,10 @@
                         </view>
                         <view class="content">备注：{{ item.remark }}</view>
                         <view style="display: flex;">
-                            <image v-for="(item2, index) in item.certificateImgUrl" :src="item2" mode="widthFix"
-                                style="width: 200rpx; height: 150rpx;"></image>
+                            <u-image v-for="(item2, index) in item.certificateImgUrl" :key="index" :src="item2" height="150rpx" width="200rpx"></u-image>
+
+
+                          
                         </view>
 
 
@@ -28,10 +30,7 @@
 <script>
 
 import {
-    certificate,
-    casualEngineerMy,
-    myDaiCertificate,
-    delcertificate
+    myCertificate,
 } from '@/api/my.js'
 export default {
     data() {
@@ -70,7 +69,7 @@ export default {
         },
     },
     onLoad(options) {
-        myDaiCertificate({ id:uni.getStorageSync('engineer_id') }).then((res) => {
+        myCertificate({ id:uni.getStorageSync('engineer_id') }).then((res) => {
             console.log(res);
             this.OrderList = res.data
         })

@@ -112,7 +112,15 @@
 					
 					uni.showToast({
 						title:'提现申请成功',
-						icon:'none'
+						icon:'none',
+						success: () => {
+								setTimeout(() => {
+									uni.navigateTo({
+										url:'/pages/my/fundDetails'
+									})
+								}, 1000)
+							}
+
 					})
 					this.dundDetails()
 				} else {

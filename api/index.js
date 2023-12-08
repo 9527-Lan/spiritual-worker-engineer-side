@@ -33,3 +33,11 @@ export function getdetail(params) {
 		params: params,
 	})
 }
+// 查看订单详情
+export function queryIssignUp(params) {
+	return request({
+		url: '/engineerEnd/queryIssignUp',
+		method: 'get',
+		params: params,
+	})
+}

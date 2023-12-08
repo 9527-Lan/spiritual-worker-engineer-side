@@ -44,7 +44,7 @@
 								<view slot="desc" class="flex-center">
 									<view class="progress-item">
 										<view class="progress-item-left">
-											<view v-if="pItem.orderImgUrl.length > 0"" class=" record-tag isRecord">已记录
+											<view v-if="pItem.orderImgUrl.length > 0" class=" record-tag isRecord">已记录
 											</view>
 											<view v-else class="record-tag">未记录</view>
 										</view>

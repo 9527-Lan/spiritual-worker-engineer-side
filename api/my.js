@@ -286,3 +286,19 @@ export function myDaiCertificate(params) {
 		params:params
 	})
 }
+// 工程师端-我的证书
+export function myCertificate(params) {
+	return request({
+		url: '/engineerEnd/myCertificate',
+		method: 'get',
+		params:params
+	})
+}
+// 工程师端-我的证书详情
+export function myCertificateItem(id) {
+	return request({
+		url: '/engineerEnd/myCertificateItem',
+		method: 'get',
+		params:{id:id}
+	})
+}

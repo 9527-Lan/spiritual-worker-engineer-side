@@ -76,3 +76,33 @@ export function getnumcode(params) {
 		params:params
 	})
 }
+export function getAgreement(){
+	return request({
+		url: '/engineerEnd/userAgreement',
+		method: 'get',
+	})
+}
+//消息 
+export function messageCount(id){
+	return request({
+		url: '/engineerEnd/messageCount',
+		method: 'get',
+		params:{id:id}
+	})
+}
+//消息列表
+export function casualMessage(params){
+	return request({
+		url: '/engineerEnd/casualMessage/pages',
+		method: 'get',
+		params:params
+	})
+}
+// 消息清空
+export function closeMessage(id){
+	return request({
+		url: '/engineerEnd/editMessage',
+		method: 'get',
+		params:{id:id}
+	})
+}

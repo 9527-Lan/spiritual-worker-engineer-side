@@ -1,38 +1,15 @@
 <template>
 	<view>
 		<view class="bg"></view>
-		<u-navbar title="上传证书" @leftClick="leftClick" :autoBack="true" leftIconSize="34rpx" bgColor="#F2F6FF"
+		<u-navbar title="证书详情" @leftClick="leftClick" :autoBack="true" leftIconSize="34rpx" bgColor="#F2F6FF"
 			ftIconColor="#000000" titleStyle="color: #000000;font-size:34rpx" />
 		<view class="from">
 			<view style="width: 600rpx;padding:40rpx 20rpx;">
-				<view style="font-size: 16px;color: #303133;font-weight: bold;text-align: center;">证书信息</view>
-				<u--form :labelStyle="labelStyle" :model="form" ref="uForm" :rules="rules">
-					<u-form-item labelPosition="top" labelWidth="240" :borderBottom="false" label="填写证书名称:" prop="name">
-						<u--input v-model="form.name" border="none" placeholder="填写证书名称"></u--input>
-					</u-form-item>
-					<u-form-item labelPosition="top" labelWidth="240" :borderBottom="false" label="填写备注:" prop="remark">
-						<u--textarea v-model="form.remark" border='none' count height="240" maxlength="200"
-							placeholder="填写备注">
-						</u--textarea>
-					</u-form-item>
-				</u--form>
-				
-			<view class="title">请上传证书照片</view>
-			<view class="tip">我确认该证书影像是本人名下最新且有效的证书影像</view>
 			<view class="upImg">
-				<u-upload :fileList="contraryList" @afterRead="aftContrary" name="6" multiple :maxCount="1"
-					width="370rpx" height="242rpx">
-					<image src="/static/my/certificate.png" mode="widthFix" style="width: 370rpx;height: 242rpx;">
-					</image>
-					<view class="imgText">点击上传</view>
-				</u-upload>
+                <image v-for="(item,index) in imgs" :src="item" mode="widthFix" style="width: 370rpx;height: 242rpx;"/>
+		
+                
 			</view>
-			<view class="upImg">
-				<u-upload :fileList="frontList" disabled @delete="delFront" name="6" multiple width="370rpx"
-					height="242rpx" :maxCount="frontList.length">
-				</u-upload>
-			</view>
-			<u-button style="margin-top: 30px;" type="primary" shape="circle" text="确认" @click="popupSub"></u-button>
 			</view>
 			<view class="fromText">平台承诺，严格保障您的隐私安全</view>
 			<!-- 		<u-button type="primary" shape="circle" text="保存" @click="save"></u-button> -->
@@ -49,7 +26,8 @@
 		certificate,
 		casualEngineerMy,
 		myDaiCertificate,
-		delcertificate
+		delcertificate,
+        myCertificateItem
 	} from '@/api/my.js'
 	export default {
 		data() {
@@ -57,6 +35,8 @@
 				frontList: [],
 				contraryList: [],
 				show: false,
+
+                imgs:[],
 				form: {
 					name: '',
 				},
@@ -75,24 +55,11 @@
 				},
 			}
 		},
-		props: {
-			labelStyle: {
-				type: Object,
-				default: function() {
-					return {
-						"font-weight": "700",
-						"font-size": "28rpx",
-						"margin-bottom": "34rpx"
-					}
-				}
-			},
-		},
 		onLoad(options) {
-			console.log(options);
-			this.id=options.id
-			myDaiCertificate({id:options.id}).then((res)=>{
-				
-			})
+            console.log(options.id);
+            myCertificateItem(options.id).then((res)=>{
+                this.imgs=res.data
+            })
 		},
 		methods: {
 			leftClick() {
@@ -185,7 +152,10 @@
 				
 				})
 			}
-		}
+		},
+        mounted(){
+
+        }
 	}
 </script>
 

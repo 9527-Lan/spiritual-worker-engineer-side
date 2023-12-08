@@ -1,34 +1,24 @@
 <template>
     <view>
         <view class="bg"></view>
+
         <u-navbar title="已提交证书" @leftClick="leftClick" :placeholder="true" :autoBack="true" leftIconSize="34rpx"
             bgColor="#F2F6FF" ftIconColor="#000000" titleStyle="color: #000000;font-size:34rpx" />
-
         <view class="list">
-            <u-list >
+            <view class="addCard" @click="addCard">
+                +添加证书
+            </view>
+            <u-list>
                 <u-list-item v-for="(item, index) in OrderList" :key="index">
-                    <view class="listBlok" >
+                    <view class="listBlok">
                         <view class="top">
-                            <text class="topTextBlack">名称：{{ item.certificateName?item.certificateName:'--' }}</text>
+                            <text class="topTextBlack">名称：{{ item.certificateName ? item.certificateName : '--' }}</text>
                         </view>
-                        <view class="content">备注：{{ item.remark?item.remark:'暂无' }}</view>
-                        <view style="display: flex;">
-                            <u-image v-for="(item2, index) in item.certificateImgUrl" :src="item2" style="margin-right: 5px;" height="150rpx" width="200rpx"></u-image>
-
-                            
-                            <!-- <image v-for="(item2, index) in item.certificateImgUrl" :src="item2" mode="widthFix"
-                                style="width: 200rpx; height: 150rpx;"></image> -->
-                        </view>
-
-
+                        <view class="content">备注：{{ item.remark ? item.remark : '暂无' }}</view>
                     </view>
                 </u-list-item>
             </u-list>
         </view>
-
-
-
-
     </view>
 </template>
 
@@ -45,7 +35,12 @@ export default {
         return {
             frontList: [],
             contraryList: [],
-            OrderList: [],
+       
+            list1: [{
+                    name: '已提交',
+                }, {
+                    name: '已审核',
+                }],
             show: false,
             form: {
                 name: '',
@@ -64,26 +59,33 @@ export default {
             },
         }
     },
-    props: {
-        labelStyle: {
-            type: Object,
-            default: function () {
-                return {
-                    "font-weight": "700",
-                    "font-size": "28rpx",
-                    "margin-bottom": "34rpx"
-                }
-            }
-        },
-    },
+    props: [
+ {
+    OrderList:{
+            type: Array,
+        }
+ }
+       
+    ],
+     
+   
     onLoad(options) {
-        console.log(options);
-        myDaiCertificate({ id: options.id }).then((res) => {
-            console.log(res);
-            this.OrderList = res.data
-        })
+        // console.log(options);
+        // myDaiCertificate({ id: uni.getStorageSync('engineer_id') }).then((res) => {
+        //     console.log(res);
+        //     this.OrderList = res.data
+        // })
     },
     methods: {
+    //     addCard(){
+    //         uni.navigateTo({
+	// 				url: '/pages/my/myMessage/components/uploadcertificat?id='+uni.getStorageSync('engineer_id')
+	// 			})
+    //     }
+
+    },
+    mounted(){
+        console.log(this.OrderList,'222');
     }
 }
 </script>
@@ -162,7 +164,6 @@ export default {
 
     .listBlok {
         width: 686rpx;
-        height: 400rpx;
         background: #ffffff;
         border-radius: 15rpx;
         padding: 35rpx 32rpx 45rpx 37rpx;
@@ -206,4 +207,23 @@ export default {
             }
         }
     }
-}</style>
+}
+
+.addCard {
+    width: 686rpx;
+    height: 120rpx;
+    margin-bottom: 10px;
+    background: #FFFFFF;
+    border-radius: 15rpx;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 32rpx;
+    font-family: PingFang SC;
+    font-weight: bold;
+    color: #3A84F0;
+}
+::v-deep .u-tabs__wrapper__nav__item{
+    width: 50%;
+}
+</style>

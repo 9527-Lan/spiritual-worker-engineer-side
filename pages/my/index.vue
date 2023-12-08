@@ -45,13 +45,23 @@
 					<text>{{ myList.monthIncome }}</text>
 				</view>
 			</view>
+			<view class="btm">
+				<view class="toDay">
+					<text class="text">总佣金收入(元)</text>
+					<text>{{ myList.totalRevenue }}</text>
+				</view>
+				<view class="month">
+					<text class="text">总邀请金额(元)</text>
+					<text>{{ myList.totalinvitationAmount }}</text>
+				</view>
+			</view>
 		</view>
 		<view class="myOrder">
 			<view class="title">我的订单</view>
 			<view class="btm">
 				<view @click="seize">
 					<view class="num">{{ myList.qdzOrderCount }}</view>
-					<view class="text">抢单中</view>
+					<view class="text">已报名</view>
 				</view>
 				<view @click="underWay">
 					<view class="num">{{ myList.jxzOrderCount }}</view>
@@ -73,11 +83,15 @@
 					<u-icon slot="icon" size="32" name="/static/my/idCard.png"></u-icon>
 					<template slot="title" class="u-slot-title">
 						<text>我的信息</text>
+						
 						<!-- <u-tag class="tag" text="待完善" size="mini" type="error" shape="circle">
 						</u-tag> -->
 					</template>
 				</u-cell>
-				<u-cell title="我的证书" isLink url="/pages/my/certificat/certificat" rightIconStyle="fontSize:32rpx">
+				<!-- <u-cell title="我的证书" isLink url="/pages/my/certificat/certificat" rightIconStyle="fontSize:32rpx">
+					<u-icon slot="icon" size="32" name="/static/my/certificate1.png"></u-icon>
+				</u-cell> -->
+				<u-cell title="证书管理" isLink url="/pages/my/Certificate" rightIconStyle="fontSize:32rpx">
 					<u-icon slot="icon" size="32" name="/static/my/certificate1.png"></u-icon>
 				</u-cell>
 				<u-cell title="银行卡管理" isLink url="/pages/my/card/card" rightIconStyle="fontSize:32rpx">
@@ -91,6 +105,15 @@
 				</u-cell>
 				<u-cell title="咨询客服" isLink url="" @click="showCard" rightIconStyle="fontSize:32rpx">
 					<u-icon slot="icon" size="32" name="/static/my/consult.png"></u-icon>
+				</u-cell>
+				<u-cell isLink url="/pages/my/messageList" rightIconStyle="fontSize:32rpx">
+					<template slot="title" class="u-slot-title">
+						<text>信息</text>
+						<u-badge  type="error "  numberType="overflow" max="99" :value="message"></u-badge>
+						<!-- <u-tag class="tag" text="待完善" size="mini" type="error" shape="circle">
+						</u-tag> -->
+					</template>
+					<u-icon slot="icon" size="32" name="/static/my/bank.png"></u-icon>
 				</u-cell>
 				<u-cell title="关于我们" isLink url="/pages/my/callMe/callMe" rightIconStyle="fontSize:32rpx">
 					<u-icon slot="icon" size="32" name="/static/my/my.png"></u-icon>
@@ -119,10 +142,10 @@
 						</view>
 					</view>
 
-					<view style="text-align: center;">
+					<view style="text-align: center; margin-bottom: 109rpx;">
 						<image :src="cardUrl"  style="margin: auto; width: 402rpx;height: 418rpx;" mode="aspectFit"></image>
 					</view>
-					<p style="text-align: center; font-size: 32rpx;font-family: PingFang SC;margin-bottom: 109rpx;font-weight: bold;color: #333333;">长按识别二维码</p>
+					<!-- <p style="text-align: center; font-size: 32rpx;font-family: PingFang SC;margin-bottom: 109rpx;font-weight: bold;color: #333333;">长按识别二维码</p> -->
 
 					<view style="display: flex;">
 						<u-button text="关闭" style=" font-size: 32rpx;font-family: PingFang SC;font-weight: 500;color: #3A84F0;" @click="cardShow = !cardShow"></u-button>
@@ -146,6 +169,10 @@ import {
 	consultCustomerService,
 	myPromotionCode
 } from "@/api/my.js"
+import {
+
+	messageCount
+} from "@/api/user.js";
 export default {
 	components: {
 		avatar
@@ -154,6 +181,7 @@ export default {
 		return {
 			avatarSrc: '',
 			id: "2", //我的工程师
+			message:'',
 			myList: [],
 			show: false,
 			cardShow: false,
@@ -169,6 +197,7 @@ export default {
 			this.myMsgTop = uni.getSystemInfoSync().statusBarHeight + menuButtonInfo.bottom + menuButtonInfo.height + menuButtonInfo.top
 		}
 		this.engineerEndList() //我的工程师查询
+		this.getmesnum()
 	},
 	computed: {},
 	methods: {
@@ -279,8 +308,17 @@ export default {
 				this.content = res.data
 			})
 
+		},
+		getmesnum(){
+			messageCount(uni.getStorageSync('engineer_id')).then((res)=>{
+			console.log(res,'res');
+			this.message=res.data
+		})
 		}
-	}
+	},
+	mounted(){
+		this.getmesnum()
+	},
 }
 </script>
 
@@ -335,7 +373,7 @@ export default {
 	flex-direction: column;
 	justify-content: space-between;
 	width: 100%;
-	height: 396rpx;
+	height: 500rpx;
 	background-repeat: round;
 	margin: 0 auto 45rpx;
 	padding: 60rpx 28rpx 80rpx 70rpx;
@@ -506,5 +544,13 @@ export default {
 	padding: 0;
 	padding-top: 0 !important;
 	padding-bottom: 45rpx !important;
+}
+::v-deep .u-cell__title{
+	display: flex;
+	flex-direction: row;
+}
+::v-deep .u-badge--error{
+	line-height: 16px;
+    height: 18px;
 }
 </style>

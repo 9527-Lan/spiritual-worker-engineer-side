@@ -137,6 +137,27 @@
 				"navigationBarTextStyle": "white"
 			}
 		},
+			{//我的->信息
+			"path": "pages/my/messageList",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
+		},
+			{//我的->上传证书
+			"path": "pages/my/Certificate",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
+		},
+			{//我的->上传证书
+			"path": "pages/my/CertificateDetail",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
+		},
 		{//我的->银行卡
 			"path": "pages/my/card/card",
 			"style": {

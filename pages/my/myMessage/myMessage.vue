@@ -6,7 +6,7 @@
 		<view class="from">
 			<view class="title">完善我的信息</view>
 			<view class="tip">为了您更快速的灵活用工，请先完善我的个人信息</view>
-			<view class="warn" 
+			<!-- <view class="warn" 
 			v-if="userInfo.isAuthentication===1||userInfo.isAuthentication===3"
 			>
 				<view class="left">
@@ -25,12 +25,12 @@
 				<view class="right">
 					<u-button type="primary" color="#3A84F0" text="重新认证" @click="toCertificate"></u-button>
 				</view>
-			</view>
+			</view> -->
 			<view>
 				<!-- 注意，如果需要兼容微信小程序，最好通过setRules方法设置rules规则 -->
 				<u--form :labelStyle="labelStyle" labelWidth="140" labelPosition="left" :model="userInfo" :rules="rules"
 					ref="uForm">
-					<u-form-item required label="姓名" prop="engineerRealname" borderBottom ref="item1">
+					<u-form-item required label="姓名" prop="engineerRealname" borderBottom ref="item1" >
 						<u--input v-model="userInfo.engineerRealname" border="none" placeholder="请输入姓名"></u--input>
 					</u-form-item>
 					<u-form-item required label="性别" prop="engineerSex" borderBottom @click="showSex = true"
@@ -60,10 +60,10 @@
 						<u-button type="primary" color="#3A84F0" text="去上传" @click="toCertificate"
 							style="width: 140rpx;height: 48rpx;border-radius: 14px;overflow: hidden;display: flex;align-items: center;" />
 					</u-form-item>
-					<u-form-item required label="签署合同" borderBottom ref="item1">
+					<!-- <u-form-item required label="签署合同" borderBottom ref="item1">
 						<u--input disabled disabledColor="#ffffff" border="none"></u--input>
 						<u--text slot="right" type="info" text="已签署" size="24"></u--text>
-					</u-form-item>
+					</u-form-item> -->
 				</u--form>
 				<u-action-sheet :show="showSex" :actions="sexActions" title="请选择性别" @close="showSex = false"
 					@select="sexSelect">
@@ -140,6 +140,8 @@
 						type: 'string',
 						required: true,
 						message: '请填写身份证号',
+						min:18,
+						max:18,
 						trigger: ['blur', 'change']
 					},
 					'typeIds': {
@@ -223,6 +225,9 @@
 			toIdCard() {
 				this.submit(true)
 				uni.setStorageSync('msgItem', this.userInfo)
+		
+				if(!this.userInfo.engineerRealname) return uni.$u.toast('请先填写姓名')
+				if(!this.userInfo.idcard) return uni.$u.toast('请先填写身份证')
 				uni.navigateTo({
 					url: '/pages/my/myMessage/components/uploadIdCard?id='+this.userInfo.id
 				})

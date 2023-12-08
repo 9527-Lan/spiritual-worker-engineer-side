@@ -1,43 +1,46 @@
 <template>
     <view>
         <view class="bg"></view>
+
         <u-navbar title="已提交证书" @leftClick="leftClick" :placeholder="true" :autoBack="true" leftIconSize="34rpx"
             bgColor="#F2F6FF" ftIconColor="#000000" titleStyle="color: #000000;font-size:34rpx" />
-
+        <u-tabs :list="list1" lineHeight="16rpx" lineWidth="64rpx" width="50%" @change="changeTabList"></u-tabs>
         <view class="list">
-            <u-list >
-                <u-list-item v-for="(item, index) in OrderList" :key="index">
-                    <view class="listBlok" >
+            <view v-if="index === 0" class="addCard" @click="addCard">
+                +添加证书
+            </view>
+            <u-list>
+                <u-list-item v-for="(item, index2) in OrderList" :key="index2">
+                    <view class="listBlok" @click="detail(item)" v-if="index === 0">
                         <view class="top">
-                            <text class="topTextBlack">名称：{{ item.certificateName?item.certificateName:'--' }}</text>
+                            <text class="topTextBlack">名称：{{ item.certificateName ? item.certificateName : '--' }}</text>
                         </view>
-                        <view class="content">备注：{{ item.remark?item.remark:'暂无' }}</view>
-                        <view style="display: flex;">
-                            <u-image v-for="(item2, index) in item.certificateImgUrl" :src="item2" style="margin-right: 5px;" height="150rpx" width="200rpx"></u-image>
-
-                            
-                            <!-- <image v-for="(item2, index) in item.certificateImgUrl" :src="item2" mode="widthFix"
-                                style="width: 200rpx; height: 150rpx;"></image> -->
+                        <view class="content">
+                            <view style="width: 15%;">备注：</view>
+                            <view style="width: 85%; padding: 5px;
+    border: 1px solid #eee6e6;;">{{ item.remark ? item.remark : '暂无' }}</view>
                         </view>
+                    </view>
 
+                    <view class="listBlok" @click="detail(item)" v-else>
+                        <view class="top">
+                            <text class="topTextBlack" style="font-size: 20px;">名称：{{ item.certificateName ? item.certificateName : '--' }}</text>
+                        </view>
 
                     </view>
                 </u-list-item>
             </u-list>
         </view>
-
-
-
-
     </view>
 </template>
 
 <script>
-
+import Certing from "./"
 import {
     certificate,
     casualEngineerMy,
     myDaiCertificate,
+    myCertificate,
     delcertificate
 } from '@/api/my.js'
 export default {
@@ -46,6 +49,12 @@ export default {
             frontList: [],
             contraryList: [],
             OrderList: [],
+            index: 0,
+            list1: [{
+                name: '已提交',
+            }, {
+                name: '已审核',
+            }],
             show: false,
             form: {
                 name: '',
@@ -78,12 +87,48 @@ export default {
     },
     onLoad(options) {
         console.log(options);
-        myDaiCertificate({ id: options.id }).then((res) => {
+        myDaiCertificate({ id: uni.getStorageSync('engineer_id') }).then((res) => {
             console.log(res);
             this.OrderList = res.data
         })
     },
     methods: {
+        addCard() {
+            uni.navigateTo({
+                url: '/pages/my/myMessage/components/uploadcertificat?id=' + uni.getStorageSync('engineer_id')
+            })
+        },
+        // 已提交
+        geting() {
+            myDaiCertificate({ id: uni.getStorageSync('engineer_id') }).then((res) => {
+                console.log(res);
+                this.OrderList = res.data
+            })
+        },
+        // 已审核
+        geted() {
+            myCertificate({ id: uni.getStorageSync('engineer_id') }).then((res) => {
+                console.log(res);
+                this.OrderList = res.data
+            })
+        },
+        changeTabList(e) {
+            this.index = e.index
+            if (e.index === 0) {
+                this.geting()
+            } else {
+                this.geted()
+            }
+
+        },
+        // 详情
+        detail(item) {
+            console.log(item);
+            console.log(item.id);
+            uni.navigateTo({
+                url: "/pages/my/CertificateDetail?id=" + item.id
+            })
+        }
     }
 }
 </script>
@@ -162,7 +207,6 @@ export default {
 
     .listBlok {
         width: 686rpx;
-        height: 400rpx;
         background: #ffffff;
         border-radius: 15rpx;
         padding: 35rpx 32rpx 45rpx 37rpx;
@@ -175,6 +219,7 @@ export default {
 
         .content {
             height: 92rpx;
+            display: flex;
             overflow: hidden;
         }
 
@@ -206,4 +251,24 @@ export default {
             }
         }
     }
-}</style>
+}
+
+.addCard {
+    width: 686rpx;
+    height: 120rpx;
+    margin-bottom: 10px;
+    background: #FFFFFF;
+    border-radius: 15rpx;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 32rpx;
+    font-family: PingFang SC;
+    font-weight: bold;
+    color: #3A84F0;
+}
+
+::v-deep .u-tabs__wrapper__nav__item {
+    width: 50%;
+}
+</style>
