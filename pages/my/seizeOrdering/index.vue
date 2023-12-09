@@ -64,7 +64,8 @@
 		casualServiceType
 	} from "@/api/index.js"
 	import {
-		LowerSingleEnd,
+		// LowerSingleEnd,
+		queryOrderbyBmId,
 		engineerEndList
 	} from "@/api/my.js"
 	export default {
@@ -145,7 +146,7 @@
 				if (this.statusId && this.statusId != '0') params.orderGrabbingStatus = this.statusId
 				if (this.typeId && this.typeId != '0') params.typeId = this.typeId
 				if (this.dateValue) params.createTime = this.$dayjs(this.dateValue).format('YYYY-MM')
-				LowerSingleEnd(params).then(res => {
+				queryOrderbyBmId(params).then(res => {
 					this.LowerList = res.data
 				})
 			},

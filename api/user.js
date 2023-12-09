@@ -19,6 +19,14 @@ export function login(mobile, code) {
 		}
 	})
 }
+// 联系客服
+export function tomerService(params) {
+	return request({
+		url: '/LowerSingleEnd/consultCustomerService',
+		method: 'get',
+		params: params,
+	})
+}
 // 验证码登录
 export function loginCode(params) {
 	return request({

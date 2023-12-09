@@ -24,6 +24,14 @@ export function LowerSingleEnd(params) {
 		params: params,
 	})
 }
+// 根据id铲鲟已报名订单
+export function queryOrderbyBmId(params) {
+	return request({
+		url: '/engineerEnd/queryOrderbyBmId',
+		method: 'get',
+		params: params,
+	})
+}
 // 工程师端-工程师抢单成功后退出当前订单
 export function LowerSingleEndExit(params) {
 	return request({

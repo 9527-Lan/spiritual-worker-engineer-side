@@ -55,16 +55,19 @@
 		</view>
 		<u-tabbar :value="value6" @change="name => value6 = name" :fixed="true" :placeholder="false"
 			:safeAreaInsetBottom="true">
-			<u-tabbar-item class="icon-size" text="平台客服" icon="phone"></u-tabbar-item>
+			<u-tabbar-item class="icon-size" @click.stop='callPhone' text="平台客服" icon="phone"></u-tabbar-item>
 			<u-button v-if="status" type="primary" shape="circle" text="立即抢单" @click="submitTo"></u-button>
 			<u-button v-else type="primary" shape="circle" text="已报名"></u-button>
 		</u-tabbar>
+		<u-modal :show="show" title="拨打客服电话进行咨询" :content='content' :showCancelButton='true' @confirm="closeCard"
+			@cancel="del"></u-modal>
 	</view>
 </template>
 
 <script>
 import {
-	casualOrderEngineer
+	casualOrderEngineer,
+	tomerService
 } from '@/api/user.js'
 import {
 	casualOrder, getdetail, queryIssignUp
@@ -83,6 +86,8 @@ export default {
 				left: '187rpx',
 				bottom: '65rpx',
 			},
+			content:'',
+			show:false,
 			orderList: {},
 			value6: ""
 		}
@@ -103,7 +108,9 @@ export default {
 			console.log(res);
 			this.status = res.data
 		})
-
+		tomerService().then((res) => {
+			this.content = res.data
+		})
 		// this.submitTo()	
 	},
 	methods: {
@@ -111,6 +118,18 @@ export default {
 			uni.switchTab({
 				url: '/pages/homePage/index'
 			});
+		},
+		closeCard() {
+			uni.makePhoneCall({
+				phoneNumber: this.content //仅为示例
+			});
+			this.show = false;
+		},
+		callPhone(){
+			this.show = true
+		},
+		del() {
+			this.show = false;
 		},
 		submitTo() {
 			let params = {

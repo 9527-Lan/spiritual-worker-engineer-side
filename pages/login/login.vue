@@ -208,6 +208,14 @@ export default {
 		//  #ifndef MP
 		async toLogin() {
 			if (this.loginStatus) {
+				if(!uni.$u.test.mobile(this.mobile)) {
+					uni.$u.toast('请正确填写手机号'); 
+					return 
+				}
+				if(!uni.$u.test.code(this.verifyCode,6)) {
+					uni.$u.toast('请正确填写验证码'); 
+					return 
+				}
 				this.logining = true;
 				// uni.switchTab({
 				// 	url: '/pages/homePage/index'
@@ -237,7 +245,6 @@ export default {
 					}
 					this.logining = false;
 				}).catch((err) => {
-					console.log(err)
 					this.logining = false;
 				});
 

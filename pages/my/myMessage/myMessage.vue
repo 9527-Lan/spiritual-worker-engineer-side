@@ -47,7 +47,7 @@
 							autoHeight></u--textarea>
 						<u-icon slot="right" name="arrow-right"></u-icon>
 					</u-form-item>
-					<u-form-item required label="服务标签" prop="labelIds" borderBottom @click="showLabel = true"
+					<u-form-item label="服务标签" prop="labelIds" borderBottom @click="showLabel = true"
 						ref="item1">
 						<u--textarea v-model="label" disabled disabledColor="#ffffff" placeholder="请选择服务标签"
 							border="none" autoHeight @click="showLabel = true"></u--textarea>
@@ -150,12 +150,12 @@
 						message: '请填选择服务类型',
 						trigger: ['blur', 'change']
 					},
-					'labelIds': {
-						type: 'string',
-						required: true,
-						message: '请填选择服务标签',
-						trigger: ['blur', 'change']
-					},
+					// 'labelIds': {
+					// 	type: 'string',
+					// 	required: true,
+					// 	message: '请填选择服务标签',
+					// 	trigger: ['blur', 'change']
+					// },
 				},
 				radio: '',
 				switchVal: false,

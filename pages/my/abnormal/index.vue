@@ -13,39 +13,36 @@
 		</view>
 		<view class="list">
 			<u-list @scrolltolower="scrolltolower">
-				<u-list-item v-for="(item, index) in indexList" :key="index">
-					<view class="list-item" @click="details(item.id)">
-						<view class="listBlok">
-							<view class="top-box">
-								<view class="top">
-									<text class="topTextBlack">{{item.name}}</text>
-									<text class="topTextBlue">{{item.price}}元/天</text>
+				<u-list-item v-for="(compData, index) in indexList" :key="index">
+					<view class="list-item" @click="details(compData.id)">
+						<view class="body">
+							<view class="flex-center between">
+								<view class="title">{{ compData.name }}</view>
+								<view class="salary">{{ compData.price }}元/天</view>
+							</view>
+							<view class="tag-list">
+								<view class="tag-item jobs">
+									<u-icon name="account-fill" size="24rpx" color="#3A84F0" :label="`岗位量${compData.orderQuantity}`"
+										label-color="#3A84F0" label-size="24rpx"></u-icon>
 								</view>
-								<view class="tagRow">
-									<view class="tag">
-										<u-tag :text="`岗位量${item.orderQuantity}`" size="mini" bgColor="#E6F0FF"
-											borderColor="#E6F0FF" plain></u-tag>
-									</view>
-									<view class="tag">
-										<u-tag :text="`${item.labelName}`" size="mini" bgColor="#E6F0FF"
-											borderColor="#E6F0FF" color="#333333" plain></u-tag>
-									</view>
-								</view>
-								<view>
-									<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
-										margin="18rpx 0 0 0" :text="item.principalName"></u--text>
-								</view>
-								<view>
-									<u--text prefixIcon="baidu" iconStyle="font-size: 17px" color="#666666" size="24rpx"
-										margin="18rpx 0 0 0" :text="`${item.orderStatr}-${item.orderEnd}`"></u--text>
-								</view>
+								<view class="tag-item" v-for="(item, index) in compData.tags" :key="index">{{ item }}</view>
+							</view>
+							<view class="body-line">
+								<u-icon name="/static/address.png" size="24rpx" color="#666666" :label="compData.address"
+									label-color="#666666" label-size="24rpx"></u-icon>
+							</view>
+							<view class="body-line">
+								<u-icon name="clock-fill" size="24rpx" color="#666666"
+									:label="`${compData.orderStatr}-${compData.orderEnd}`" label-color="#666666"
+									label-size="24rpx"></u-icon>
 							</view>
 						</view>
-						<view class="statusBox">
-							<p>您的订单存在异常，请联系平台客服</p>
+						<view class="footer exception" >
+							<text>订单存在异常，若有结算争议，请联系平台客服</text>
 						</view>
 					</view>
 				</u-list-item>
+				
 			</u-list>
 		</view>
 	</view>
@@ -270,5 +267,113 @@
 		}
 
 
+	}
+	.body {
+		box-sizing: border-box;
+		padding: 35rpx;
+		background-color: #fff;
+	
+		.body-line {
+			margin-top: 28rpx;
+		}
+	}
+	
+	.flex-center {
+		display: flex;
+		align-items: center;
+	
+		&.between {
+			justify-content: space-between;
+		}
+	}
+	
+	.title {
+		font-size: 32rpx;
+		font-weight: bold;
+		color: #333333;
+	}
+	
+	.progress {
+		margin-top: 50rpx;
+	
+		.progress-item {
+			display: flex;
+			align-items: flex-start;
+			height: 80rpx;
+		}
+	
+		.day {
+			margin-left: 24rpx;
+			font-size: 24rpx;
+			font-weight: 500;
+			color: #333333;
+		}
+	
+		.time {
+			margin-left: 24rpx;
+			font-size: 20rpx;
+			font-weight: 500;
+			color: #666666;
+		}
+	}
+	
+	.salary {
+		font-size: 32rpx;
+		font-weight: bold;
+		color: #3a84f0;
+	}
+	
+	.tag-list {
+		margin-top: 24rpx;
+		display: flex;
+		align-items: center;
+	
+		.tag-item {
+			display: flex;
+			align-items: center;
+			height: 43rpx;
+			line-height: 43rpx;
+			border-radius: 5rpx;
+			font-size: 24rpx;
+			font-weight: 500;
+			padding: 0 13rpx;
+			background-color: #eaeff4;
+			color: #333333;
+	
+			&.jobs {
+				background-color: #e6f0ff !important;
+				color: #3a84f0 !important;
+			}
+	
+			&+.tag-item {
+				margin-left: 10rpx;
+			}
+		}
+	}
+	
+	.footer {
+		height: 78rpx;
+		line-height: 78rpx;
+		border-radius: 0 0 15rpx 15rpx;
+		padding: 0 36rpx;
+		font-size: 24rpx;
+		font-weight: 500;
+	
+		&.being,
+		&.completed {
+			color: #b18a50;
+			background-color: #fff0d6;
+		}
+	
+		&.grab,
+		&.completing {
+			color: #3a84f0;
+			background-color: #e6f0ff;
+		}
+	
+		&.exception {
+			color: #f37878;
+			background-color: #fef8f8;
+		}
 	}
 </style>

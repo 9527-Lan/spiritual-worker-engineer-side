@@ -58,15 +58,18 @@
 		</view>
 		<u-tabbar :fixed="true" :placeholder="false"
 			:safeAreaInsetBottom="true">
-			<u-tabbar-item class="icon-size" text="平台客服" icon="phone"></u-tabbar-item>
+			<u-tabbar-item class="icon-size" @click='callPhone' text="平台客服" icon="phone"></u-tabbar-item>
 			<u-button type="primary" shape="circle" text="撤销抢单" :plain="true" @click="cancel"></u-button>
 		</u-tabbar>
+		<u-modal :show="show" title="拨打客服电话进行咨询" :content='content' :showCancelButton='true' @confirm="closeCard"
+			@cancel="del"></u-modal>
 	</view>
 </template>
 
 <script>
 	import {
-		casualOrderEngineer
+		casualOrderEngineer,
+		tomerService
 	} from '@/api/user.js'
 	import {
 		casualOrder
@@ -87,6 +90,8 @@
 					left: '187rpx',
 					bottom: '65rpx',
 				},
+				content:'',
+				show:false,
 				orderList: []
 			}
 		},
@@ -97,6 +102,9 @@
 				this.orderList = list[0] ? list[0] : [],
 				this.nodeText = this.orderList.description == null ? '' : this.orderList.description
 				this.order_id = this.orderList.id
+			})
+			tomerService().then((res) => {
+				this.content = res.data
 			})
 		},
 		methods: {
@@ -123,8 +131,21 @@
 						})
 					}
 				})
-			}
-		}
+			},
+			closeCard() {
+				uni.makePhoneCall({
+					phoneNumber: this.content //仅为示例
+				});
+				this.show = false;
+			},
+			callPhone(){
+				this.show = true
+			},
+			del() {
+				this.show = false;
+			},
+		},
+		
 	}
 </script>
 

@@ -64,6 +64,9 @@ const actions = {
 		} = data
 		return new Promise((resolve, reject) => {
 			loginCode(data).then(response => {
+				if(response.code != '00000'){
+					uni.$u.toast(response.msg);
+				}
 				const {
 					access_token,
 					token_type
