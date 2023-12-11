@@ -131,7 +131,7 @@
 					engineerId: uni.getStorageSync('msgItem').id
 				}
 			
-	casualEngineerEdit(parmas).then(res => {
+				casualEngineerEdit(parmas).then(res => {
 					authentication(parmas1).then(res => {
 						if(res.code==='B0001'){
 							uni.$u.toast(res.msg)
@@ -145,12 +145,8 @@
 							url: '/pages/my/myMessage/myMessage',
 						});
 						}else{
-						uni.$u.toast(res.data.msg)
+							uni.$u.toast(res.data.msg)
 						}
-						console.log(res.code,'code');
-
-						
-						
 					})
 				})
 			

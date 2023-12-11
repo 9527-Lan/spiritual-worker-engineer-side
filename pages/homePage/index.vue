@@ -15,27 +15,27 @@
 			<u-col span="4">
 				<view class="titlePink">
 					<u--text color="#F86464" :bold="true" size="28rpx" suffixIcon="/static/homePage/fire.png" iconStyle="font-size: 19px"
-						text="热门岗位"></u--text>
+						class="cardPadding" text="热门岗位"></u--text>
 					<u--text color="#F86464" size="24rpx" text="快速更新"></u--text>
 				</view>
 			</u-col>
 			<u-col span="4">
 				<view class="titleYello">
 					<u--text color="#DC8208" :bold="true" size="28rpx" suffixIcon="/static/homePage/medal.png" iconStyle="font-size: 19px"
-						text="认证企业"></u--text>
+						class="cardPadding" text="认证企业"></u--text>
 					<u--text color="#DC8208" size="24rpx" text="安全可靠"></u--text>
 				</view>
 			</u-col>
 			<u-col span="4">
 				<view class="titleBlue">
-					<u--text color="#3A84F0" :bold="true" size="28rpx" suffixIcon="/static/homePage/handshake.png" iconStyle="font-size: 19px"
+					<u--text class="cardPadding" color="#3A84F0" :bold="true" size="28rpx" suffixIcon="/static/homePage/handshake.png" iconStyle="font-size: 19px"
 						text="双选会"></u--text>
 					<u--text color="#3A84F0" size="24rpx" text="灵活可控"></u--text>
 				</view>
 			</u-col>
 		</u-row>
 		<u-sticky bgColor="#fff" :offsetTop="(64+(top+statusBarHeight)+30)" zIndex="10000000" ref="stickyFixed">
-			<u-tabs class="tab" @click="changeOption" :list="tabList" lineWidth="35" lineHeight="20" :scrollable="false"
+			<u-tabs class="tab" @click="changeOption" :list="tabList" lineWidth="33" lineHeight="0.4rem" :scrollable="false"
 				:activeStyle="{
 						color: '#333333',
 						fontWeight: 'bold',
@@ -204,7 +204,10 @@ let menuButtonInfo = uni.getMenuButtonBoundingClientRect()?uni.getMenuButtonBoun
 		z-index: 10000;
 		background-color: #F2F6FF;
 	}
-
+	
+	.cardPadding{
+		height: 60%;
+	}
 	.wrap {
 		padding: 0 32rpx;
 	}
@@ -213,7 +216,7 @@ let menuButtonInfo = uni.getMenuButtonBoundingClientRect()?uni.getMenuButtonBoun
 		font-family: PingFang SC;
 		width: 100%;
 		height: 140rpx;
-		padding: 30rpx 0 0 32rpx;
+		padding: 0 0 0 32rpx;
 		border-radius: 25rpx;
 		background: linear-gradient(120deg, #FFF0F0, #FDD9D9, #FEBCBD);
 	}
@@ -222,7 +225,7 @@ let menuButtonInfo = uni.getMenuButtonBoundingClientRect()?uni.getMenuButtonBoun
 		font-family: PingFang SC;
 		width: 100%;
 		height: 140rpx;
-		padding: 30rpx 0 0 32rpx;
+		padding: 0 0 0 32rpx;
 		border-radius: 25rpx;
 		background: linear-gradient(120deg, #FEF8E1, #FCEFCC, #F9E4AB);
 	}
@@ -231,7 +234,7 @@ let menuButtonInfo = uni.getMenuButtonBoundingClientRect()?uni.getMenuButtonBoun
 		font-family: PingFang SC;
 		width: 100%;
 		height: 140rpx;
-		padding: 30rpx 0 0 32rpx;
+		padding: 0 0 0 32rpx;
 		border-radius: 25rpx;
 		background: linear-gradient(120deg, #E3EFFF, #C8DCFF, #9CC2FA);
 	}
@@ -248,7 +251,6 @@ let menuButtonInfo = uni.getMenuButtonBoundingClientRect()?uni.getMenuButtonBoun
 		margin: 42rpx 32rpx;
 
 		.listBlok {
-			width: 686rpx;
 			height: 285rpx;
 			background: #ffffff;
 			border-radius: 15rpx;

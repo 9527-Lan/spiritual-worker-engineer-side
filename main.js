@@ -28,7 +28,21 @@ const msg = (title, duration=1500, mask=false, icon='none')=>{
 		icon
 	});
 }
-
+uni.$on('beforeEnter', (to, from, next) => {
+	
+  // 进行路由拦截判断，根据你的业务逻辑进行处理
+  if ((to.path === '/' || to.path === 'pages/login/login' || to.path === 'pages/login/index') && !store.state.hasLogin) {
+    // 未登录，则跳转到登录页面
+    uni.showToast({
+      title: '请先登录',
+      icon: 'none'
+    })
+    next('/')
+  } else {
+    // 已登录或其他情况，正常跳转
+    next()
+  }
+})
 const prePage = ()=>{
 	let pages = uni.$u.pages();
 	let prePage = pages[pages.length - 2];

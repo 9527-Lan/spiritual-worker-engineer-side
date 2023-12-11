@@ -79,10 +79,23 @@
 		</view>
 		<view class="cell">
 			<u-cell-group :customStyle="{ fontSize: '160px' }" :border="false">
-				<u-cell isLink rightIconStyle="fontSize:32rpx" url="/pages/my/myMessage/myMessage">
+				<u-cell isLink url="/pages/my/messageList" rightIconStyle="fontSize:32rpx">
+					<template slot="title" class="u-slot-title">
+						<text>我的消息</text>
+						<u-badge  type="error "  numberType="overflow" max="99" :value="message"></u-badge>
+						<!-- <u-tag class="tag" text="待完善" size="mini" type="error" shape="circle">
+						</u-tag> -->
+					</template>
+					<u-icon slot="icon" size="32" name="/static/my/bank.png"></u-icon>
+				</u-cell>
+				<u-cell :disabled="myList.status == 1" isLink rightIconStyle="fontSize:32rpx" :url="'/pages/my/myMessage/myMessage?status=' + myList.status">
 					<u-icon slot="icon" size="32" name="/static/my/idCard.png"></u-icon>
 					<template slot="title" class="u-slot-title">
-						<text>我的信息</text>
+						<view class="titleFlex">
+							<text>我的信息</text>
+							<text>{{myList.statusName}}</text>
+						</view>
+						
 						
 						<!-- <u-tag class="tag" text="待完善" size="mini" type="error" shape="circle">
 						</u-tag> -->
@@ -91,7 +104,7 @@
 				<!-- <u-cell title="我的证书" isLink url="/pages/my/certificat/certificat" rightIconStyle="fontSize:32rpx">
 					<u-icon slot="icon" size="32" name="/static/my/certificate1.png"></u-icon>
 				</u-cell> -->
-				<u-cell title="证书管理" isLink url="/pages/my/Certificate" rightIconStyle="fontSize:32rpx">
+				<u-cell title="我的证书" isLink url="/pages/my/Certificate" rightIconStyle="fontSize:32rpx">
 					<u-icon slot="icon" size="32" name="/static/my/certificate1.png"></u-icon>
 				</u-cell>
 				<u-cell title="银行卡管理" isLink url="/pages/my/card/card" rightIconStyle="fontSize:32rpx">
@@ -105,15 +118,6 @@
 				</u-cell>
 				<u-cell title="咨询客服" isLink url="" @click="showCard" rightIconStyle="fontSize:32rpx">
 					<u-icon slot="icon" size="32" name="/static/my/consult.png"></u-icon>
-				</u-cell>
-				<u-cell isLink url="/pages/my/messageList" rightIconStyle="fontSize:32rpx">
-					<template slot="title" class="u-slot-title">
-						<text>信息</text>
-						<u-badge  type="error "  numberType="overflow" max="99" :value="message"></u-badge>
-						<!-- <u-tag class="tag" text="待完善" size="mini" type="error" shape="circle">
-						</u-tag> -->
-					</template>
-					<u-icon slot="icon" size="32" name="/static/my/bank.png"></u-icon>
 				</u-cell>
 				<u-cell title="关于我们" isLink url="/pages/my/callMe/callMe" rightIconStyle="fontSize:32rpx">
 					<u-icon slot="icon" size="32" name="/static/my/my.png"></u-icon>
@@ -155,7 +159,9 @@
 			</view>
 			<view class="slot-footer"></view>
 		</u-modal>
-
+		<view class="">
+			<u-button shape='circle' type="error" class="unLogin" @click="unLogin" text="退出登录"></u-button>
+		</view>
 	</view>
 </template>
 
@@ -240,6 +246,14 @@ export default {
 				url: '/pages/my/successed/index',
 			});
 		},
+		unLogin(){
+			uni.redirectTo({
+				url: '/',
+				success:()=>{
+					this.$store.commit('SET_HAS_LOGIN',false)
+				}
+			})
+		},
 		seize() {
 			uni.navigateTo({
 				url: '/pages/my/seizeOrdering/index',
@@ -306,6 +320,7 @@ export default {
 			})
 			consultCustomerService().then(res => {
 				this.content = res.data
+				console.log(res)
 			})
 
 		},
@@ -323,6 +338,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+	.unLogin{
+		width: 50%;
+		margin: 20px auto;
+	}
 .bg {
 	position: fixed;
 	width: 100%;
@@ -332,7 +351,11 @@ export default {
 	z-index: -1;
 	background-color: #F2F6FF;
 }
-
+	.titleFlex{
+		display: flex;
+		width: 100%;
+		justify-content: space-between;
+	}
 .myMsg {
 	position: relative;
 	display: flex;
@@ -376,7 +399,7 @@ export default {
 	height: 500rpx;
 	background-repeat: round;
 	margin: 0 auto 45rpx;
-	padding: 60rpx 28rpx 80rpx 70rpx;
+	padding: 60rpx 70rpx 80rpx 70rpx;
 	color: #FFFFFF;
 	font-family: PingFang SC;
 
@@ -446,6 +469,7 @@ export default {
 			.text {
 				font-weight: 500;
 				opacity: 0.5;
+				margin-bottom: 0.7rem;
 			}
 		}
 
@@ -464,11 +488,11 @@ export default {
 }
 
 .myOrder {
+	width: calc(100% - 140rpx);
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
 	font-family: PingFang SC;
-	width: 686rpx;
 	height: 280rpx;
 	background: #FFFFFF;
 	border-radius: 15rpx;
@@ -507,7 +531,7 @@ export default {
 }
 
 .cell {
-	width: 686rpx;
+	width: calc(100% - 140rpx);
 	margin: 0 auto;
 
 	.tag {

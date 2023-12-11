@@ -259,7 +259,6 @@
 			margin-bottom: 30rpx;
 
 			.listBlok {
-				width: 686rpx;
 				height: auto;
 				background: #ffffff;
 				padding: 35rpx 25rpx 25rpx 25rpx;

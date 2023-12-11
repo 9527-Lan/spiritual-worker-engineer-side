@@ -6,6 +6,17 @@
 		<view class="from">
 			<view class="title">完善我的信息</view>
 			<view class="tip">为了您更快速的灵活用工，请先完善我的个人信息</view>
+			<view class="warn"
+			v-if="userInfo.isAuthentication===1||userInfo.isAuthentication===3"
+			>
+				<view class="left">
+					<u-icon name="../../../static/my/zj-icon.png" color="#2979ff" size="28"></u-icon>
+					<p>您还未进行身份证认证</p>
+				</view>
+				<view class="right">
+					<u-button type="primary" color="#3A84F0" text="去认证" @click="toIdCard"></u-button>
+				</view>
+			</view>
 			<!-- <view class="warn" 
 			v-if="userInfo.isAuthentication===1||userInfo.isAuthentication===3"
 			>
@@ -28,7 +39,7 @@
 			</view> -->
 			<view>
 				<!-- 注意，如果需要兼容微信小程序，最好通过setRules方法设置rules规则 -->
-				<u--form :labelStyle="labelStyle" labelWidth="140" labelPosition="left" :model="userInfo" :rules="rules"
+				<u--form  :disabled='status == 1' :labelStyle="labelStyle" labelWidth="140" labelPosition="left" :model="userInfo" :rules="rules"
 					ref="uForm">
 					<u-form-item required label="姓名" prop="engineerRealname" borderBottom ref="item1" >
 						<u--input v-model="userInfo.engineerRealname" border="none" placeholder="请输入姓名"></u--input>
@@ -53,13 +64,14 @@
 							border="none" autoHeight @click="showLabel = true"></u--textarea>
 						<u-icon slot="right" name="arrow-right"></u-icon>
 					</u-form-item>
-					<u-form-item required label="上传证书" borderBottom ref="item1">
+					<!-- 暂时隐藏 -->
+					<!-- <u-form-item required label="上传证书" borderBottom ref="item1">
 						<u--input disabled disabledColor="#ffffff" border="none"></u--input>
 						<u-button type="primary" color="#3A84F0" text="审核中" @click=" tolistlook"
 							style="width: 140rpx;height: 48rpx;border-radius: 14px;overflow: hidden;display: flex;align-items: center; margin-right: 30rpx;" />
 						<u-button type="primary" color="#3A84F0" text="去上传" @click="toCertificate"
 							style="width: 140rpx;height: 48rpx;border-radius: 14px;overflow: hidden;display: flex;align-items: center;" />
-					</u-form-item>
+					</u-form-item> -->
 					<!-- <u-form-item required label="签署合同" borderBottom ref="item1">
 						<u--input disabled disabledColor="#ffffff" border="none"></u--input>
 						<u--text slot="right" type="info" text="已签署" size="24"></u--text>
@@ -119,6 +131,7 @@
 						value: '2'
 					}
 				],
+				status:'',
 				showType: false,
 				typeActions: [],
 				showLabel: false,
@@ -131,7 +144,7 @@
 						trigger: ['blur', 'change']
 					},
 					'engineerSex': {
-						type: 'number',
+						type: 'string',
 						required: true,
 						message: '请选择男或女',
 						trigger: ['blur', 'change']
@@ -172,7 +185,8 @@
 			//如果需要兼容微信小程序，并且校验规则中含有方法等，只能通过setRules方法设置规则。
 			this.$refs.uForm.setRules(this.rules)
 		},
-		async onLoad() {
+		async onLoad(e) {
+			this.status = e.status
 			this.getTypeDict()
 			this.casualEngineerMyList()
 		},
@@ -187,6 +201,9 @@
 					this.sex = res.data.engineerSexName
 					this.type = res.data.typeName
 					this.label = res.data.labelName
+					setTimeout(()=>{
+						this.$refs.uForm.clearValidate()
+					}, 0)
 					console.log(this.userInfo);
 					res.data.casualEngineerCertificateList.forEach(el => {
 						if (el.states == 3) {
@@ -252,6 +269,7 @@
 			sexSelect(e) {
 				this.userInfo.engineerSex = e.value
 				this.sex = e.name
+				this.$refs.uForm.validateField('engineerSex')
 			},
 			typeSelect(e) {
 				this.showType = false
@@ -260,11 +278,13 @@
 				this.getLabelDict(this.userInfo.typeIds)
 				this.userInfo.labelIds = ''
 				this.label = ''
+				this.$refs.uForm.validateField('typeIds')
 			},
 			labelSelect(e) {
 				this.showLabel = false
 				this.userInfo.labelIds = e.length ? e.map(el => el.id).toString() : ''
 				this.label = e.length ? e.map(el => el.name).toString() : ''
+				this.$refs.uForm.validateField('label')
 			},
 			submit(b) {
 				this.$refs.uForm.validate().then(res => {
@@ -329,7 +349,6 @@
 		.warn {
 			display: flex;
 			height: 108rpx;
-			background: #FEF8F8;
 			border-radius: 15rpx;
 			align-items: center;
 			padding: 0 36rpx;

@@ -2,7 +2,7 @@
     <view>
         <view class="bg"></view>
 
-        <u-navbar title="已提交证书" @leftClick="leftClick" :placeholder="true" :autoBack="true" leftIconSize="34rpx"
+        <u-navbar title="我的证书" @leftClick="leftClick" :placeholder="true" :autoBack="true" leftIconSize="34rpx"
             bgColor="#F2F6FF" ftIconColor="#000000" titleStyle="color: #000000;font-size:34rpx" />
         <u-tabs :list="list1" lineHeight="16rpx" lineWidth="64rpx" width="50%" @change="changeTabList"></u-tabs>
         <view class="list">
@@ -24,7 +24,7 @@
 
                     <view class="listBlok" @click="detail(item)" v-else>
                         <view class="top">
-                            <text class="topTextBlack" style="font-size: 20px;">名称：{{ item.certificateName ? item.certificateName : '--' }}</text>
+                            <text class="topTextBlack" style="font-size: 20px;">名称：{{ item.labelText ? item.labelText : '--' }}</text>
                         </view>
 
                     </view>
