@@ -52,6 +52,7 @@
     <u-collapse-item
     v-for="(item,index) in list" :key="index"
       name="Docs guide"
+	  class="collapse"
     >
 		<template v-slot:title>
 			<uni-row class="demo-uni-row">
@@ -130,7 +131,11 @@ page {
     margin: 0 auto;
     padding: 0 32rpx;
 }
-
+.collapse{
+	& /deep/ .u-cell__body{
+		padding: 15px 15px;
+	}
+}
 .query-box {
     display: flex;
     justify-content: space-between;

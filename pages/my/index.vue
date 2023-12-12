@@ -93,7 +93,7 @@
 					<template slot="title" class="u-slot-title">
 						<view class="titleFlex">
 							<text>我的信息</text>
-							<text>{{myList.statusName}}</text>
+							<text :class="myList.status == 1?'green':'blue'">{{myList.statusName}}</text>
 						</view>
 						
 						
@@ -338,9 +338,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+	.green{
+		color: green;
+	}
+	.blue{
+		color: #1e80ff;
+	}
 	.unLogin{
 		width: 50%;
 		margin: 20px auto;
+		background-color: #1e80ff;
+		border-color: #1e80ff;
+		color: #fff;
 	}
 .bg {
 	position: fixed;
