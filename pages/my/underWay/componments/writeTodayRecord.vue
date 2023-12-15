@@ -33,6 +33,7 @@
 	import uIcon from '@/uni_modules/uview-ui/components/u-icon/u-icon.vue';
 	import {listOrderItemAdd} from'@/api/my.js'
 	import service from '@/utils/request.js'
+	import {translate} from '@/utils/yasuoimg.js'
 	export default {
 		data() {
 			return {
@@ -109,29 +110,33 @@
 					})
 				})
 				for (let i = 0; i < lists.length; i++) {
-					const result = await this.uploadFilePromise(lists[i].url)
-					let item = this[`fileList${event.name}`][fileListLen]
-					console.log(this[`fileList${event.name}`],1,result);
-					this[`fileList${event.name}`].splice(fileListLen, 1, Object.assign(item, {
-						status: 'success',
-						message: '',
+					await translate(lists[i].url,async (res)=>{
+						const result = await this.uploadFilePromise(res,this[`fileList${event.name}`][i])
+						console.log(result)
+						let item = this[`fileList${event.name}`][fileListLen]
+						this[`fileList${event.name}`].splice(fileListLen, 1, Object.assign(item, {
+							status: 'success',
+							message: '',
 						url: JSON.parse(result).data.fileUrl,
 						id:JSON.parse(result).data.id,
-					}))
-					fileListLen++
+						}))
+						fileListLen++
+					})
 				}
 			},
-			uploadFilePromise(url) {
+			uploadFilePromise(url,file) {
 				console.log(url);
 				return new Promise((resolve, reject) => {
 					let a = uni.uploadFile({
 						url: service.defaults.baseURL+'/file/upload', // 仅为示例，非真实的接口地址
 						filePath: url,
+						fileType:'image',
 						name: 'file',
 						formData: {
 							user: 'test'
 						},
 						success: (res) => {
+							file.status == 'success'
 							setTimeout(() => {
 								resolve(res.data)
 							}, 1000)

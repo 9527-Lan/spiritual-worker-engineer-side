@@ -6,7 +6,7 @@
 		<view>
 			<view>
 				<u-search placeholder="搜索用工信息..." v-model="keyword" :showAction="false" height="64rpx"
-					margin="100rpx 32rpx 39rpx 32rpx" bgColor="#FFFFFF" @click="toSearch" @search="searchList"
+					margin="100rpx 32rpx 39rpx 32rpx" bgColor="#FFFFFF" @search="searchList"
 					@blur="searchList"></u-search>
 			</view>
 		</view>
@@ -103,6 +103,7 @@
 				const params = {
 					pageNum: this.pageNum,
 					pageSize: this.pageSize,
+					name:this.keyword
 				}
 				casualOrder(params).then(res => {
 					if (res.code === '00000') {
@@ -115,13 +116,11 @@
 			},
 			// 搜索用工信息
 			searchList() {
-
-				console.log(this.keyword, this.indexList)
-
-				this.indexList = this.indexList.filter(item => this.keyword === item.name)
-				if (this.keyword === '') {
-					this.findCasualOrder()
-				}
+			this.findCasualOrder()
+				// this.indexList = this.indexList.filter(item => this.keyword === item.name)
+				// if (this.keyword === '') {
+				// 	this.findCasualOrder()
+				// }
 
 			}
 		}

@@ -60,7 +60,7 @@
 					<view class="demo-uni-col dark">{{item.typeName}}</view>
 				</uni-col>
 				<uni-col :span="12">
-					<view class="demo-uni-col dark">{{item.updateTime}}</view>
+					<view class="demo-uni-col dark">{{item.createTime}}</view>
 				</uni-col>
 			</uni-row>
 		</template>

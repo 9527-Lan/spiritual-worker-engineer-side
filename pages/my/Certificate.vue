@@ -17,8 +17,7 @@
                         </view>
                         <view class="content">
                             <view style="width: 15%;">备注：</view>
-                            <view style="width: 85%; padding: 5px;
-    border: 1px solid #eee6e6;;">{{ item.remark ? item.remark : '暂无' }}</view>
+                            <view style="width: 85%;">{{ item.remark ? item.remark : '暂无' }}</view>
                         </view>
                     </view>
 

@@ -86,7 +86,7 @@
 						<!-- <u-tag class="tag" text="待完善" size="mini" type="error" shape="circle">
 						</u-tag> -->
 					</template>
-					<u-icon slot="icon" size="32" name="/static/my/bank.png"></u-icon>
+					<u-icon slot="icon" size="32" name="/static/消息.png"></u-icon>
 				</u-cell>
 				<u-cell :disabled="myList.status == 1" isLink rightIconStyle="fontSize:32rpx" :url="'/pages/my/myMessage/myMessage?status=' + myList.status">
 					<u-icon slot="icon" size="32" name="/static/my/idCard.png"></u-icon>

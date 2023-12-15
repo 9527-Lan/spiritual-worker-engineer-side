@@ -99,6 +99,9 @@
 				this.LowerSingleEndList()
 			}
 		},
+		onShow() {
+			this.LowerSingleEndList()
+		},
 		computed: {
 
 		},
