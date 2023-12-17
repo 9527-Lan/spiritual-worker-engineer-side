@@ -56,7 +56,6 @@
 			}
 		},
 		onLoad(options) {
-            console.log(options.id);
             myCertificateItem(options.id).then((res)=>{
                 this.imgs=res.data
             })
@@ -89,7 +88,6 @@
 					}))
 					fileListLen++
 					this.show = true
-					console.log();
 				}
 			},
 			uploadFilePromise(url) {
@@ -118,8 +116,6 @@
 				})
 			},
 			popupSub() {
-				
-				console.log(this.frontList,'3333333333');
 				let arr = this.frontList.map((item)=>{
 					return item.id
 				})
@@ -133,9 +129,6 @@
 					return item.status==="success"
 				})
 				let state=this.frontList.length>0
-				
-
-				console.log(status,'20000000');
 				if(!status||!state) return uni.$u.toast('请上传完证书后再试')
 				certificate(pramas).then(res => {
 					// this.show = false

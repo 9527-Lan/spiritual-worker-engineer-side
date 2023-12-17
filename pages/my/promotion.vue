@@ -16,7 +16,7 @@
         <p>推广总量：{{ list.length }}</p>
       </view>
       <view class="query-item" @click="DateShow = true">
-        <p>{{ params.date }}</p>
+        <p>{{ params.passivityDate }}</p>
         <u-icon
           v-if="!queryDateShow"
           name="arrow-down-fill"
@@ -31,7 +31,7 @@
         ></u-icon>
       </view>
     </view>
-    <view class="list-box">
+    <view class="list-box" v-if="list.length">
       <view class="list-item" v-for="(item, index) in list" :key="index">
         <view class="item-img">
           <u-avatar
@@ -72,6 +72,9 @@
         </view>
       </view>
     </view>
+	<view v-else class="zanwu">
+		暂无数据
+	</view>
     <view class="bottom"> </view>
     <u-datetime-picker
       :show="DateShow"
@@ -97,7 +100,7 @@ export default {
         engineerId: "",
         pageNum: 1,
         pageSize: 10,
-        date: "",
+        passivityDate: "",
       },
       queryDateShow: false,
       queryTypeShow: false,
@@ -112,7 +115,7 @@ export default {
         ? "0" + (date.getMonth() + 1)
         : date.getMonth() + 1;
     console.log(Year + "-" + Moth);
-    this.params.date = Year + "-" + Moth;
+    this.params.passivityDate = Year + "-" + Moth;
     this.params.engineerId = uni.getStorageSync("engineer_id");
     this.getlist();
   },
@@ -123,7 +126,7 @@ export default {
 
     getEndTimes(e) {
       console.log(e.vlaue);
-      this.params.date = this.timestampToTime(e.value);
+      this.params.passivityDate = this.timestampToTime(e.value);
       this.DateShow = false;
       this.getlist();
     },
@@ -165,7 +168,13 @@ export default {
 page {
   background: #f2f6ff;
 }
-
+.zanwu{
+		font-size: 30rpx;
+		text-align: center;
+		    padding: 30rpx;
+		    width: 50%;
+		    margin: 0 auto;
+	}
 .container {
   margin: 0 auto;
   padding: 0 32rpx;

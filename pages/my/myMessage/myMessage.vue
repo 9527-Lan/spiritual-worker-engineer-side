@@ -45,9 +45,9 @@
 					<u-form-item required label="姓名" prop="engineerRealname" borderBottom ref="item1" >
 						<u--input v-model="userInfo.engineerRealname" border="none" placeholder="请输入姓名"></u--input>
 					</u-form-item>
-					<u-form-item required label="性别" prop="engineerSex" borderBottom @click="showSex = true"
+					<u-form-item required label="性别" prop="engineerSexName" borderBottom @click="showSex = true"
 						ref="item1">
-						<u--input v-model="sex" disabled disabledColor="#ffffff" placeholder="请选择性别"
+						<u--input v-model="userInfo.engineerSexName" disabled disabledColor="#ffffff" placeholder="请选择性别"
 							border="none"></u--input>
 						<u-icon slot="right" name="arrow-right"></u-icon>
 					</u-form-item>
@@ -119,7 +119,6 @@
 				userInfo: {
 					engineerRealname: '',
 				},
-				sex: '',
 				type: '',
 				label: '',
 				showSex: false,
@@ -138,13 +137,28 @@
 				showLabel: false,
 				labelActions: [],
 				rules: {
-					'engineerRealname': {
-						type: 'string',
-						required: true,
-						message: '请填写姓名',
-						trigger: ['blur', 'change']
-					},
-					'engineerSex': {
+					'engineerRealname': [
+						{
+							type: 'string',
+							required: true,
+							message: '请填写姓名',
+							trigger: ['blur', 'change']
+						},
+						{
+							// 自定义验证函数，见上说明
+							validator: (rule, value, callback) => {
+								if(value.indexOf('GCS') >=0){
+									return false
+								}else{
+									return true
+								}
+							},
+							message: '姓名不合规',
+							// 触发器可以同时用blur和change
+							trigger: ['change','blur'],
+						},
+					],
+					'engineerSexName': {
 						type: 'string',
 						required: true,
 						message: '请选择男或女',
@@ -200,7 +214,6 @@
 				casualEngineerMy(params).then(res => {
 					console.log(res)
 					this.userInfo = res.data
-					this.sex = res.data.engineerSexName
 					this.type = res.data.typeName
 					this.label = res.data.labelName
 					setTimeout(()=>{
@@ -270,7 +283,7 @@
 			},
 			sexSelect(e) {
 				this.userInfo.engineerSex = e.value
-				this.sex = e.name
+				this.userInfo.engineerSexName = e.name
 				this.$refs.uForm.validateField('engineerSex')
 			},
 			typeSelect(e) {

@@ -13,7 +13,7 @@
                         </view>
                         <view class="content">备注：{{ item.remark }}</view>
                         <view style="display: flex;">
-                            <u-image v-for="(item2, index) in item.certificateImgUrl" :key="index" :src="item2" height="150rpx" width="200rpx"></u-image>
+                            <u-image v-for="(item2, index) in item.certificateImgUrl" :key="index" :src="item2" height="150rpx"></u-image>
 
 
                           
@@ -126,7 +126,6 @@ export default {
 
     .upImg {
         position: relative;
-        width: 370rpx;
         margin: 34rpx auto 0;
 
         .imgText {
@@ -154,7 +153,7 @@ export default {
     .listBlok {
         width: 686rpx;
         height: 400rpx;
-        background: #ffffff;
+        background-image: linear-gradient(90deg, #7993e9, #87d9e7);
         border-radius: 15rpx;
         padding: 35rpx 32rpx 45rpx 37rpx;
         margin-bottom: 27rpx;

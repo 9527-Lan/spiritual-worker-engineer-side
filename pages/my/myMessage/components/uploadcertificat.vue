@@ -89,8 +89,18 @@
 			},
 		},
 		onLoad(options) {
-			console.log(options);
 			this.id=options.id
+			if (options.img) {
+				let data = uni.getStorageSync('certificateImgList')
+				this.frontList = data.certificateImg.split(',').map((item,index)=>{
+					return {
+						status: 'success',
+						message: '',
+						url: data.certificateImgUrl[index],
+						id: item,
+					}
+				})
+			}
 			myDaiCertificate({id:options.id}).then((res)=>{
 				
 			})
@@ -114,7 +124,6 @@
 				for (let i = 0; i < lists.length; i++) {
 					await translate(lists[i].url,async (res)=>{
 						const result = await this.uploadFilePromise(res)
-						console.log(result)
 						this.frontList.push()
 						let item = this.frontList[fileListLen]
 						this.frontList.splice(fileListLen, 1, Object.assign(item, {
@@ -154,8 +163,6 @@
 				})
 			},
 			popupSub() {
-				
-				console.log(this.frontList,'3333333333');
 				let arr = this.frontList.map((item)=>{
 					return item.id
 				})
@@ -169,9 +176,6 @@
 					return item.status==="success"
 				})
 				let state=this.frontList.length>0
-				
-
-				console.log(status,'20000000');
 				if(!status||!state) return uni.$u.toast('请上传完证书后再试')
 				certificate(pramas).then(res => {
 					// this.show = false

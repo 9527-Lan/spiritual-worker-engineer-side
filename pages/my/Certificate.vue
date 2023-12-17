@@ -9,26 +9,40 @@
             <view v-if="index === 0" class="addCard" @click="addCard">
                 +添加证书
             </view>
-            <u-list>
+            <u-list v-if="OrderList.length">
                 <u-list-item v-for="(item, index2) in OrderList" :key="index2">
                     <view class="listBlok" @click="detail(item)" v-if="index === 0">
                         <view class="top">
-                            <text class="topTextBlack">名称：{{ item.certificateName ? item.certificateName : '--' }}</text>
+							<view class="flexo">
+								<u-icon name="order" size="30px"></u-icon>
+								<text class="topTextBlack">{{ item.certificateName ? item.certificateName : '--' }}</text>
+							</view>
+							<view class="status">
+								{{item.statesText}}
+							</view>
+							<!-- v-if="item.statesText == '未通过'" -->
+							<view class="position" @click.stop="addCard({
+								certificateImg:item.certificateImg,
+								certificateImgUrl:item.certificateImgUrl
+							})">
+								重新提交
+							</view>
                         </view>
                         <view class="content">
-                            <view style="width: 15%;">备注：</view>
                             <view style="width: 85%;">{{ item.remark ? item.remark : '暂无' }}</view>
                         </view>
                     </view>
 
                     <view class="listBlok" @click="detail(item)" v-else>
                         <view class="top">
-                            <text class="topTextBlack" style="font-size: 20px;">名称：{{ item.labelText ? item.labelText : '--' }}</text>
+                            <text class="topTextBlack" style="font-size: 20px;">{{ item.labelText ? item.labelText : '--' }}</text>
                         </view>
-
                     </view>
                 </u-list-item>
             </u-list>
+			<view class="zanwu" v-else>
+				暂无数据
+			</view>
         </view>
     </view>
 </template>
@@ -85,16 +99,18 @@ export default {
         },
     },
     onLoad(options) {
-        console.log(options);
         myDaiCertificate({ id: uni.getStorageSync('engineer_id') }).then((res) => {
             console.log(res);
             this.OrderList = res.data
         })
     },
     methods: {
-        addCard() {
+        addCard(data) {
+			if(data){
+				uni.setStorageSync('certificateImgList',data)
+			}
             uni.navigateTo({
-                url: '/pages/my/myMessage/components/uploadcertificat?id=' + uni.getStorageSync('engineer_id')
+                url: '/pages/my/myMessage/components/uploadcertificat?id=' + uni.getStorageSync('engineer_id') + '&img=' + (data?true:false)
             })
         },
         // 已提交
@@ -203,19 +219,34 @@ export default {
 
 .list {
     margin: 42rpx 32rpx;
-
+	.zanwu{
+		font-size: 30rpx;
+		text-align: center;
+		    padding: 30rpx;
+		    width: 50%;
+		    margin: 0 auto;
+	}
     .listBlok {
         width: 686rpx;
-        background: #ffffff;
+        background-image: linear-gradient(90deg, #7993e9, #87d9e7);
         border-radius: 15rpx;
         padding: 35rpx 32rpx 45rpx 37rpx;
         margin-bottom: 27rpx;
-
+		position: relative;
+		.position{
+			position: absolute;
+			right: 30rpx;
+			top: 60%;
+			color: #3A84F0;
+		}
         .topTextBlack {
             color: #333333;
 
         }
-
+		.status{
+			right: 10rpx;
+			color: #3A84F0;
+		}
         .content {
             height: 92rpx;
             display: flex;
@@ -224,14 +255,16 @@ export default {
 
         .top {
             display: flex;
-            height: 34rpx;
+			align-items: center;
             justify-content: space-between;
             font-size: 32rpx;
             font-family: PingFang SC;
             font-weight: bold;
             margin-bottom: 24rpx;
-
-
+			.flexo{
+				display: flex;
+				align-items: center;
+			}
 
             .topTextBlue {
                 color: #3A84F0;

@@ -138,24 +138,15 @@
 			
 				casualEngineerEdit(parmas).then(res => {
 					authentication(parmas1).then(res => {
-						if(res.code==='B0001'){
-							uni.$u.toast(res.msg)
+						if(res.data.response!='00000'){
+							uni.$u.toast(res.data.msg)
+							return
 						}
-						if(res.data.status===1){
-							uni.showToast({
-							title: res.data.msg,
-							duration: 2000,
-						})
-							uni.navigateTo({
+						uni.navigateTo({
 							url: '/pages/my/myMessage/myMessage',
 						});
-						}else{
-							uni.$u.toast(res.data.msg)
-						}
 					})
 				})
-			
-			
 			}
 		}
 	}
