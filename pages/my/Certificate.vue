@@ -20,8 +20,8 @@
 							<view class="status">
 								{{item.statesText}}
 							</view>
-							<!-- v-if="item.statesText == '未通过'" -->
-							<view class="position" @click.stop="addCard({
+							<view v-if="item.statesText == '未通过'" 
+							class="position" @click.stop="addCard({
 								certificateImg:item.certificateImg,
 								certificateImgUrl:item.certificateImgUrl
 							})">

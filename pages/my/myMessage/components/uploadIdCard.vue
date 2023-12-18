@@ -138,12 +138,12 @@
 			
 				casualEngineerEdit(parmas).then(res => {
 					authentication(parmas1).then(res => {
-						if(res.data.response!='00000'){
-							uni.$u.toast(res.data.msg)
+						uni.$u.toast(res.data.msg)
+						if(res.data.response.code!='00000'){
 							return
 						}
 						uni.navigateTo({
-							url: '/pages/my/myMessage/myMessage',
+							url: '/pages/my/index',
 						});
 					})
 				})
