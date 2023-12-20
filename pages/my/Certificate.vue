@@ -35,8 +35,14 @@
 
                     <view class="listBlok" @click="detail(item)" v-else>
                         <view class="top">
-                            <text class="topTextBlack" style="font-size: 20px;">{{ item.labelText ? item.labelText : '--' }}</text>
-                        </view>
+                            <view class="flexo">
+                            	<u-icon name="order" size="30px"></u-icon>
+                            	<text class="topTextBlack">{{ item.certificateName ? item.certificateName : '--' }}</text>
+                            </view>
+						</view>
+						<view class="content">
+						    <view style="width: 85%;">{{ item.remark ? item.remark : '暂无' }}</view>
+						</view>
                     </view>
                 </u-list-item>
             </u-list>
@@ -251,6 +257,7 @@ export default {
             height: 92rpx;
             display: flex;
             overflow: hidden;
+			align-items: center;
         }
 
         .top {

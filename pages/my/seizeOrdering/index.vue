@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="bg"></view>
-		<u-navbar title="抢单中" @leftClick="leftClick" :autoBack="true" :placeholder="true" leftIconSize="34rpx" bgColor="#F2F6FF"
+		<u-navbar title="已报名" @leftClick="leftClick" :autoBack="true" :placeholder="true" leftIconSize="34rpx" bgColor="#F2F6FF"
 			ftIconColor="#000000" titleStyle="color: #000000;font-size:34rpx"/>
 		<view class="picker">
 			<view class="after" @click="typeShow = true">{{typeValue.label}}</view>

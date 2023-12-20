@@ -55,7 +55,7 @@
 		</view>
 		<u-tabbar :value="value6" @change="name => value6 = name" :fixed="true" :placeholder="false"
 			:safeAreaInsetBottom="true">
-			<u-tabbar-item class="icon-size" @click.stop='callPhone' text="平台客服" icon="phone"></u-tabbar-item>
+			<u-tabbar-item class="icon-size" @click='callPhone' text="平台客服" icon="phone"></u-tabbar-item>
 			<u-button v-if="status" type="primary" shape="circle" text="立即抢单" @click="submitTo"></u-button>
 			<u-button v-else type="primary" shape="circle" text="已报名"></u-button>
 		</u-tabbar>

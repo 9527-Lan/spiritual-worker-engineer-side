@@ -25,7 +25,7 @@
 					</view>
 					<view class="item" style="text-align: right;">
 						<p style="margin-bottom: 10rpx;font-size: 32rpx;font-weight: bold;color: #3A84F0;">{{item.type===1?'+':'-'}}{{item.balanceLess}}</p>
-						<p style="font-size: 24rpx;font-weight: 500;color: #999999;">{{item.orderName}}{{item.remark?(':' + item.remark) : ''}}</p>
+						<p style="font-size: 24rpx;font-weight: 500;color: #999999;">{{item.orderName}}{{item.remark?('(' + item.remark) + ')' : ''}}</p>
 					</view>
 				</view>
 				<!-- <u-collapse  v-else>

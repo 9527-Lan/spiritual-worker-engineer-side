@@ -20,7 +20,7 @@
 				</view>
 			</view>
 			<view class="bottomBox">
-				<u-icon labelPos="bottom " label="平台客服" labelSize="20" labelColor="#333333" size="40" name="phone"></u-icon>
+				<kefu labelPos="bottom " label="平台客服" labelSize="20" labelColor="#333333" size="40" name="phone" />
 				<view class="bottonBox">
 					<u-button type="primary" color="#3A84F0" text="确认提交" @click="submit"></u-button>
 				</view>
@@ -31,10 +31,14 @@
 <script>
 	import uTextarea from '@/uni_modules/uview-ui/components/u--textarea/u--textarea.vue';
 	import uIcon from '@/uni_modules/uview-ui/components/u-icon/u-icon.vue';
+	import kefu from "@/components/kefu.vue"
 	import {listOrderItemAdd} from'@/api/my.js'
 	import service from '@/utils/request.js'
 	import {translate} from '@/utils/yasuoimg.js'
 	export default {
+		components:{
+			kefu
+		},
 		data() {
 			return {
 				form: {
