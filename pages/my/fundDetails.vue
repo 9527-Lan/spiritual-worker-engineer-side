@@ -17,17 +17,18 @@
 		</view>
 		<view class="list-box">
 			<view  v-for="(item, index) in list" :key="index">
-				<view v-if="item.orderName != '提现失败'" class="list-item">
+				<!-- v-if="item.orderName != '提现失败'" -->
+				<view  class="list-item">
 					<view class="item">
 						<p style="margin-bottom: 10rpx;font-size: 32rpx;font-weight: bold;color: #333333;">结算</p>
 						<p style="font-size: 24rpx;font-weight: 500;color: #999999;">{{item.createTime}}</p>
 					</view>
 					<view class="item" style="text-align: right;">
 						<p style="margin-bottom: 10rpx;font-size: 32rpx;font-weight: bold;color: #3A84F0;">{{item.type===1?'+':'-'}}{{item.balanceLess}}</p>
-						<p style="font-size: 24rpx;font-weight: 500;color: #999999;">{{item.orderName}}</p>
+						<p style="font-size: 24rpx;font-weight: 500;color: #999999;">{{item.orderName}}{{item.remark?(':' + item.remark) : ''}}</p>
 					</view>
 				</view>
-				<u-collapse  v-else>
+				<!-- <u-collapse  v-else>
 					<u-collapse-item
 					  class="collapse"
 					>
@@ -52,7 +53,7 @@
 						
 						<text class="u-collapse-content">{{ item.remark }}</text>
 					</u-collapse-item>
-				</u-collapse>
+				</u-collapse> -->
 				
 			</view>
 		</view>
