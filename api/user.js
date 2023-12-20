@@ -90,6 +90,13 @@ export function getAgreement(){
 		method: 'get',
 	})
 }
+export function querybyPhone(params){
+	return request({
+		url: '/engineerEnd/querybyPhone',
+		method: 'get',
+		params
+	})
+}
 //消息 
 export function messageCount(id){
 	return request({

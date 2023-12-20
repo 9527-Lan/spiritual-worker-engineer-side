@@ -72,7 +72,7 @@
 		tomerService
 	} from '@/api/user.js'
 	import {
-		casualOrder
+		casualOrderPage
 	} from '@/api/index.js'
 	import {
 		LowerSingleEndExit
@@ -97,7 +97,7 @@
 		},
 		onLoad(options) {
 			this.engineer_id = uni.getStorageSync('engineer_id')
-			casualOrder().then(res => {
+			casualOrderPage({id:options.id}).then(res => {
 				const list = res.data.list.filter(item => item.id === options.id)
 				this.orderList = list[0] ? list[0] : [],
 				this.nodeText = this.orderList.description == null ? '' : this.orderList.description

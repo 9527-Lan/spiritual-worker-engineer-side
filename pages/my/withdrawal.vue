@@ -1,8 +1,14 @@
 <template>
 	<view>
 		<view class="bg"></view>
-		<u-navbar title="提现" @rightClick="rightClick" :autoBack="true" leftIconSize="34rpx" bgColor="#3a84f0"
-			leftIconColor="#ffffff" titleStyle="color: #ffffff;font-size:34rpx" />
+		<u-navbar title="提现"  :autoBack="true" leftIconSize="34rpx" bgColor="#3a84f0"
+			 leftIconColor="#ffffff" titleStyle="color: #ffffff;font-size:34rpx" >
+			 <view class="rightHeader" slot="right" >
+			 	<view class="" @click="rightClick">
+			 		提现记录
+			 	</view>
+			 </view>
+		</u-navbar>
 		<view class="blueFixed">
 			<view class="money-sum">
 				<p class="text">可提现金额（元）</p>
@@ -28,23 +34,33 @@
 					</u-form-item>
 				</u--form>
 			</view>
-			<view class="card-to">
-				<p>提现至</p>
+			<view class="card-to" @click="()=>{
+				columns[0].length?show = true:''
+			}">
+				<p>银行卡</p>
 				<view class="card-to-right">
-					<u-icon name="arrow-right" color="#2979ff" size="28"></u-icon>
+					<view v-if="columns[0].length">
+						{{eee.label}}
+					</view>
+					<u-button v-else text="去添加银行卡" size="mini" @click="toAddCard"></u-button>
 					<u-icon style="color: #999999; margin-left: 10rpx;" name="arrow-right" color="#2979ff" size="28"></u-icon>
 				</view>
 			</view>
+			<!-- <view class="card1" v-if="eee.id">
+				<text class="china">{{ eee.cardType }}</text>
+				<text class="chinaBank">{{ eee.cardNo }}</text>
+			</view> -->
 			<view class="card-button">
 				<u-button type="primary" color="#3A84F0" text="申请提现" @click="applyWithdrawal"></u-button>
 			</view>
 
 		</view>
+		<u-picker :show="show" keyName="label" :columns="columns" @cancel='close' @confirm='confirm'></u-picker>
 	</view>
 </template>
 
 <script>
-	import {engineerEnd, addwithdrawal} from "@/api/my.js"
+	import {engineerEnd, addwithdrawal,getcardList} from "@/api/my.js"
 	export default {
 		data() {
 			return {
@@ -57,11 +73,21 @@
 				form: {
 					money:0
 				},
+				eee:{},
+				show:false,
+				columns:[
+					[]
+				],
+				cardParams:{
+					pageNum: 1,
+					pageSize: 10
+				},
 				id:"",
 			}
 		},
 		onLoad() {
 			this.dundDetails()
+			this.getList()
 		},
 		methods: {
 			async dundDetails() {
@@ -79,15 +105,45 @@
 				}
 				
 			},
+			toAddCard(){
+				uni.navigateTo({
+					url: '/pages/my/card/components/addCard',
+				});
+			},
+			getList(){
+				this.cardParams.engineerId = uni.getStorageSync('engineer_id')
+				getcardList(this.cardParams).then((res) => {
+					this.columns = [res.data.list.map(item=>{
+						item.label = item.cardType + '-' + item.cardNo
+						return item
+					})]
+				})
+			},
 			rightClick() {
-				uni.navigateBack(1)
+				uni.navigateTo({
+					url:'/pages/my/fundDetails'
+				})
 			},
 			allWithdraw(){
 				console.log(123);
 				this.form.money = this.balance
 			},
+			confirm(e){
+				this.eee = e.value[0]
+				this.close()
+			},
+			close(){
+				this.show = false
+			},
 			async applyWithdrawal() {
 				let money = this.form.money
+				if(!this.eee.id){
+					uni.showToast({
+						title:'请选择银行卡',
+						icon:'none'
+					})
+					return
+				}
 				if (money <= 0) {
 					uni.showToast({
 						title:'提现金额必须大于0',
@@ -105,7 +161,8 @@
 				let userInfo = this.$store.state.user.userInfo
 				let params = {
 					"engineerId": uni.getStorageSync('engineer_id'),
-					"money": this.form.money
+					"money": this.form.money,
+					"bankId":this.eee.id
 				}
 				let res = await addwithdrawal(params);
 				if(res.code == '00000') {
@@ -145,6 +202,38 @@
 		z-index: -1;
 		background-color: #F2F6FF;
 	}
+	.card1 {
+		overflow: hidden;
+		background-image: url('/static/my/card.png');
+		height: 205rpx;
+		background-size: 100%;
+		margin-bottom: 25rpx;
+		position: relative;
+	}
+	.china {
+		width: 200rpx;
+		height: 31rpx;
+		font-size: 32rpx;
+		font-family: PingFang SC;
+		font-weight: 500;
+		color: #FFFFFF;
+		line-height: 67rpx;
+		position: absolute;
+		left: 60rpx;
+		top: 60rpx;
+	}
+	.chinaBank {
+		width: 414rpx;
+		height: 32rpx;
+		font-size: 42rpx;
+		font-family: PingFang SC;
+		font-weight: bold;
+		color: #FFFFFF;
+		line-height: 67rpx;
+		position: absolute;
+		left: 60rpx;
+		top: 123rpx;
+	}
 	.blueFixed {
 		width: 100%;
 		height: 480rpx;
@@ -161,6 +250,10 @@
 				margin-bottom: 36rpx;
 			}
 		}
+	}
+	.rightHeader{
+		color: #ffffff;
+		font-size:34rpx
 	}
 	.card {
 		position: relative;

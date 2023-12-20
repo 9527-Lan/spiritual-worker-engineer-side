@@ -17,6 +17,14 @@ export function casualOrder(params) {
 		params: params,
 	})
 }
+// 任务订单根据id查询
+export function casualOrderPage(params) {
+	return request({
+		url: '/web/casualOrder/pages',
+		method: 'get',
+		params: params,
+	})
+}
 // 中间tab渲染
 export function casualServiceType(params) {
 	return request({

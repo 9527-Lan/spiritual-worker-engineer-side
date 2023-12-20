@@ -22,9 +22,9 @@
 					<u-form-item required label="银行类型" prop="cardType" borderBottom ref="item1">
 						<u--input v-model="form.cardType" border="none" :disabled="id" placeholder="请输入银行类型"></u--input>
 					</u-form-item>
-					<u-form-item required label="手机号" prop="phone" borderBottom ref="item1">
+					<!-- <u-form-item required label="手机号" prop="phone" borderBottom ref="item1">
 						<u--input v-model="form.phone" border="none" :disabled="id" placeholder="请输入手机号"></u--input>
-					</u-form-item>
+					</u-form-item> -->
 				</u--form>
 			</view>
 			<view class="cn">
@@ -52,40 +52,67 @@
 			return {
 				form: {
 					engineerRealname: '',
+					cardType:''
 				},
 				id:'',//银行卡id
 
 				rules: {
-					'cardName': {
-						type: 'string',
-						required: true,
-						message: '请输入开户名',
-						trigger: ['blur', 'change']
-					},
-					'cardAddress': {
-						type: 'string',
-						required: true,
-						message: '请输入开户行',
-						trigger: ['blur', 'change']
-					},
-					'cardNo': {
-						type: 'string',
-						required: true,
-						message: '请输入开户名',
-						trigger: ['blur', 'change']
-					},
+					'cardName': [
+						{
+							type: 'string',
+							required: true,
+							message: '请输入开户名',
+							trigger: ['blur', 'change']
+						},{
+							message: '请输入正确的开户名',
+							trigger: ['blur', 'change'],
+							validator: (rule, value, callback) => {
+								return !(uni.$u.test.digits(value))
+							},
+						}
+					],
+					'cardAddress': [
+						{
+							type: 'string',
+							required: true,
+							message: '请输入开户行',
+							trigger: ['blur', 'change']
+						},{
+							message: '请输入正确的开户行',
+							trigger: ['blur', 'change'],
+							validator: (rule, value, callback) => {
+								return !(uni.$u.test.digits(value))
+							},
+						}
+					],
+					'cardNo': [
+						{
+							type: 'string',
+							required: true,
+							message: '请输入银行卡号',
+							trigger: ['blur', 'change']
+						},
+						{
+							message: '请输入正确的银行卡号',
+							trigger: ['blur', 'change'],
+							validator: (rule, value, callback) => {
+								var reg = /^([1-9]{1})(\d{15}|\d{18})$/;
+								  return reg.test(value);
+							},
+						}
+					],
 					'cardType': {
 						type: 'string',
 						required: true,
 						message: '请输入银行类型',
 						trigger: ['blur', 'change']
 					},
-					'phone': {
-						type: 'string',
-						required: true,
-						message: '请输入手机号',
-						trigger: ['blur', 'change']
-					},
+					// 'phone': {
+					// 	type: 'string',
+					// 	required: true,
+					// 	message: '请输入手机号',
+					// 	trigger: ['blur', 'change']
+					// },
 				},
 				labelStyle: {
 					"font-weight": "700",
@@ -112,11 +139,7 @@
 				console.log(val);
 				bankUtils.getBankBin(val).then(res => {
 					console.log(res,'res');
-					this.$nextTick(() => {
-						this.form.cardType = res.data.bankName
-				})
-					
-					
+					this.form.cardType = res.data.bankName
 				}).catch((err) => {
 					uni.$u.toast(err.msg, '银行类型校验失败')
 				})

@@ -61,6 +61,10 @@
 		</u-tabbar>
 		<u-modal :show="show" title="拨打客服电话进行咨询" :content='content' :showCancelButton='true' @confirm="closeCard"
 			@cancel="del"></u-modal>
+		<uni-popup ref="alertDialog" type="dialog">
+			<uni-popup-dialog type="warn" cancelText="否" confirmText="是" title="通知" content="您当前未实名认证,是否前往认证" @confirm="dialogConfirm"
+				></uni-popup-dialog>
+		</uni-popup>
 	</view>
 </template>
 
@@ -131,6 +135,11 @@ export default {
 		del() {
 			this.show = false;
 		},
+		dialogConfirm(){
+			uni.navigateTo({
+				url:'/pages/my/myMessage/myMessage'
+			})
+		},
 		submitTo() {
 			let params = {
 				engineer_id: this.engineer_id,
@@ -150,12 +159,15 @@ export default {
 						}
 					})
 				} else {
-					uni.showToast({
-						duration: 2000,
-						title: res.msg,
-						icon: 'error'
-
-					})
+					if (res.msg == '您当前未实名认证') {
+						this.$refs.alertDialog.open()
+					} else{
+						uni.showToast({
+							duration: 2000,
+							title: res.msg,
+							icon: 'error'
+						})
+					}
 				}
 
 			})
@@ -186,7 +198,6 @@ export default {
 
 .card {
 	position: relative;
-	z-index: 100;
 	//top: 100rpx;
 	width: 686rpx;
 	//height: 415rpx;

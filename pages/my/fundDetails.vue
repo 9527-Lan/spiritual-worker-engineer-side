@@ -5,7 +5,7 @@
 		</u-navbar>
 		<view class="query-box">
 			<view class="query-item" @click="showSex=!showSex">
-				<p>全部</p>
+				<p>{{title?title:'全部'}}</p>
 				<u-icon v-if="!showSex" name="arrow-down-fill" color="#333333" size="14"></u-icon>
 				<u-icon v-else name="arrow-down-fill" color="#333333" size="14"></u-icon>
 			</view>
@@ -16,15 +16,44 @@
 			</view>
 		</view>
 		<view class="list-box">
-			<view class="list-item" v-for="(item, index) in list" :key="index">
-				<view class="item">
-					<p style="margin-bottom: 10rpx;font-size: 32rpx;font-weight: bold;color: #333333;">结算</p>
-					<p style="font-size: 24rpx;font-weight: 500;color: #999999;">{{item.createTime}}</p>
+			<view  v-for="(item, index) in list" :key="index">
+				<view v-if="item.orderName != '提现失败'" class="list-item">
+					<view class="item">
+						<p style="margin-bottom: 10rpx;font-size: 32rpx;font-weight: bold;color: #333333;">结算</p>
+						<p style="font-size: 24rpx;font-weight: 500;color: #999999;">{{item.createTime}}</p>
+					</view>
+					<view class="item" style="text-align: right;">
+						<p style="margin-bottom: 10rpx;font-size: 32rpx;font-weight: bold;color: #3A84F0;">{{item.type===1?'+':'-'}}{{item.balanceLess}}</p>
+						<p style="font-size: 24rpx;font-weight: 500;color: #999999;">{{item.orderName}}</p>
+					</view>
 				</view>
-				<view class="item" style="text-align: right;">
-					<p style="margin-bottom: 10rpx;font-size: 32rpx;font-weight: bold;color: #3A84F0;">{{item.type===1?'+':'-'}}{{item.balanceLess}}</p>
-					<p style="font-size: 24rpx;font-weight: 500;color: #999999;">{{item.orderName}}</p>
-				</view>
+				<u-collapse  v-else>
+					<u-collapse-item
+					  class="collapse"
+					>
+						<template v-slot:title>
+							<uni-row class="demo-uni-row shang">
+								<uni-col :span="16">
+									<view class="demo-uni-col dark">结算</view>
+								</uni-col>
+								<uni-col :span="8">
+									<view class="demo-uni-col lan right">{{item.balanceLess}}</view>
+								</uni-col>
+							</uni-row>
+							<uni-row class="demo-uni-row xia">
+								<uni-col :span="16">
+									<view class="demo-uni-col hui">{{item.createTime}}</view>
+								</uni-col>
+								<uni-col :span="8">
+									<view class="demo-uni-col hui right">{{item.orderName}}</view>
+								</uni-col>
+							</uni-row>
+						</template>
+						
+						<text class="u-collapse-content">{{ item.remark }}</text>
+					</u-collapse-item>
+				</u-collapse>
+				
 			</view>
 		</view>
 		<view class="bottom">
@@ -53,6 +82,7 @@ import {fundDetails,getzjoptions} from "@/api/my.js"
 					fundDetails:'',
 					createDate:''
 				},
+				title:'',
 				options:[],
 				queryDateShow: false,
 				queryTypeShow: false,
@@ -122,6 +152,7 @@ import {fundDetails,getzjoptions} from "@/api/my.js"
 			})
 			},
 			typeSelect(e) {
+				this.title = e.name
 				this.params.fundDetails = e.value;
 				this.getlist()
 
@@ -153,6 +184,26 @@ import {fundDetails,getzjoptions} from "@/api/my.js"
 			margin-right: 10rpx;
 		}
 	}
+	.collapse{
+		width: 95%;
+		margin: 0 auto;
+		& .shang{
+			font-weight: bold;
+			font-size: 32rpx;
+			& .lan{
+				color: #3A84F0;
+			}
+		}
+		& .xia{
+			& .hui{
+				color: #999999;
+			}
+			font-size: 24rpx;
+		}
+		& .right{
+			text-align: right;
+		}
+	}
 	.list-box {
 		background: #FFFFFF;
 		width: 100%;
@@ -162,6 +213,7 @@ import {fundDetails,getzjoptions} from "@/api/my.js"
 		justify-content: center;
 		.list-item {
 			width: 95%;
+			margin:  0 auto;
 			display: flex;
 			border-bottom: 2rpx solid #F0F0F0;
 			justify-content: space-between;

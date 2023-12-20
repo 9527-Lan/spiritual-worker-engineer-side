@@ -59,8 +59,8 @@ export default {
 			},
 			getlist(){
 				getcardList(this.params).then((res) => {
-			this.list = res.data.list
-		})
+					this.list = res.data.list
+				})
 			}
 	},
 	onLoad() {

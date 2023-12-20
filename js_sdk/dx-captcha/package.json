@@ -1,0 +1,18 @@
+{
+    "id": "dx-captcha",
+    "name": "顶象验证码",
+    "displayName": "顶象验证码",
+    "version": "0.1.2",
+    "description": "顶象验证码JS SDK",
+    "keywords": [
+        "顶象",
+        "验证码",
+        "无感验证"
+    ],
+    "dcloudext": {
+        "category": [
+            "JS SDK",
+            "通用 SDK"
+        ]
+    }
+}

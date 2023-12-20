@@ -129,24 +129,27 @@
 					cardImgPositive: this.contraryList[0].id,
 					id: uni.getStorageSync('engineer_id')
 				}
-				let parmas1 = {
-					phone: uni.getStorageSync('msgItem').phone,
-					name: uni.getStorageSync('msgItem').engineerRealname,
-					idnum: uni.getStorageSync('msgItem').idcard,
-					engineerId: uni.getStorageSync('msgItem').id
-				}
+				uni.setStorageSync('imgData',parmas)
+				uni.navigateBack();
+				
+			// 	let parmas1 = {
+			// 		phone: uni.getStorageSync('msgItem').phone,
+			// 		name: uni.getStorageSync('msgItem').engineerRealname,
+			// 		idnum: uni.getStorageSync('msgItem').idcard,
+			// 		engineerId: uni.getStorageSync('msgItem').id
+			// 	}
 			
-				casualEngineerEdit(parmas).then(res => {
-					authentication(parmas1).then(res => {
-						uni.$u.toast(res.data.msg)
-						if(res.data.response.code!='00000'){
-							return
-						}
-						uni.navigateTo({
-							url: '/pages/my/index',
-						});
-					})
-				})
+			// 	casualEngineerEdit(parmas).then(res => {
+			// 		authentication(parmas1).then(res => {
+			// 			uni.$u.toast(res.data.msg)
+			// 			if(res.data.response.code!='00000'){
+			// 				return
+			// 			}
+			// 			uni.navigateTo({
+			// 				url: '/pages/my/index',
+			// 			});
+			// 		})
+			// 	})
 			}
 		}
 	}

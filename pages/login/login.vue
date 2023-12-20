@@ -40,27 +40,29 @@
 					<input :value="verifyCode" placeholder="请输入验证码" placeholder-class="input-empty" maxlength="20"
 						data-key="verifyCode" @input="inputChange" @confirm="toLogin" />
 				</view>
+				<view class="input-item">
+					<move-verify @result='verifyResult' ref="verifyElement"></move-verify>
+				</view>
+			</view>
+			<view class="footer-tip">
+				<u-radio-group v-model="agree" @change="checkboxChange">
+					<u-radio name='a' size="28rpx"></u-radio>
+				</u-radio-group>
+			
+			
+				<!-- <view class="circle"></view> -->
+				<!-- <u-checkbox-group v-model="agree" @change="checkboxChange">
+						<u-checkbox size="28rpx" label='' name='' shape="circle"></u-checkbox>
+					</u-checkbox-group> -->
+				我已阅读并理解
+				<text class="link">《服务协议》</text>
+				和
+				<text class="link" >《隐私协议》</text>
 			</view>
 			<button class="confirm-btn" @click="toLogin" :disabled="logining">登录</button>
 			<view class="tip">
 			</view>
 			<!-- #endif -->
-		</view>
-
-		<view class="footer-tip">
-			<u-radio-group v-model="agree" @change="checkboxChange">
-				<u-radio size="28rpx"></u-radio>
-			</u-radio-group>
-
-
-			<!-- <view class="circle"></view> -->
-			<!-- <u-checkbox-group v-model="agree" @change="checkboxChange">
-					<u-checkbox size="28rpx" label='' name='' shape="circle"></u-checkbox>
-				</u-checkbox-group> -->
-			我已阅读并理解
-			<text class="link">《服务协议》</text>
-			和
-			<text class="link" >《隐私协议》</text>
 		</view>
 		<!-- <view class="register-section">
 			还没有账号?
@@ -86,12 +88,16 @@
 </template>
 
 <script>
-import { getnumcode, getAgreement } from "@/api/user.js"
+import { getnumcode, getAgreement,querybyPhone } from "@/api/user.js"
+import moveVerify from "@/components/helang-moveVerify/helang-moveVerify.vue"
 import {
 	mapMutations
 } from 'vuex';
 
 export default {
+	components: {
+		"move-verify":moveVerify
+	},
 	data() {
 		return {
 			mobile: '',
@@ -106,6 +112,7 @@ export default {
 			timer: null,
 			id: '',
 			agree: false,
+			resultData:{},
 			isAgree: [{
 				nema: 'argree'
 			}],
@@ -124,9 +131,9 @@ export default {
 			this.id = options.id
 			console.log(this.id);
 		}
-
 		// #ifdef MP
 		this.getCode()
+		
 		// #endif
 
 
@@ -163,6 +170,17 @@ export default {
 		toRegist() {
 			this.$api.msg('去注册');
 		},
+		verifyResult(res){
+			console.log(res);
+			this.resultData = res;
+		},
+		/* 校验插件重置 */
+		verifyReset(){
+			this.$refs.verifyElement.reset();
+
+			/* 删除当前页面的数据 */
+			this.resultData = {};
+		},
 		getCode() {
 			uni.login({
 				provider: 'weixin',
@@ -181,7 +199,10 @@ export default {
 			console.log(this.agree)
 		},
 		getSmsCode() {
-
+			if (!this.resultData.flag) {
+				uni.$u.toast('请先滑动滑块再发送验证码'); 
+				return 
+			}
 			getnumcode({ phone: this.mobile }).then((res) => {
 				if (res.code === '00000') {
 					this.$api.msg('验证码已发送');
@@ -207,56 +228,62 @@ export default {
 
 		//  #ifndef MP
 		async toLogin() {
-			if (this.loginStatus) {
-				if(!uni.$u.test.mobile(this.mobile)) {
-					uni.$u.toast('请正确填写手机号'); 
-					return 
-				}
-				if(!uni.$u.test.code(this.verifyCode,6)) {
-					uni.$u.toast('请正确填写验证码'); 
-					return 
-				}
-				this.logining = true;
-				// uni.switchTab({
-				// 	url: '/pages/homePage/index'
-				// });
-				let params = {
-					code: this.verifyCode,
-					phone: this.mobile,
-				}
-				if (this.id) {
-					params.engineer_id = this.id
-				}
-				this.$store.dispatch('user/loginCode', params).then(res => {
-					const pages = getCurrentPages();
-
-					console.log(pages.length > 1, 'pages');
-					if (pages.length > 1) {
-						// uni.navigateBack()
-						uni.switchTab({
-							url: '/pages/homePage/index'
-						});
+			querybyPhone({phone:this.mobile}).then(res=>{
+				if (res.data!=0) {
+					this.agree = 'a'
+					this.loginGoGoGo()
+				}else{
+					if (this.loginStatus) {
+						this.loginGoGoGo()
 					} else {
-						console.log("跳转首页")
-						// 跳转首页
-						uni.switchTab({
-							url: '/pages/homePage/index'
-						});
+						this.$api.msg('请仔细阅读协议后登录');
 					}
-					this.logining = false;
-				}).catch((err) => {
-					this.logining = false;
-				});
-
-			} else {
-				this.$api.msg('请仔细阅读协议后登录');
-
-			}
-
-
-
+				}
+			})
 		},
 		// #endif
+		loginGoGoGo(){
+			if(!this.resultData.flag) {
+				uni.$u.toast('请滑动滑块验证通过'); 
+				return 
+			}if(!uni.$u.test.mobile(this.mobile)) {
+				uni.$u.toast('请正确填写手机号'); 
+				return 
+			}
+			if(!uni.$u.test.code(this.verifyCode,6)) {
+				uni.$u.toast('请正确填写验证码'); 
+				return 
+			}
+			this.logining = true;
+			// uni.switchTab({
+			// 	url: '/pages/homePage/index'
+			// });
+			let params = {
+				code: this.verifyCode,
+				phone: this.mobile,
+			}
+			if (this.id) {
+				params.engineer_id = this.id
+			}
+			this.$store.dispatch('user/loginCode', params).then(res => {
+				const pages = getCurrentPages();
+				if (pages.length > 1) {
+					// uni.navigateBack()
+					uni.switchTab({
+						url: '/pages/homePage/index'
+					});
+				} else {
+					console.log("跳转首页")
+					// 跳转首页
+					uni.switchTab({
+						url: '/pages/homePage/index'
+					});
+				}
+				this.logining = false;
+			}).catch((err) => {
+				this.logining = false;
+			});
+		}
 	}
 };
 </script>
@@ -303,7 +330,6 @@ page {
 .wrapper {
 	position: relative;
 	z-index: 90;
-	padding-bottom: 40upx;
 }
 
 .back-btn {
@@ -470,7 +496,7 @@ page {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-
+	padding-top: 20rpx;
 	.circle {}
 
 	.link {
