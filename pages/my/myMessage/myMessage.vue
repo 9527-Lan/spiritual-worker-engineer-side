@@ -49,14 +49,14 @@
 						<u-icon slot="right" name="arrow-right"></u-icon>
 					</u-form-item>
 					<u-form-item label="身份证件照片" borderBottom required>
-						<u--input v-model="userInfo.workType" disabled disabledColor="#ffffff" border="none"></u--input>
+						<!-- <u--input v-model="userInfo.workType" disabled disabledColor="#ffffff" border="none"></u--input> -->
 						<view class="imgdelegate" v-if="userInfo.cardImgNegative&&userInfo.cardImgPositive">
-							<u-image  :src="'https://lhyg.hnxfsd.cn/prod-api/file/download?fileId=' + userInfo.cardImgNegative" height="150rpx" width="200rpx"  style="margin-right: 20px;"></u-image>
-						   <u-image  :src="'https://lhyg.hnxfsd.cn/prod-api/file/download?fileId=' + userInfo.cardImgPositive" height="150rpx" width="200rpx"></u-image>
+							<u-image  :src="'https://lhyg.hnxfsd.cn/prod-api/file/download?fileId=' + userInfo.cardImgNegative" height="120rpx" width="120rpx"  style="margin-right: 20px;"></u-image>
+						   <u-image  :src="'https://lhyg.hnxfsd.cn/prod-api/file/download?fileId=' + userInfo.cardImgPositive" height="120rpx" width="120rpx"></u-image>
 						</view>
-						
-						<u-tag v-else text='去认证' shape="circle" plain size="mini"
-							@click="toIdCard()"></u-tag>
+						<u-tag v-if="userInfo.status != 2" text='去上传' shape="circle" plain size="mini"
+							@click="toIdCard()" slot="right"></u-tag>
+						<u-tag v-else text='已认证' shape="circle" plain size="mini" slot="right"></u-tag>
 						<!-- </view> -->
 					</u-form-item>
 					<!-- 暂时隐藏 -->
@@ -250,7 +250,7 @@
 				})
 			},
 			toIdCard() {
-				this.submit(true)
+				// this.submit(true)
 				uni.setStorageSync('msgItem', this.userInfo)
 		
 				if(!this.userInfo.engineerRealname) return uni.$u.toast('请先填写姓名')
@@ -304,23 +304,36 @@
 						engineerId: this.userInfo.id
 					}
 					casualEngineerEdit(this.userInfo).then(res => {
-						authentication(parmas1).then(res => {
-							if (res.code != '00000') {
-								uni.$u.toast( res.msg)
-								return 
-							}
-							uni.$u.toast( res.data.response.message)
-							if(res.data.status!='1'){
-								return
-							}
-							setTimeout(() => {
-								uni.switchTab({
-									url: "/pages/my/index"
+						if(res.code == '00000') {
+							if(res.data != 2) {
+								authentication(parmas1).then(res => {
+									if (res.code != '00000') {
+										uni.$u.toast(res.msg)
+										return 
+									} else {
+										let message = res.data.msg
+										if(res.data.status != '1' && message == '核验失败!'){
+											uni.$u.toast(res.data.response.msg)
+											return
+										}
+										if(res.data.status != '1'){
+											uni.$u.toast(message)
+											return
+										} else {
+											uni.$u.toast(message)
+											setTimeout(() => {
+												uni.switchTab({
+													url: "/pages/my/index"
+												})
+											}, 1000)
+										}
+									}
+								}).catch(err=>{
+									uni.$u.toast( '核验失败')
 								})
-							}, 1000)
-						}).catch(err=>{
-							uni.$u.toast( '核验失败')
-						})
+							}
+							uni.$u.toast('修改成功')
+						}
 					}).catch(errors => {
 						uni.$u.toast( '提交失败')
 					})
@@ -333,6 +346,7 @@
 <style lang="scss" scoped>
 	.imgdelegate{
 		display: flex;
+		margin: 0 auto;
 	}
 	/deep/.u-textarea--disabled {
 		background-color: #ffffff !important;
