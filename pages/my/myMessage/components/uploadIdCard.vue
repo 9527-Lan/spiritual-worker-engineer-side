@@ -21,7 +21,7 @@
 				</u-upload>
 			</view>
 			<view class="fromText">平台承诺，严格保障您的隐私安全</view>
-			<u-button type="primary" shape="circle" text="认证" @click="save"></u-button>
+			<u-button type="primary" shape="circle" text="确认上传" @click="save"></u-button>
 		</view>
 	</view>
 </template>
@@ -129,8 +129,19 @@
 					cardImgPositive: this.contraryList[0].id,
 					id: uni.getStorageSync('engineer_id')
 				}
-				uni.setStorageSync('imgData',parmas)
-				uni.navigateBack();
+				casualEngineerEdit(parmas).then(res => {
+					if(res.code == '00000') {
+						uni.$u.toast('上传成功')
+						uni.setStorageSync('imgData',parmas)
+						uni.navigateBack();
+					} else {
+						uni.$u.toast( '上传失败')
+						return
+					}
+				}).catch(errors => {
+					uni.$u.toast( '上传失败')
+					return
+				})
 				
 			// 	let parmas1 = {
 			// 		phone: uni.getStorageSync('msgItem').phone,
@@ -138,18 +149,6 @@
 			// 		idnum: uni.getStorageSync('msgItem').idcard,
 			// 		engineerId: uni.getStorageSync('msgItem').id
 			// 	}
-			
-			// 	casualEngineerEdit(parmas).then(res => {
-			// 		authentication(parmas1).then(res => {
-			// 			uni.$u.toast(res.data.msg)
-			// 			if(res.data.response.code!='00000'){
-			// 				return
-			// 			}
-			// 			uni.navigateTo({
-			// 				url: '/pages/my/index',
-			// 			});
-			// 		})
-			// 	})
 			}
 		}
 	}
