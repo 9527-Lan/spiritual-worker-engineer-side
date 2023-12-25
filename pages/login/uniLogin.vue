@@ -102,7 +102,7 @@
 		background: #F2F6FF;
 	}
 </style>
-<style lang="scss">
+<style lang="scss" scoped>
 	.container {
 		background: #F2F6FF;
 	}

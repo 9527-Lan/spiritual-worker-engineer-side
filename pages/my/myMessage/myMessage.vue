@@ -20,7 +20,7 @@
 			</view> -->
 			<view>
 				<!-- 注意，如果需要兼容微信小程序，最好通过setRules方法设置rules规则 -->
-				<u--form  :disabled='status == 1' :labelStyle="labelStyle" labelWidth="140" labelPosition="left" :model="userInfo" :rules="rules"
+				<u--form  :disabled='status == 1' :labelStyle="labelStyle" labelWidth="150" labelPosition="left" :model="userInfo" :rules="rules"
 					ref="uForm">
 					<u-form-item required label="姓名" prop="engineerRealname" borderBottom ref="item1" >
 						<u--input v-model="userInfo.engineerRealname" border="none" placeholder="请输入姓名"></u--input>
@@ -35,8 +35,10 @@
 						<u--input v-model="userInfo.idcard" border="none" placeholder="请输入身份证号"></u--input>
 					</u-form-item>
 					<u-form-item required label="服务类型" prop="typeIds" borderBottom @click="showType = true" ref="item1">
-						<u--textarea v-model="type" disabled disabledColor="#ffffff" placeholder="请选择服务类型" border="none"
-							autoHeight></u--textarea>
+						<view v-if="type.split(',')[0]" style="display: flex; flex-wrap: wrap;">
+							<u-tag v-for="(item) in type.split(',')" class="tag" :text="item" :key="item" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
+							color="#333333" plain></u-tag>
+						</view>
 						<u-icon slot="right" name="arrow-right"></u-icon>
 					</u-form-item>
 					<u-form-item required label="手机号" prop="phone" borderBottom >
@@ -44,11 +46,17 @@
 					</u-form-item>
 					<u-form-item label="服务标签" prop="labelIds" borderBottom @click="showLabel = true"
 						ref="item1">
-						<u--textarea v-model="label" disabled disabledColor="#ffffff" placeholder="请选择服务标签"
-							border="none" autoHeight @click="showLabel = true"></u--textarea>
+						<view  style="flex: 1;" >
+							<view v-if="label.split(',')[0]" style="display: flex; flex-wrap: wrap;">
+								<u-tag v-for="(item) in label.split(',')" class="tag" :text="item" :key="item" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
+								color="#333333" plain></u-tag>
+							</view>
+						</view>
+						<!-- <u--textarea v-model="label" disabled disabledColor="#ffffff" placeholder="请选择服务标签"
+							border="none" autoHeight @click="showLabel = true"></u--textarea> -->
 						<u-icon slot="right" name="arrow-right"></u-icon>
 					</u-form-item>
-					<u-form-item label="身份证件照片" borderBottom required>
+					<u-form-item label="身份证照片" borderBottom required>
 						<!-- <u--input v-model="userInfo.workType" disabled disabledColor="#ffffff" border="none"></u--input> -->
 						<view class="imgdelegate" v-if="userInfo.cardImgNegative&&userInfo.cardImgPositive">
 							<u-image  :src="'https://lhyg.hnxfsd.cn/prod-api/file/download?fileId=' + userInfo.cardImgNegative" height="120rpx" width="120rpx"  style="margin-right: 20px;"></u-image>
@@ -78,8 +86,8 @@
 			</view>
 		</view>
 		<view class="bottomBox">
-			<view class="bottonBox">
-				<u-button type="primary" color="#3A84F0" text="确认提交" @click="submit"></u-button>
+			<view class="bottonBox" :class="submitDisabled?'opc':''">
+				<u-button type="primary" :disabled="submitDisabled" color="#3A84F0" text="确认提交" @click="submit"></u-button>
 			</view>
 		</view>
 	</view>
@@ -178,11 +186,29 @@
 				switchVal: false,
 				labelStyle: {
 					"font-weight": "700",
-					"font-size": "28rpx"
+					"font-size": "28rpx",
+					"color" : '#4a4a4a'
 				},
 				id: "2",
 				formList: [],
 				certificate: [],
+			}
+		},
+		computed: {
+			submitDisabled() {
+				if(
+					this.userInfo.engineerRealname&&
+					this.userInfo.engineerSexName&&
+					this.userInfo.idcard&&
+					this.type.split(',')[0]&&
+					this.userInfo.phone&&
+					this.userInfo.cardImgNegative&&
+					this.userInfo.cardImgPositive
+				){
+					return false
+				}else{
+					return true
+				}
 			}
 		},
 		onShow() {
@@ -200,18 +226,24 @@
 			this.getTypeDict()
 			this.casualEngineerMyList()
 		},
-		computed: {},
 		methods: {
 			casualEngineerMyList() {
 				let params = {
 					id: uni.getStorageSync('engineer_id')
 				}
 				casualEngineerMy(params).then(res => {
-					this.userInfo = res.data
+					console.log(JSON.parse(JSON.stringify(this.userInfo)));
+					if(!res.data.idcard){
+						this.userInfo = {...res.data,...this.userInfo}
+					}else{
+						this.userInfo = res.data
+						this.type = res.data.typeName
+						this.label = res.data.labelName
+					}
+					
 					this.userInfo.cardImgNegative = this.userInfo.cardImgNegative?this.userInfo.cardImgNegative: this.imgData.cardImgNegative
 					this.userInfo.cardImgPositive = this.userInfo.cardImgPositive?this.userInfo.cardImgPositive: this.imgData.cardImgPositive
-					this.type = res.data.typeName
-					this.label = res.data.labelName
+					
 					setTimeout(()=>{
 						this.$refs.uForm.clearValidate()
 					}, 0)
@@ -313,7 +345,7 @@
 									} else {
 										let message = res.data.msg
 										if(res.data.status != '1' && message == '核验失败!'){
-											uni.$u.toast(res.data.response.msg)
+											uni.$u.toast(res.data.response.message)
 											return
 										}
 										if(res.data.status != '1'){
@@ -351,7 +383,12 @@
 	/deep/.u-textarea--disabled {
 		background-color: #ffffff !important;
 	}
-
+	/deep/ .u-tag__text--primary--plain{
+		padding: 4rpx 10rpx;
+	}
+	.opc{
+		opacity: 0.5;
+	}
 	.bg {
 		position: fixed;
 		width: 100%;
@@ -361,16 +398,19 @@
 		z-index: -1;
 		background-color: #F2F6FF;
 	}
-
+	.tag{
+		margin: 10rpx;
+	}
 	.from {
 		position: relative;
 		width: 686rpx;
+		height: calc(100vh - 300rpx);
 		margin: 32rpx auto 0;
 		padding: 53rpx 36rpx 36rpx 36rpx;
 		background: #FFFFFF;
 		border-radius: 15rpx;
 		margin-bottom: 32rpx;
-
+		overflow: auto;
 		.title {
 			height: 32rpx;
 			font-size: 32rpx;
@@ -421,14 +461,20 @@
 		}
 
 		.cn {
-			padding: 30rpx 0 0 0;
+			padding-top: 30rpx;
+			width: 608rpx;
 		}
 	}
-
+	/deep/ .u-form-item__body{
+		padding: 30rpx;
+	}
 	.bottomBox {
 		padding: 40rpx 0;
 		border-top: 2rpx solid #DDDDDD;
 		background-color: #FFFFFF;
+		position: fixed;
+		width: 100%;
+		bottom: 0;
 
 		.bottonBox {
 			width: 80%;

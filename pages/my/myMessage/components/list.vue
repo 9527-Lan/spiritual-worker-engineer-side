@@ -13,7 +13,7 @@
                         </view>
                         <view class="content">备注：{{ item.remark?item.remark:'暂无' }}</view>
                         <view style="display: flex;">
-                            <u-image v-for="(item2, index) in item.certificateImgUrl" :src="item2" style="margin-right: 5px;" height="150rpx" width="200rpx"></u-image>
+                            <u-image v-for="(item2, index1) in item.certificateImgUrl" :key="index1" :src="item2" style="margin-right: 5px;" height="150rpx" width="200rpx"></u-image>
 
                             
                             <!-- <image v-for="(item2, index) in item.certificateImgUrl" :src="item2" mode="widthFix"

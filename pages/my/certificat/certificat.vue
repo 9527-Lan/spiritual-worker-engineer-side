@@ -6,14 +6,14 @@
 
         <view class="list">
             <u-list >
-                <u-list-item v-for="(item, index) in OrderList" :key="index">
+                <u-list-item v-for="(item) in OrderList" :key="item">
                     <view class="listBlok" >
                         <view class="top">
                             <text class="topTextBlack">名称：{{ item.certificateName }}</text>
                         </view>
                         <view class="content">备注：{{ item.remark }}</view>
                         <view style="display: flex;">
-                            <u-image v-for="(item2, index) in item.certificateImgUrl" :key="index" :src="item2" height="150rpx"></u-image>
+                            <u-image v-for="(item2) in item.certificateImgUrl" :key="item2" :src="item2" height="150rpx"></u-image>
 
 
                           

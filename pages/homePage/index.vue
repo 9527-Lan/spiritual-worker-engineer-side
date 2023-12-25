@@ -34,7 +34,7 @@
 				</view>
 			</u-col>
 		</u-row>
-		<u-sticky bgColor="#fff" :offsetTop="(64+(top+statusBarHeight)+30)" zIndex="10000000" ref="stickyFixed">
+		<u-sticky  :offsetTop="(64+(top+statusBarHeight)+30)" zIndex="10000000" ref="stickyFixed">
 			<u-tabs class="tab" @click="changeOption" :list="tabList" lineWidth="33" lineHeight="0.4rem" :scrollable="false"
 				:activeStyle="{
 						color: '#333333',
@@ -215,27 +215,27 @@ let menuButtonInfo = uni.getMenuButtonBoundingClientRect()?uni.getMenuButtonBoun
 	.titlePink {
 		font-family: PingFang SC;
 		width: 100%;
-		height: 140rpx;
+		height: 120rpx;
 		padding: 0 0 0 32rpx;
-		border-radius: 25rpx;
+		border-radius: 20rpx;
 		background: linear-gradient(120deg, #FFF0F0, #FDD9D9, #FEBCBD);
 	}
 
 	.titleYello {
 		font-family: PingFang SC;
 		width: 100%;
-		height: 140rpx;
+		height: 120rpx;
 		padding: 0 0 0 32rpx;
-		border-radius: 25rpx;
+		border-radius: 20rpx;
 		background: linear-gradient(120deg, #FEF8E1, #FCEFCC, #F9E4AB);
 	}
 
 	.titleBlue {
 		font-family: PingFang SC;
 		width: 100%;
-		height: 140rpx;
+		height: 120rpx;
 		padding: 0 0 0 32rpx;
-		border-radius: 25rpx;
+		border-radius: 20rpx;
 		background: linear-gradient(120deg, #E3EFFF, #C8DCFF, #9CC2FA);
 	}
 

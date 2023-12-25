@@ -59,7 +59,7 @@
 		<u-tabbar :fixed="true" :placeholder="false"
 			:safeAreaInsetBottom="true">
 			<u-tabbar-item class="icon-size" @click='callPhone' text="平台客服" icon="phone"></u-tabbar-item>
-			<u-button type="primary" shape="circle" text="撤销抢单" :plain="true" @click="cancel"></u-button>
+			<u-button v-if="orderList.status != 1" type="primary" shape="circle" text="撤销抢单" :plain="true" @click="cancel"></u-button>
 		</u-tabbar>
 		<u-modal :show="show" title="拨打客服电话进行咨询" :content='content' :showCancelButton='true' @confirm="closeCard"
 			@cancel="del"></u-modal>

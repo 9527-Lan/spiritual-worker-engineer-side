@@ -5,6 +5,9 @@
 			<view class="left">
 				<u-avatar :src="myList.headSculptureUrl" size="120" @click="upAvatar"></u-avatar>
 				<avatar @upload="myUpload" ref="avatar" style="width: 0;height: 0;"></avatar>
+				<view class="shezhi" v-if="!myList.headSculptureUrl" @click="uploadTouX">
+					设置
+				</view>
 			</view>
 			<view class="right">
 				<view class="name">
@@ -131,29 +134,29 @@
 		<u-modal :show="cardShow" :showConfirmButton="false" width="622rpx" style="padding-top: 0;">
 			<view class="slot-content">
 				<view class="card-home">
-					<view
-						style="width: 622rpx; padding: 0; height: 207rpx; margin-top: -6px; margin-bottom: 20px; background: url('../../static/my/cardLogo.png') round;">
-
-					</view>
-					<view style="height: 150rpx; width: 622rpx; padding: 10px 20px; margin-bottom: 30px;">
-						<view class="item-img" style="display: flex;">
-							<u-avatar :src="myList.headSculptureUrl" mode="aspectFit" size="108" style="margin-right: 15px;"></u-avatar>
-							<view>
-								<view style=" font-weight: bold; font-size: 32rpx; margin: 5px 0;">	{{ myList.engineerRealname }}
+					<view id="dowloadImg111">
+						<view
+							style="width: 622rpx; padding: 0; height: 207rpx; margin-top: -6px; margin-bottom: 20px; background: url('../../static/my/cardLogo.png') round;">
+						</view>
+						<view style="height: 150rpx; width: 622rpx; padding: 10px 20px; margin-bottom: 30px;">
+							<view class="item-img" style="display: flex;">
+								<u-avatar :src="myList.headSculptureUrl" mode="aspectFit" size="108" style="margin-right: 15px;"></u-avatar>
+								<view>
+									<view style=" font-weight: bold; font-size: 32rpx; margin: 5px 0;">	{{ myList.engineerRealname }}
+									</view>
+									<p>邀请你访问灵活用工小程序</p>
 								</view>
-								<p>邀请你访问灵活用工小程序</p>
 							</view>
 						</view>
-					</view>
-
-					<view style="text-align: center; margin-bottom: 109rpx;">
-						<image :src="cardUrl"  style="margin: auto; width: 402rpx;height: 418rpx;" mode="aspectFit"></image>
+						<view style="text-align: center; padding-bottom: 109rpx;">
+							<image :src="cardUrl"  style="margin: auto; width: 402rpx;height: 418rpx;" mode="aspectFit"></image>
+						</view>
 					</view>
 					<!-- <p style="text-align: center; font-size: 32rpx;font-family: PingFang SC;margin-bottom: 109rpx;font-weight: bold;color: #333333;">长按识别二维码</p> -->
 
-					<view style="display: flex;">
+					<view class="tuiguangma">
 						<u-button text="关闭" style=" font-size: 32rpx;font-family: PingFang SC;font-weight: 500;color: #3A84F0;" @click="cardShow = !cardShow"></u-button>
-						<!-- <u-button text="保存图片" type="primary" style="width: 125px;"></u-button> -->
+						<u-button text="保存图片" type="primary" style="width: 125px;" @click="dowloadImg"></u-button>
 					</view>
 				</view>
 			</view>
@@ -162,6 +165,7 @@
 		<view class="">
 			<u-button shape='circle' type="error" class="unLogin" @click="unLogin" text="退出登录"></u-button>
 		</view>
+		<canvas canvas-id="canvas-ddd"></canvas>
 	</view>
 </template>
 
@@ -169,6 +173,7 @@
 let menuButtonInfo = uni.getMenuButtonBoundingClientRect()
 import avatar from "../../components/yq-avatar/yq-avatar.vue";
 import service from '@/utils/request.js'
+import html2canvas from '@/utils/html2canvas.min.js'
 import {
 	engineerEnd,
 	casualEngineerAvatar,
@@ -176,7 +181,6 @@ import {
 	myPromotionCode
 } from "@/api/my.js"
 import {
-
 	messageCount
 } from "@/api/user.js";
 export default {
@@ -207,6 +211,44 @@ export default {
 	},
 	computed: {},
 	methods: {
+		dowloadImg() {
+		  // 使用uni.createSelectorQuery()获取节点
+		  const query = uni.createSelectorQuery().in(this);
+		  query.select('#dowloadImg111').boundingClientRect(res => {
+			  const width = res.width;
+			  const height = res.height;
+	
+			  // 创建一个 canvas 绘图上下文
+			  const ctx = uni.createCanvasContext('canvas-ddd', this);
+			  // 绘制节点内容到canvas
+			  ctx.drawImage(res.left, res.top, width, height,0, 0, width, height);
+			  
+	
+			  // 导出图片
+			  ctx.draw(true, () => {
+				uni.canvasToTempFilePath({
+				  x: 0,
+				  y: 0,
+				  width: width,
+				  height: height,
+				  destWidth: width,
+				  destHeight: height,
+				  canvasId: 'canvas-ddd',
+				  success: (res) => {
+					// 在这里可以处理生成的图片路径
+					console.log(res.tempFilePath);
+				  },
+				  fail:(err)=>{
+					 console.log(err); 
+				  }
+				}, this);
+			  });
+			});
+		},
+		uploadTouX(){
+			this.upAvatar()
+			this.$refs.avatar.fSelect()
+		},
 		upAvatar() {
 			this.$refs.avatar.fChooseImg(0, {
 				selWidth: "300upx", selHeight: "300upx",
@@ -299,7 +341,6 @@ export default {
 		},
 		// 生成二维码
 		openCard() {
-			console.log('eeee');
 			this.cardShow = true
 			myPromotionCode(uni.getStorageSync('engineer_id')).then((res) => {
 				this.cardUrl = res.data
@@ -314,13 +355,11 @@ export default {
 			}
 			engineerEnd(params).then(res => {
 				if (res.code === "00000") {
-					console.log(res.data)
 					this.myList = res.data
 				}
 			})
 			consultCustomerService().then(res => {
 				this.content = res.data
-				console.log(res)
 			})
 
 		},
@@ -351,15 +390,25 @@ export default {
 		border-color: #1e80ff;
 		color: #fff;
 	}
-.bg {
-	position: fixed;
-	width: 100%;
-	height: 100%;
-	top: 0;
-	left: 0;
-	z-index: -1;
-	background-color: #F2F6FF;
-}
+	.tuiguangma{
+		display: flex;
+		width: 90%;
+		margin: 0 auto;
+		&>:nth-child(n){
+			flex: 1;
+			margin: 10rpx;
+			border-radius: 20rpx;
+		}
+	}
+	.bg {
+		position: fixed;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		z-index: -1;
+		background-color: #F2F6FF;
+	}
 	.titleFlex{
 		display: flex;
 		width: 100%;
@@ -370,10 +419,22 @@ export default {
 	display: flex;
 	flex-direction: row;
 	//justify-content: space-between;
-	margin: 0 0 56rpx 60rpx;
+	margin: 0 0 10rpx 60rpx;
 
 	.left {
 		width: 120rpx;
+		position: relative;
+		border-radius: 50%;
+		overflow: hidden;
+		.shezhi{
+			position: absolute;
+			bottom: 0;
+			width: 120rpx;
+			display: flex;
+			justify-content: center;
+			align-items: flex-end;
+			background: #929292c7;
+		}
 	}
 
 	.right {
@@ -395,7 +456,7 @@ export default {
 			font-family: PingFang SC;
 			font-weight: 500;
 			color: #666666;
-			line-height: 67rpx;
+			line-height: 50rpx;
 		}
 	}
 }
@@ -407,8 +468,8 @@ export default {
 	width: 100%;
 	height: 500rpx;
 	background-repeat: round;
-	margin: 0 auto 45rpx;
-	padding: 60rpx 70rpx 80rpx 70rpx;
+	margin: 0 auto;
+	padding: 60rpx 30rpx 80rpx 70rpx;
 	color: #FFFFFF;
 	font-family: PingFang SC;
 
@@ -497,7 +558,7 @@ export default {
 }
 
 .myOrder {
-	width: calc(100% - 140rpx);
+	width: calc(100% - 60rpx);
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;

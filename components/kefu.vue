@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<u-icon @click="callPhone" v-bind ='$attrs'></u-icon>
+		<u-icon @click="callPhone" labelPos label labelSize labelColor size name></u-icon>
 		<u-modal :show="show" title="拨打客服电话进行咨询" :content='content' :showCancelButton='true' @confirm="closeCard"
 			@cancel="del"></u-modal>
 	</view>
@@ -11,11 +11,20 @@
 		consultCustomerService
 	} from "@/api/my.js"
 	export default{
+		name:'kefu',
 		data(){
 			return {
 				show:false,
 				content:'18570390397'
 			}
+		},
+		props:{
+			labelPos:'',
+			label:'',
+			labelSize:'',
+			labelColor:'',
+			size:'',
+			name:''
 		},
 		created(){
 			consultCustomerService().then((res) => {

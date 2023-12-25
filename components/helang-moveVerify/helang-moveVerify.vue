@@ -34,7 +34,14 @@
 					view.fields({
 						size: true,
 					}, (res) => {
-						resolve(res.width);
+						let width = res.width + ''
+						let widthList = width.split('.')
+						let width2 = ''
+						if (widthList[1]) {
+							width2 = widthList[1].slice(0,2)
+						}
+						let zuizhoing = Number(widthList[0] + '.' + width2)
+						resolve(zuizhoing);
 					}).exec();
 				});
 			}
@@ -57,7 +64,6 @@
 				if (this.isOk || this.oldx<1) {
 					return;
 				}
-				
 				this.count++;
 				this.x = this.oldx;
 				if ((this.oldx + 3) > (this.size.pathway - this.size.track)) {
