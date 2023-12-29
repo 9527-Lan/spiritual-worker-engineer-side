@@ -35,7 +35,7 @@
 						<u--input v-model="userInfo.idcard" border="none" placeholder="请输入身份证号"></u--input>
 					</u-form-item>
 					<u-form-item required label="服务类型" prop="typeIds" borderBottom @click="showType = true" ref="item1">
-						<view v-if="type.split(',')[0]" style="display: flex; flex-wrap: wrap;">
+						<view v-if="type&&type.split(',')[0]" style="display: flex; flex-wrap: wrap;">
 							<u-tag v-for="(item) in type.split(',')" class="tag" :text="item" :key="item" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
 							color="#333333" plain></u-tag>
 						</view>
@@ -47,7 +47,7 @@
 					<u-form-item label="服务标签" prop="labelIds" borderBottom @click="showLabel = true"
 						ref="item1">
 						<view  style="flex: 1;" >
-							<view v-if="label.split(',')[0]" style="display: flex; flex-wrap: wrap;">
+							<view v-if="label&&label.split(',')[0]" style="display: flex; flex-wrap: wrap;">
 								<u-tag v-for="(item) in label.split(',')" class="tag" :text="item" :key="item" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
 								color="#333333" plain></u-tag>
 							</view>

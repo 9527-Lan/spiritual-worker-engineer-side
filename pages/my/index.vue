@@ -4,9 +4,12 @@
 		<view class="myMsg" :style="'margin-top:' + myMsgTop + 'rpx'">
 			<view class="left">
 				<u-avatar :src="myList.headSculptureUrl" size="120" @click="upAvatar"></u-avatar>
-				<avatar @upload="myUpload" ref="avatar" style="width: 0;height: 0;"></avatar>
-				<view class="shezhi" v-if="!myList.headSculptureUrl" @click="uploadTouX">
-					设置
+				{{!myList.headSculptureUrl}}
+				<view v-if="!myList.headSculptureUrl">
+					<avatar @upload="myUpload" ref="avatar" v-if="!myList.headSculptureUrl" style="width: 0;height: 0;"></avatar>
+					<view class="shezhi" v-if="!myList.headSculptureUrl" @click="uploadTouX">
+						设置
+					</view>
 				</view>
 			</view>
 			<view class="right">
@@ -126,8 +129,16 @@
 					<u-icon slot="icon" size="32" name="/static/my/my.png"></u-icon>
 				</u-cell>
 			</u-cell-group>
-			<u-modal :show="show" :title="title" :content='content' :showCancelButton='true' @confirm="closeCard"
-				@cancel="del"></u-modal>
+			<u-modal :show="show" :title="title" :showCancelButton='true'
+			@cancel="del">
+				<view class="modalContent">
+					{{content}}
+				</view>
+				<view slot='confirmButton' class="confirmButton">
+					<u-button shape="circle" text="取消" @click="del"></u-button>
+					<u-button shape="circle" type="primary" text="确定" @click="closeCard"></u-button>
+				</view>
+			</u-modal>
 		</view>
 
 
@@ -377,6 +388,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+	.modalContent{
+		padding: 30rpx 0;
+		font-size: 32rpx;
+		font-weight: bold;
+		color: #606266;
+	}
+	.confirmButton{
+		display: flex;
+		width: 80%;
+		margin: 0 auto;
+		justify-content: space-between;
+		&>:nth-child(n){
+			width: 45%;
+		}
+	}
 	.green{
 		color: green;
 	}

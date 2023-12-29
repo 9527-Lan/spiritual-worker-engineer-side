@@ -8,7 +8,7 @@
 			<view class="tip">请确认是您名下的银行卡信息</view>
 			<view>
 				<!-- 注意，如果需要兼容微信小程序，最好通过setRules方法设置rules规则 -->
-				<u--form :labelStyle="labelStyle" labelWidth="140" labelPosition="left" :model="form" :rules="rules"
+				<u--form :labelStyle="labelStyle" labelWidth="160" labelPosition="left" :model="form" :rules="rules"
 					ref="uForm">
 					<u-form-item required label="开户名" prop="cardName" borderBottom ref="item1">
 						<u--input v-model="form.cardName" :disabled="id" border="none" placeholder="请输入开户名"></u--input>
@@ -19,7 +19,7 @@
 					<u-form-item required label="银行卡号" prop="cardNo" borderBottom ref="item1">
 						<u--input v-model="form.cardNo" border="none" :disabled="id" placeholder="请输入银行卡号" @blur="blur"></u--input>
 					</u-form-item>
-					<u-form-item required label="银行类型" prop="cardType" borderBottom ref="item1">
+					<u-form-item required label="银行卡名称" prop="cardType" borderBottom ref="item1">
 						<u--input v-model="form.cardType" border="none" :disabled="id" placeholder="请输入银行类型"></u--input>
 					</u-form-item>
 					<!-- <u-form-item required label="手机号" prop="phone" borderBottom ref="item1">
@@ -193,7 +193,7 @@
 	.from {
 		position: relative;
 		width: 686rpx;
-		height: 1000rpx;
+		height:calc(100vh - 280rpx);
 		margin: 32rpx auto 0;
 		padding: 53rpx 36rpx 36rpx 36rpx;
 		background: #FFFFFF;
@@ -217,9 +217,11 @@
 			margin-bottom: 40rpx;
 		}
 		.cn {
-			position: relative;
-			top: 240rpx;
+			position: absolute;
+			bottom: 30rpx;
 			padding: 30rpx 0 0 0;
+			margin: 0 auto;
+			width: calc(100% - 104rpx);
 		}
 	}
 

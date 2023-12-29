@@ -1,8 +1,16 @@
 <template>
 	<view>
-		<u-icon @click="callPhone" labelPos label labelSize labelColor size name></u-icon>
-		<u-modal :show="show" title="拨打客服电话进行咨询" :content='content' :showCancelButton='true' @confirm="closeCard"
-			@cancel="del"></u-modal>
+		<u-icon @click="callPhone" :labelPos='labelPos' :label='label' :labelSize='labelSize' :labelColor='labelColor' :size='size' :name='name'></u-icon>
+		<u-modal :show="show" title="拨打客服电话进行咨询" :showCancelButton='true'
+			@cancel="del">
+				<view class="modalContent">
+					{{content}}
+				</view>
+				<view slot='confirmButton' class="confirmButton">
+					<u-button shape="circle" text="取消" @click="del"></u-button>
+					<u-button shape="circle" type="primary" text="确定" @click="closeCard"></u-button>
+				</view>
+			</u-modal>
 	</view>
 </template>
 
@@ -48,5 +56,20 @@
 	}
 </script>
 
-<style>
+<style scoped lang="scss">
+	.modalContent{
+		padding: 30rpx 0;
+		font-size: 32rpx;
+		font-weight: bold;
+		color: #606266;
+	}
+	.confirmButton{
+		display: flex;
+		width: 80%;
+		margin: 0 auto;
+		justify-content: space-between;
+		&>:nth-child(n){
+			width: 45%;
+		}
+	}
 </style>

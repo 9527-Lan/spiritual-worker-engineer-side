@@ -175,14 +175,14 @@ export default {
 	top: 123rpx;
 }
 .del{
-	width: 110rpx;
-height: 55rpx;
-background: #1E46B3;
-opacity: 0.6;
-border-radius: 28rpx;
-position: absolute;
+	width: 150rpx;
+	height: 55rpx;
+	background: #1E46B3;
+	opacity: 0.6;
+	border-radius: 28rpx;
+	position: absolute;
     top: 20rpx;
-	right: -20rpx;
+	right: -28rpx;
     padding-left: 31rpx;
     line-height: 28px;
 	color: #FFFFFF;
