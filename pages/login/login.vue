@@ -199,10 +199,10 @@ export default {
 			console.log(this.agree)
 		},
 		getSmsCode() {
-			if (!this.resultData.flag) {
-				uni.$u.toast('请先滑动滑块再发送验证码'); 
-				return 
-			}
+			// if (!this.resultData.flag) {
+			// 	uni.$u.toast('请先滑动滑块再发送验证码'); 
+			// 	return 
+			// }
 			getnumcode({ phone: this.mobile }).then((res) => {
 				if (res.code === '00000') {
 					this.$api.msg('验证码已发送');
@@ -243,10 +243,11 @@ export default {
 		},
 		// #endif
 		loginGoGoGo(){
-			if(!this.resultData.flag) {
-				uni.$u.toast('请滑动滑块验证通过'); 
-				return 
-			}if(!uni.$u.test.mobile(this.mobile)) {
+			// if(!this.resultData.flag) {
+			// 	uni.$u.toast('请滑动滑块验证通过'); 
+			// 	return 
+			// }
+			if(!uni.$u.test.mobile(this.mobile)) {
 				uni.$u.toast('请正确填写手机号'); 
 				return 
 			}

@@ -4,7 +4,6 @@
 		<view class="myMsg" :style="'margin-top:' + myMsgTop + 'rpx'">
 			<view class="left">
 				<u-avatar :src="myList.headSculptureUrl" size="120" @click="upAvatar"></u-avatar>
-				{{!myList.headSculptureUrl}}
 				<view v-if="!myList.headSculptureUrl">
 					<avatar @upload="myUpload" ref="avatar" v-if="!myList.headSculptureUrl" style="width: 0;height: 0;"></avatar>
 					<view class="shezhi" v-if="!myList.headSculptureUrl" @click="uploadTouX">
