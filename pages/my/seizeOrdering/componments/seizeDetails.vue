@@ -64,7 +64,7 @@
 		<u-modal :show="show" title="拨打客服电话进行咨询" :showCancelButton='true' @confirm="closeCard"
 			@cancel="del">
 				<view class="modalContent">
-					<rich-text style="width: 100%;" :nodes="content" class="rText"></rich-text>
+					<rich-text style="width: 100%;" :nodes="orderList.phone?orderList.phone:'暂无'" class="rText"></rich-text>
 				</view>
 				<view slot='confirmButton' class="confirmButton">
 					<u-button shape="circle" class="an" text="取消" @click="del"></u-button>
@@ -98,7 +98,6 @@
 					left: '187rpx',
 					bottom: '65rpx',
 				},
-				content:'',
 				show:false,
 				orderList: []
 			}
@@ -110,9 +109,6 @@
 				this.orderList = list[0] ? list[0] : [],
 				this.nodeText = this.orderList.description == null ? '' : this.orderList.description
 				this.order_id = this.orderList.id
-			})
-			tomerService().then((res) => {
-				this.content = res.data
 			})
 		},
 		methods: {
@@ -141,6 +137,13 @@
 				})
 			},
 			closeCard() {
+				if (!this.orderList.phone) {
+					uni.showToast({
+						duration: 2000,
+						title: '暂无手机号'
+					})
+					return
+				}
 				uni.makePhoneCall({
 					phoneNumber: this.content //仅为示例
 				});
