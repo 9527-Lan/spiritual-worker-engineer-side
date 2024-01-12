@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 工程师端-进行中-查看详情
+// 用户端-进行中-查看详情
 export function engineerEndListOrderItem(params) {
 	return request({
 		url: '/engineerEnd/listOrderItem',
@@ -12,6 +12,15 @@ export function engineerEndListOrderItem(params) {
 export function engineerEnd(params) {
 	return request({
 		url: '/engineerEnd/app/my_engineer',
+		method: 'get',
+		params: params,
+	})
+}
+
+//提现文字
+export function withdrawalText(params) {
+	return request({
+		url: '/engineerEnd/withdrawal',
 		method: 'get',
 		params: params,
 	})
@@ -32,7 +41,7 @@ export function queryOrderbyBmId(params) {
 		params: params,
 	})
 }
-// 工程师端-工程师抢单成功后退出当前订单
+// 用户端-用户抢单成功后退出当前订单
 export function LowerSingleEndExit(params) {
 	return request({
 		url: '/engineerEnd/casualEngineer/exit',
@@ -107,7 +116,7 @@ export function casualEngineerEdit(params) {
 	})
 }
 
-// 工程师端-进行中-提交
+// 用户端-进行中-提交
 export function listOrderItemAdd(params) {
 	return request({
 		url: '/engineerEnd/listOrderItemAdd',
@@ -143,7 +152,7 @@ export function authentication(params) {
 	})
 }
 
-// 工程师端-上传其他证件
+// 用户端-上传其他证件
 export function certificate(params) {
 	return request({
 		url: '/engineerEnd/web/casualEngineer/certificate',
@@ -152,7 +161,7 @@ export function certificate(params) {
 	})
 }
 
-// 工程师端-删除其他证件
+// 用户端-删除其他证件
 export function delcertificate(params) {
 	return request({
 		url: '/engineerEnd/web/casualEngineer/delcertificate',
@@ -170,7 +179,7 @@ export function casualEngineerAvatar(params) {
 	})
 }
 
-//工程师端-关于我们
+//用户端-关于我们
 export function engineerEndAboutUs(params) {
 	return request({
 		url: '/engineerEnd/aboutUs',
@@ -179,7 +188,7 @@ export function engineerEndAboutUs(params) {
 	})
 }
 
-//工程师端-咨询客服
+//用户端-咨询客服
 export function consultCustomerService(params) {
 	return request({
 		url: '/engineerEnd/consultCustomerService',
@@ -188,7 +197,7 @@ export function consultCustomerService(params) {
 	})
 }
 
-//工程师端-我的证书
+//用户端-我的证书
 export function engineerEndMyCertificate(params) {
 	return request({
 		url: '/engineerEnd/myCertificate',
@@ -197,7 +206,7 @@ export function engineerEndMyCertificate(params) {
 	})
 }
 
-//工程师-添加银行卡
+//用户-添加银行卡
 export function casualBankCardsAdd(params) {
 	return request({
 		url: '/engineerEnd/web/casualBankCards/add',
@@ -294,7 +303,7 @@ export function myDaiCertificate(params) {
 		params:params
 	})
 }
-// 工程师端-我的证书
+// 用户端-我的证书
 export function myCertificate(params) {
 	return request({
 		url: '/engineerEnd/myCertificate',
@@ -302,7 +311,7 @@ export function myCertificate(params) {
 		params:params
 	})
 }
-// 工程师端-我的证书详情
+// 用户端-我的证书详情
 export function myCertificateItem(id) {
 	return request({
 		url: '/engineerEnd/myCertificateItem',

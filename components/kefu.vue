@@ -4,11 +4,11 @@
 		<u-modal :show="show" title="拨打客服电话进行咨询" :showCancelButton='true'
 			@cancel="del">
 				<view class="modalContent">
-					{{content}}
+					<rich-text style="width: 100%;" :nodes="content" class="rText"></rich-text>
 				</view>
 				<view slot='confirmButton' class="confirmButton">
-					<u-button shape="circle" text="取消" @click="del"></u-button>
-					<u-button shape="circle" type="primary" text="确定" @click="closeCard"></u-button>
+					<u-button shape="circle" class="an" text="取消" @click="del"></u-button>
+					<u-button shape="circle" class="an" type="primary" text="确定" @click="closeCard"></u-button>
 				</view>
 			</u-modal>
 	</view>
@@ -23,7 +23,7 @@
 		data(){
 			return {
 				show:false,
-				content:'18570390397'
+				content:''
 			}
 		},
 		props:{
@@ -57,6 +57,13 @@
 </script>
 
 <style scoped lang="scss">
+	.rText {
+		font-size: 24rpx;
+		font-family: PingFang SC;
+		font-weight: 500;
+		color: #333333;
+		line-height: 48rpx;
+	}
 	.modalContent{
 		padding: 30rpx 0;
 		font-size: 32rpx;
@@ -68,7 +75,7 @@
 		width: 80%;
 		margin: 0 auto;
 		justify-content: space-between;
-		&>:nth-child(n){
+		&.an{
 			width: 45%;
 		}
 	}

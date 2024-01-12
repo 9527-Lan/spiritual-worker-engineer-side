@@ -34,6 +34,10 @@
 					</u-form-item>
 				</u--form>
 			</view>
+			<view class="">
+				<rich-text :nodes="withdrawalContext" class="rText"></rich-text>
+				
+			</view>
 			<view class="card-to" @click="()=>{
 				columns[0].length?show = true:''
 			}">
@@ -60,7 +64,7 @@
 </template>
 
 <script>
-	import {engineerEnd, addwithdrawal,getcardList} from "@/api/my.js"
+	import {engineerEnd, addwithdrawal,getcardList,withdrawalText} from "@/api/my.js"
 	export default {
 		data() {
 			return {
@@ -78,6 +82,7 @@
 				columns:[
 					[]
 				],
+				withdrawalContext:'',
 				cardParams:{
 					pageNum: 1,
 					pageSize: 10
@@ -88,6 +93,7 @@
 		onLoad() {
 			this.dundDetails()
 			this.getList()
+			this.getWithdrawalText()
 		},
 		methods: {
 			async dundDetails() {
@@ -104,6 +110,11 @@
 					})
 				}
 				
+			},
+			getWithdrawalText(){
+				withdrawalText().then(res=>{
+					this.withdrawalContext = res.data
+				})
 			},
 			toAddCard(){
 				uni.navigateTo({
@@ -193,6 +204,13 @@
 </script>
 
 <style lang="scss">
+	.rText {
+		font-size: 24rpx;
+		font-family: PingFang SC;
+		font-weight: 500;
+		color: #333333;
+		line-height: 48rpx;
+	}
 	.bg{
 		position: fixed;
 		width: 100%;

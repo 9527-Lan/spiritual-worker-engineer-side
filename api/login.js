@@ -18,3 +18,11 @@ export function loginCode(params) {
 		params:params
 	})
 }
+// 验证码登录
+export function loginOpenid(params) {
+	return request({
+		url: '/engineerEnd/gzhLogin',
+		method: 'get',
+		params:params
+	})
+}

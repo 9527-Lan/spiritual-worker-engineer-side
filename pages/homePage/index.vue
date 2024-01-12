@@ -46,7 +46,7 @@
 		</u-sticky>
 		<view class="list">
 			<u-list @scrolltolower="scrolltolower" >
-				<u-list-item v-for="(item, index) in OrderList" :key="index">
+				<u-list-item v-for="(item, index1) in OrderList" :key="item">
 					<view class="listBlok" @click="toStepAhead(item.id)">
 						<view class="top">
 							<text class="topTextBlack">{{item.name}}</text>
@@ -58,8 +58,8 @@
 								<u-tag :text="`岗位量${item.orderQuantity}`" size="mini" bgColor="#E6F0FF"
 									borderColor="#E6F0FF" plain></u-tag>
 							</view>
-							<view class="tag">
-								<u-tag :text="item.labelName" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
+							<view class="tag jiuzhe">
+								<u-tag v-for="(item,index2) in item.labelName.split(',')" :key="item" :text="item" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
 									color="#333333" plain></u-tag>
 							</view>
 						</view>
@@ -84,6 +84,9 @@ let menuButtonInfo = uni.getMenuButtonBoundingClientRect()?uni.getMenuButtonBoun
 		queryOrderbyIdPages,
 		casualServiceType
 	} from "@/api/index.js"
+	import {
+		loginOpenid
+	} from "@/api/login.js"
 	export default {
 		data() {
 			return {
@@ -100,25 +103,23 @@ let menuButtonInfo = uni.getMenuButtonBoundingClientRect()?uni.getMenuButtonBoun
 				typeId: "",
 				tatal: 0,
 				top:menuButtonInfo.top,
-				statusBarHeight:0
+				statusBarHeight:0,
+				isOne:true
 			}
 		},
 		onShow() {
-			this.statusBarHeight=uni.getSystemInfoSync().statusBarHeight?uni.getSystemInfoSync().statusBarHeight:40
-			this.casualServiceTypeList()
+			if (!this.isOne) {
+				this.statusBarHeight=uni.getSystemInfoSync().statusBarHeight?uni.getSystemInfoSync().statusBarHeight:40
+				this.casualServiceTypeList()
+			}
+			
+		},
+		onLoad(options){
+			this.isOne = false
 		},
 		onHide(){
 			this.OrderList = []
 		},
-		// onReachBottom() {
-		// 	this.pageNum++
-		// 	this.loadmore()
-		// },
-		// onPullDownRefresh() {
-		// 	this.pageNum = 1
-		// 	this.OrderList = []
-		// 	this.loadmore()
-		// },
 		methods: {
 			//抢单、
 			toStepAhead(e) {
@@ -276,14 +277,19 @@ let menuButtonInfo = uni.getMenuButtonBoundingClientRect()?uni.getMenuButtonBoun
 			}
 
 			.tagRow {
-				max-height: 42rpx;
-				overflow: hidden;
-
+				display: flex;
 				.tag {
 					height: 42rpx;
 					width: fit-content;
 					display: inline-block;
 					margin-right: 13rpx;
+				}
+				.jiuzhe{
+					display: flex;
+					max-width: 70%;
+					&>*{
+						margin: 0 6rpx;
+					}
 				}
 			}
 		}

@@ -61,14 +61,14 @@
 			<u-tabbar-item class="icon-size" @click='callPhone' text="平台客服" icon="phone"></u-tabbar-item>
 			<u-button v-if="orderList.status != 1" type="primary" shape="circle" text="撤销抢单" :plain="true" @click="cancel"></u-button>
 		</u-tabbar>
-		<u-modal :show="show" title="拨打客服电话进行咨询" :content='content' :showCancelButton='true' @confirm="closeCard"
+		<u-modal :show="show" title="拨打客服电话进行咨询" :showCancelButton='true' @confirm="closeCard"
 			@cancel="del">
 				<view class="modalContent">
-					{{content}}
+					<rich-text style="width: 100%;" :nodes="content" class="rText"></rich-text>
 				</view>
 				<view slot='confirmButton' class="confirmButton">
-					<u-button shape="circle" text="取消" @click="del"></u-button>
-					<u-button shape="circle" type="primary" text="确定" @click="closeCard"></u-button>
+					<u-button shape="circle" class="an" text="取消" @click="del"></u-button>
+					<u-button shape="circle" class="an" type="primary" text="确定" @click="closeCard"></u-button>
 				</view>
 			</u-modal>
 	</view>
@@ -169,7 +169,7 @@
 		width: 80%;
 		margin: 0 auto;
 		justify-content: space-between;
-		&>:nth-child(n){
+		&.an{
 			width: 45%;
 		}
 	}

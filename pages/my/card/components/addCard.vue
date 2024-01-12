@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="bg"></view>
-		<u-navbar title="我的信息" @leftClick="leftClick" :placeholder="true" :autoBack="true" leftIconSize="34rpx"
+		<u-navbar title="我的信息" :placeholder="true" :autoBack="true" leftIconSize="34rpx"
 			bgColor="#F2F6FF" ftIconColor="#000000" titleStyle="color: #000000;font-size:34rpx" />
 		<view class="from">
 			<view class="title">输入银行信息</view>
@@ -11,16 +11,16 @@
 				<u--form :labelStyle="labelStyle" labelWidth="160" labelPosition="left" :model="form" :rules="rules"
 					ref="uForm">
 					<u-form-item required label="开户名" prop="cardName" borderBottom ref="item1">
-						<u--input v-model="form.cardName" :disabled="id" border="none" placeholder="请输入开户名"></u--input>
+						<u--input v-model="form.cardName" :disabled="(id?true:false) || cardNameReadonly" border="none" placeholder="请输入开户名"></u--input>
 					</u-form-item>
 					<u-form-item required label="开户行" prop="cardAddress" borderBottom ref="item1">
-						<u--input v-model="form.cardAddress" :disabled="id" border="none" placeholder="请输入开户行"></u--input>
+						<u--input v-model="form.cardAddress" :disabled="id?true:false" border="none" placeholder="请输入开户行"></u--input>
 					</u-form-item>
 					<u-form-item required label="银行卡号" prop="cardNo" borderBottom ref="item1">
-						<u--input v-model="form.cardNo" border="none" :disabled="id" placeholder="请输入银行卡号" @blur="blur"></u--input>
+						<u--input v-model="form.cardNo" border="none" :disabled="id?true:false" placeholder="请输入银行卡号" @blur="blur"></u--input>
 					</u-form-item>
 					<u-form-item required label="银行卡名称" prop="cardType" borderBottom ref="item1">
-						<u--input v-model="form.cardType" border="none" :disabled="id" placeholder="请输入银行类型"></u--input>
+						<u--input v-model="form.cardType" border="none" :disabled="id?true:false" placeholder="请输入银行类型"></u--input>
 					</u-form-item>
 					<!-- <u-form-item required label="手机号" prop="phone" borderBottom ref="item1">
 						<u--input v-model="form.phone" border="none" :disabled="id" placeholder="请输入手机号"></u--input>
@@ -55,7 +55,7 @@
 					cardType:''
 				},
 				id:'',//银行卡id
-
+				cardNameReadonly:false,
 				rules: {
 					'cardName': [
 						{
@@ -127,10 +127,14 @@
 		async onLoad(options) {
 			this.id=options.id
 			if(options.id){
-			getbyId({id:options.id}).then((res)=>{
-				console.log(res);
-				this.form=res.data
-			})	
+				getbyId({id:options.id}).then((res)=>{
+					console.log(res);
+					this.form=res.data
+				})	
+			}
+			if (options.data) {
+				this.form.cardName = options.data
+				this.cardNameReadonly = true
 			}
 		},
 		computed: {},

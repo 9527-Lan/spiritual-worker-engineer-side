@@ -16,8 +16,8 @@
 					<u-tag :text="`岗位量${orderList.orderQuantity}`" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF"
 						plain></u-tag>
 				</view>
-				<view class="tag">
-					<u-tag :text="orderList.labelName" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF" color="#333333"
+				<view class="tag nage">
+					<u-tag v-for='(item) in orderList.labelName.split(",")' :key="item" :text="item" size="mini" bgColor="#E6F0FF" borderColor="#E6F0FF" color="#333333"
 						plain></u-tag>
 				</view>
 			</view>
@@ -39,6 +39,11 @@
 				<u--text prefixIcon="/static/homePage/time.png" iconStyle="width: 28rpx;height: 28rpx;margin:0 20rpx 0 0"
 					color="#666666" size="24rpx" margin="18rpx 0 0 0"
 					:text="`${orderList.orderStatr}-${orderList.orderEnd}`"></u--text>
+			</view>
+			<view>
+				<u--text prefixIcon="/static/homePage/age.png" iconStyle="width: 28rpx;height: 28rpx;margin:0 20rpx 0 0"
+					color="#666666" size="24rpx" margin="18rpx 0 0 0"
+					:text="`${orderList.startAge}-${orderList.endAge}岁`"></u--text>
 			</view>
 			<u-divider />
 			<view>
@@ -62,11 +67,11 @@
 		<u-modal :show="show" title="拨打客服电话进行咨询" :showCancelButton='true'
 			@cancel="del">
 				<view class="modalContent">
-					{{content}}
+					<rich-text style="width: 100%;" :nodes="orderList.phone" class="rText"></rich-text>
 				</view>
 				<view slot='confirmButton' class="confirmButton">
-					<u-button shape="circle" text="取消" @click="del"></u-button>
-					<u-button shape="circle" type="primary" text="确定" @click="closeCard"></u-button>
+					<u-button shape="circle" class="an" text="取消" @click="del"></u-button>
+					<u-button shape="circle" class="an" type="primary" text="确定" @click="closeCard"></u-button>
 				</view>
 			</u-modal>
 		<uni-popup ref="alertDialog" type="dialog">
@@ -98,7 +103,6 @@ export default {
 				left: '187rpx',
 				bottom: '65rpx',
 			},
-			content:'',
 			show:false,
 			orderList: {},
 			value6: ""
@@ -119,9 +123,6 @@ export default {
 		queryIssignUp({ order_id: options.id, engineer_id: this.engineer_id }).then((res) => {
 			console.log(res);
 			this.status = res.data
-		})
-		tomerService().then((res) => {
-			this.content = res.data
 		})
 		// this.submitTo()	
 	},
@@ -198,7 +199,7 @@ export default {
 		width: 80%;
 		margin: 0 auto;
 		justify-content: space-between;
-		&>:nth-child(n){
+		&.an{
 			width: 45%;
 		}
 	}
@@ -248,14 +249,19 @@ export default {
 	}
 
 	.tagRow {
-		max-height: 42rpx;
-		overflow: hidden;
-
+		display: flex;
 		.tag {
 			height: 42rpx;
 			width: fit-content;
 			display: inline-block;
 			margin-right: 13rpx;
+		}
+		.nage{
+			display: flex;
+			flex-wrap: wrap;
+			&>*{
+				margin: 0 6rpx;
+			}
 		}
 	}
 

@@ -7,14 +7,14 @@
 			<!-- <u--image class="logo" :showLoading="true" src="/static/logo@2x.png" width="112rpx"
 				height="112rpx"></u--image> -->
 			<view class="title">灵活用工服务平台</view>
-			<p>工程师端</p>
+			<p>用户端</p>
 		</view>
 
 
 		<!-- <view class="top-box">
 			<u--image :showLoading="true" src="/static/logo@2x.png" width="108rpx" height="108rpx"></u--image>
 			<view class="title">灵活用工服务平台</view>
-			<p>工程师端</p>
+			<p>用户端</p>
 		</view> -->
 		<view class="wrapper">
 			<!-- 小程序登录授权界面 -->
@@ -34,14 +34,13 @@
 						{{ countdown > 0 ? `(${countdown}s)已发送` : '获取验证码' }}
 					</button>
 				</view>
-
+				<view class="input-item">
+					<move-verify @result='verifyResult' ref="verifyElement"></move-verify>
+				</view>
 				<view class="input-item">
 					<text class="tit">验证码</text>
 					<input :value="verifyCode" placeholder="请输入验证码" placeholder-class="input-empty" maxlength="20"
 						data-key="verifyCode" @input="inputChange" @confirm="toLogin" />
-				</view>
-				<view class="input-item">
-					<move-verify @result='verifyResult' ref="verifyElement"></move-verify>
 				</view>
 			</view>
 			<view class="footer-tip">
@@ -83,7 +82,6 @@
 				
 			</view>
 		</u-modal>
-
 	</view>
 </template>
 
@@ -116,7 +114,10 @@ export default {
 			isAgree: [{
 				nema: 'argree'
 			}],
-			code: undefined
+			externalLink:'',
+			aaa:false,
+			code: undefined,
+			openid:''
 		};
 	},
 	computed: {
@@ -125,8 +126,8 @@ export default {
 			return /^1[3456789]\d{9}$/.test(this.mobile);
 		}
 	},
-	onLoad(options) {
-		console.log(options, 'options');
+	created() {
+		let options = this.$route.query;
 		if (options.id) {
 			this.id = options.id
 			console.log(this.id);
@@ -135,29 +136,23 @@ export default {
 		this.getCode()
 		
 		// #endif
-
-
-	},
-	mounted() {
-
-		let routes = getCurrentPages()
-		console.log(routes[routes.length - 1].options, 'routes');
-		let id = routes[routes.length - 1].options.id
-		console.log(id, 'options');
-		if (id) {
-			this.id = id
-			console.log(this.id);
+		if (!options) {
+			// this.loginwx()
+		}else{
+			this.openid = options.openid
 		}
-
-		// #ifdef MP
-		this.getCode()
-		// #endif
-
-
-
-
-
+		let routes = getCurrentPages()
+		let id = routes[routes.length - 1].options.id
 	},
+	// mounted(options) {
+	// 	console.log(options);
+		
+
+
+
+
+
+	// },
 	methods: {
 		...mapMutations(['login']),
 		inputChange(e) {
@@ -199,10 +194,10 @@ export default {
 			console.log(this.agree)
 		},
 		getSmsCode() {
-			// if (!this.resultData.flag) {
-			// 	uni.$u.toast('请先滑动滑块再发送验证码'); 
-			// 	return 
-			// }
+			if (!this.resultData.flag) {
+				uni.$u.toast('请先滑动滑块再发送验证码'); 
+				return 
+			}
 			getnumcode({ phone: this.mobile }).then((res) => {
 				if (res.code === '00000') {
 					this.$api.msg('验证码已发送');
@@ -225,9 +220,15 @@ export default {
 				this.node = res.data
 			})
 		},
-
 		//  #ifndef MP
 		async toLogin() {
+			if (!this.mobile) {
+				uni.$u.toast('请填写手机号'); 
+				return 
+			}if (!this.resultData.flag) {
+				uni.$u.toast('请先滑动滑块再发送验证码'); 
+				return 
+			}
 			querybyPhone({phone:this.mobile}).then(res=>{
 				if (res.data!=0) {
 					this.agree = 'a'
@@ -265,6 +266,9 @@ export default {
 			}
 			if (this.id) {
 				params.engineer_id = this.id
+			}
+			if (this.openid) {
+				params.openid = this.openid
 			}
 			this.$store.dispatch('user/loginCode', params).then(res => {
 				const pages = getCurrentPages();

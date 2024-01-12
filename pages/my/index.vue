@@ -112,7 +112,7 @@
 				<u-cell title="我的证书" isLink url="/pages/my/Certificate" rightIconStyle="fontSize:32rpx">
 					<u-icon slot="icon" size="32" name="/static/my/certificate1.png"></u-icon>
 				</u-cell>
-				<u-cell title="银行卡管理" isLink url="/pages/my/card/card" rightIconStyle="fontSize:32rpx">
+				<u-cell title="银行卡管理" :disabled="myList.status != 2" isLink :url="'/pages/my/card/card?name=' + myList.engineerRealname" rightIconStyle="fontSize:32rpx">
 					<u-icon slot="icon" size="32" name="/static/my/bank.png"></u-icon>
 				</u-cell>
 				<u-cell title="我的推广码" isLink url="" rightIconStyle="fontSize:32rpx" @click="openCard">
@@ -131,11 +131,11 @@
 			<u-modal :show="show" :title="title" :showCancelButton='true'
 			@cancel="del">
 				<view class="modalContent">
-					{{content}}
+					<rich-text style="width: 100%;" :nodes="content" class="rText"></rich-text>
 				</view>
 				<view slot='confirmButton' class="confirmButton">
-					<u-button shape="circle" text="取消" @click="del"></u-button>
-					<u-button shape="circle" type="primary" text="确定" @click="closeCard"></u-button>
+					<u-button shape="circle" class="an" text="取消" @click="del"></u-button>
+					<u-button shape="circle" class="an" type="primary" text="确定" @click="closeCard"></u-button>
 				</view>
 			</u-modal>
 		</view>
@@ -144,29 +144,31 @@
 		<u-modal :show="cardShow" :showConfirmButton="false" width="622rpx" style="padding-top: 0;">
 			<view class="slot-content">
 				<view class="card-home">
-					<view id="dowloadImg111">
+					<view >
 						<view
+							class="dowloadImg111"
+							id="/static/my/cardLogo.png"
 							style="width: 622rpx; padding: 0; height: 207rpx; margin-top: -6px; margin-bottom: 20px; background: url('../../static/my/cardLogo.png') round;">
 						</view>
 						<view style="height: 150rpx; width: 622rpx; padding: 10px 20px; margin-bottom: 30px;">
 							<view class="item-img" style="display: flex;">
-								<u-avatar :src="myList.headSculptureUrl" mode="aspectFit" size="108" style="margin-right: 15px;"></u-avatar>
+								<u-avatar id="headSculptureUrl" class="dowloadImg111" :src="myList.headSculptureUrl" mode="aspectFit" size="108" style="margin-right: 15px;"></u-avatar>
 								<view>
-									<view style=" font-weight: bold; font-size: 32rpx; margin: 5px 0;">	{{ myList.engineerRealname }}
+									<view id="text1" class="dowloadImg111" style=" font-weight: bold; font-size: 32rpx; margin: 5px 0;">	{{ myList.engineerRealname }}
 									</view>
-									<p>邀请你访问灵活用工小程序</p>
+									<p id="text2" class="dowloadImg111"> 邀请你访问灵活用工小程序</p>
 								</view>
 							</view>
 						</view>
 						<view style="text-align: center; padding-bottom: 109rpx;">
-							<image :src="cardUrl"  style="margin: auto; width: 402rpx;height: 418rpx;" mode="aspectFit"></image>
+							<image id="cardUrl" class="dowloadImg111" :src="cardUrl"  style="margin: auto; width: 402rpx;height: 418rpx;" mode="aspectFit"></image>
 						</view>
 					</view>
 					<!-- <p style="text-align: center; font-size: 32rpx;font-family: PingFang SC;margin-bottom: 109rpx;font-weight: bold;color: #333333;">长按识别二维码</p> -->
 
 					<view class="tuiguangma">
-						<u-button text="关闭" style=" font-size: 32rpx;font-family: PingFang SC;font-weight: 500;color: #3A84F0;" @click="cardShow = !cardShow"></u-button>
-						<u-button text="保存图片" type="primary" style="width: 125px;" @click="dowloadImg"></u-button>
+						<u-button class="an" text="关闭" style=" font-size: 32rpx;font-family: PingFang SC;font-weight: 500;color: #3A84F0;" @click="cardShow = !cardShow"></u-button>
+						<u-button class="an" text="保存图片" type="primary" style="width: 125px;" @click="dowloadImg"></u-button>
 					</view>
 				</view>
 			</view>
@@ -175,7 +177,11 @@
 		<view class="">
 			<u-button shape='circle' type="error" class="unLogin" @click="unLogin" text="退出登录"></u-button>
 		</view>
-		<canvas canvas-id="canvas-ddd"></canvas>
+		<canvas
+		      canvas-id="myCanvas"
+			  class="myCanvas"
+		      style="width: 100vw; height: 100vh; position: fixed; top: 0; left: 0; z-index: -999;"
+		    ></canvas>
 	</view>
 </template>
 
@@ -200,7 +206,7 @@ export default {
 	data() {
 		return {
 			avatarSrc: '',
-			id: "2", //我的工程师
+			id: "2", //我的用户
 			message:'',
 			myList: [],
 			show: false,
@@ -209,51 +215,109 @@ export default {
 			content: "15344443333",
 			menuButtonInfo: menuButtonInfo,
 			myMsgTop: 110,
-			cardUrl: ''
+			cardUrl: '',
+			tempFilePath:''
 		}
 	},
 	onShow() {
 		if (uni.getSystemInfoSync().statusBarHeight) {
 			this.myMsgTop = uni.getSystemInfoSync().statusBarHeight + menuButtonInfo.bottom + menuButtonInfo.height + menuButtonInfo.top
 		}
-		this.engineerEndList() //我的工程师查询
+		this.engineerEndList() //我的用户查询
 		this.getmesnum()
 	},
 	computed: {},
 	methods: {
 		dowloadImg() {
-		  // 使用uni.createSelectorQuery()获取节点
-		  const query = uni.createSelectorQuery().in(this);
-		  query.select('#dowloadImg111').boundingClientRect(res => {
-			  const width = res.width;
-			  const height = res.height;
-	
-			  // 创建一个 canvas 绘图上下文
-			  const ctx = uni.createCanvasContext('canvas-ddd', this);
-			  // 绘制节点内容到canvas
-			  ctx.drawImage(res.left, res.top, width, height,0, 0, width, height);
-			  
-	
-			  // 导出图片
-			  ctx.draw(true, () => {
-				uni.canvasToTempFilePath({
-				  x: 0,
-				  y: 0,
-				  width: width,
-				  height: height,
-				  destWidth: width,
-				  destHeight: height,
-				  canvasId: 'canvas-ddd',
-				  success: (res) => {
-					// 在这里可以处理生成的图片路径
-					console.log(res.tempFilePath);
-				  },
-				  fail:(err)=>{
-					 console.log(err); 
-				  }
-				}, this);
+			let width = ''
+			let height = ''
+			uni.createSelectorQuery()
+			  .in(this)
+			  .select('.myCanvas') // 替换为你的 Canvas 的 class 或选择器
+			  .fields({  size: true })
+			  .exec(res => {
+				width = res[0].width;
+				height = res[0].height;
+		
+				console.log('Canvas Width:', width);
+				console.log('Canvas Height:', height);
+				// 可以在这里进行 Canvas 相关的操作，例如绘制图形等
 			  });
-			});
+			// 获取页面元素信息
+			uni.createSelectorQuery()
+				.in(this)
+				.selectAll('.dowloadImg111') // 替换为你的页面元素的class或其他选择器
+				.boundingClientRect(rects => {
+					// 创建Canvas上下文
+					const canvasContext = uni.createCanvasContext('myCanvas', this);
+					canvasContext.fillStyle = 'white';
+					canvasContext.fillRect(0, 0, width, height);
+					canvasContext.fillStyle = 'black'; // 这里设置文字颜色为黑色
+
+					// 遍历页面元素，将其绘制到Canvas上
+					rects.forEach(rect => {
+					if (rect.id == 'cardUrl') {
+						canvasContext.drawImage(this.cardUrl, rect.left, rect.top, rect.width, rect.height);
+					}else if(rect.id == 'text1'){
+						canvasContext.lineWidth = 4;
+						canvasContext.fillText(this.myList.engineerRealname, rect.left, rect.top +12 );
+						canvasContext.lineWidth = 1;
+					}else if(rect.id == 'text2'){
+						canvasContext.fillText('邀请你访问灵活用工小程序', rect.left, rect.top +12);
+					}else if(rect.id == 'headSculptureUrl'){
+						canvasContext.arcTo(rect.left + rect.width/2, rect.top+ rect.height/2,rect.left, rect.top, rect.width/2)
+						canvasContext.closePath();
+						//
+						canvasContext.save();
+						  canvasContext.beginPath();
+						  canvasContext.arc(rect.left + rect.width/2,rect.top+ rect.height/2, rect.height/2, 0, 2 * Math.PI);
+						  canvasContext.clip(); // 使用clip方法裁剪出一个圆形区域
+						  canvasContext.drawImage(this.myList.headSculptureUrl, rect.left, rect.top, rect.width, rect.height);
+						  canvasContext.restore();
+					}else{
+						canvasContext.drawImage(rect.id, rect.left, rect.top, rect.width, rect.height);
+					}
+				  });
+				  canvasContext.draw(false, () => {
+					uni.canvasToTempFilePath({
+						canvasId: 'myCanvas',
+						success: res => {
+							// res.tempFilePath 包含了保存的图片路径
+							this.tempFilePath = res.tempFilePath
+							this.saveImageToAlbum()
+						
+						},
+						fail: err => {
+							console.error('保存失败', err);
+						}
+					}, this);
+				  });
+				})
+			.exec();
+		},
+		saveImageToAlbum() {
+		  if (this.tempFilePath) {
+			  // #ifdef H5
+			  const link = document.createElement('a');
+			  link.href = this.tempFilePath;
+			  link.download = 'image.png'; // 可以指定下载后的文件名
+			  link.click();
+			  // #endif
+			  // #ifdef MP-WEIXIN
+			  uni.saveImageToPhotosAlbum({
+				  filePath: this.tempFilePath,
+				  success: () => {
+					console.log('保存成功');
+				  },
+				  fail: err => {
+					console.error('保存失败', err);
+				  }
+			  });
+			  // #endif
+			
+		  } else {
+			console.error('请先绘制并获取图片路径');
+		  }
 		},
 		uploadTouX(){
 			this.upAvatar()
@@ -357,7 +421,7 @@ export default {
 			})
 		},
 
-		//我的工程师查询
+		//我的用户查询
 		engineerEndList() {
 			const params = {
 				id: uni.getStorageSync('engineer_id')
@@ -398,7 +462,7 @@ export default {
 		width: 80%;
 		margin: 0 auto;
 		justify-content: space-between;
-		&>:nth-child(n){
+		&.an{
 			width: 45%;
 		}
 	}
@@ -419,7 +483,7 @@ export default {
 		display: flex;
 		width: 90%;
 		margin: 0 auto;
-		&>:nth-child(n){
+		&.an{
 			flex: 1;
 			margin: 10rpx;
 			border-radius: 20rpx;

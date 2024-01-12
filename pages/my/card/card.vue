@@ -29,6 +29,7 @@ export default {
 				engineerId: ''
 			},
 			list: [],
+			option:{}
 		}
 	},
 	methods: {
@@ -39,7 +40,7 @@ export default {
 		},
 		addCard() {
 			uni.navigateTo({
-				url: '/pages/my/card/components/addCard',
+				url: '/pages/my/card/components/addCard?data=' +this.option.name,
 			});
 		},
 		toCard(item) {
@@ -63,7 +64,8 @@ export default {
 				})
 			}
 	},
-	onLoad() {
+	onLoad(option) {
+		this.option = option
 		this.params.engineerId = uni.getStorageSync('engineer_id')
 		getcardList(this.params).then((res) => {
 			this.list = res.data.list

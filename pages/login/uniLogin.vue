@@ -6,7 +6,7 @@
 			<!-- <u--image class="logo" :showLoading="true" src="/static/logo@2x.png" width="112rpx"
 				height="112rpx"></u--image> -->
 			<view class="title">灵活用工服务平台</view>
-			<p>工程师端</p>
+			<p>用户端</p>
 		</view>
 
 		<view class="bottom-box">
