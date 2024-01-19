@@ -29,18 +29,21 @@
 				<view class="input-item" style="position: relative;">
 					<text class="tit">手机号码</text>
 					<input :value="mobile" placeholder="请输入手机号码" maxlength="11" data-key="mobile" @input="inputChange" />
-					<button :disabled="!isCorretPhoneNumber" class="sms-code-btn"
-						:class="{ correct_phone_number: isCorretPhoneNumber }" @click.prevent="getSmsCode">
-						{{ countdown > 0 ? `(${countdown}s)已发送` : '获取验证码' }}
-					</button>
 				</view>
-				<view class="input-item">
+				<view class="">
 					<move-verify @result='verifyResult' ref="verifyElement"></move-verify>
 				</view>
 				<view class="input-item">
 					<text class="tit">验证码</text>
-					<input :value="verifyCode" placeholder="请输入验证码" placeholder-class="input-empty" maxlength="20"
-						data-key="verifyCode" @input="inputChange" @confirm="toLogin" />
+					<view class="houmiande">
+						<input :value="verifyCode" placeholder="请输入验证码" placeholder-class="input-empty" maxlength="20"
+							data-key="verifyCode" @input="inputChange" @confirm="toLogin" />
+						<button :disabled="!isCorretPhoneNumber" class="sms-code-btn"
+							:class="{ correct_phone_number: isCorretPhoneNumber }" @click.prevent="getSmsCode">
+							{{ countdown > 0 ? `(${countdown}s)已发送` : '获取验证码' }}
+						</button>
+					</view>
+					
 				</view>
 			</view>
 			<view class="footer-tip">
@@ -426,18 +429,18 @@ page {
 		font-size: $font-sm + 2upx;
 		color: $font-color-base;
 	}
-
+	.houmiande{
+		display: flex;
+		width: 100%;
+	}
 	input {
 		height: 60upx;
 		font-size: $font-base + 2upx;
 		color: $font-color-dark;
-		width: 100%;
 	}
 }
 
 .sms-code-btn {
-	position: absolute;
-	right: 0;
 	border: none;
 	color: #ccc;
 	background: transparent;

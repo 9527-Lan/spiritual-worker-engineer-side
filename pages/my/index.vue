@@ -115,9 +115,9 @@
 				<u-cell title="银行卡管理" :disabled="myList.status != 2" isLink :url="'/pages/my/card/card?name=' + myList.engineerRealname" rightIconStyle="fontSize:32rpx">
 					<u-icon slot="icon" size="32" name="/static/my/bank.png"></u-icon>
 				</u-cell>
-				<u-cell title="我的推广码" isLink url="" rightIconStyle="fontSize:32rpx" @click="openCard">
+				<!-- <u-cell title="我的推广码" isLink url="" rightIconStyle="fontSize:32rpx" @click="openCard">
 					<u-icon slot="icon" size="32" name="/static/my/twoCode.png"></u-icon>
-				</u-cell>
+				</u-cell> -->
 				<u-cell title="推广列表" isLink url="" @click="proto" rightIconStyle="fontSize:32rpx">
 					<u-icon slot="icon" size="32" name="/static/my/extendCode.png"></u-icon>
 				</u-cell>

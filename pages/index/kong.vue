@@ -37,6 +37,9 @@ export default {
 			})
 		}else{
 			this.loginwx()
+			// uni.navigateTo({
+			// 	url:'/pages/login/login'
+			// })
 		}
 	},
 	methods: {
