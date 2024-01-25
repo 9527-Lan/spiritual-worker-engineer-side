@@ -174,9 +174,9 @@
 			</view>
 			<view class="slot-footer"></view>
 		</u-modal>
-		<view class="">
+		<!-- <view class="">
 			<u-button shape='circle' type="error" class="unLogin" @click="unLogin" text="退出登录"></u-button>
-		</view>
+		</view> -->
 		<canvas
 		      canvas-id="myCanvas"
 			  class="myCanvas"

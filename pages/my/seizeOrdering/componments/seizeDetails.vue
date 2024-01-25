@@ -58,10 +58,10 @@
 		</view>
 		<u-tabbar :fixed="true" :placeholder="false"
 			:safeAreaInsetBottom="true">
-			<u-tabbar-item class="icon-size" @click='callPhone' text="平台客服" icon="phone"></u-tabbar-item>
+			<u-tabbar-item class="icon-size" @click='callPhone' text="联系人" icon="phone"></u-tabbar-item>
 			<u-button v-if="orderList.status != 1" type="primary" shape="circle" text="撤销抢单" :plain="true" @click="cancel"></u-button>
 		</u-tabbar>
-		<u-modal :show="show" title="拨打客服电话进行咨询" :showCancelButton='true' @confirm="closeCard"
+		<u-modal :show="show" title="线上联系发单人" :showCancelButton='true' @confirm="closeCard"
 			@cancel="del">
 				<view class="modalContent">
 					<rich-text style="width: 100%;" :nodes="orderList.phone?orderList.phone:'暂无'" class="rText"></rich-text>

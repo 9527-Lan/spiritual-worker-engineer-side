@@ -44,7 +44,8 @@ export default {
 	},
 	methods: {
 		loginwx(){
-			this.externalLink = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx4cc076e518106cc3&redirect_uri=https%3A%2F%2Flhyg.hnxfsd.cn%2Fprod-api%2FwxPublic%2FgetOpenID&response_type=code&scope=snsapi_base&state=lhyg#wechat_redirect'
+			//this.externalLink = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx4cc076e518106cc3&redirect_uri=https%3A%2F%2Flhyg.hnxfsd.cn%2Fprod-api%2FwxPublic%2FgetOpenID&response_type=code&scope=snsapi_base&state=lhyg#wechat_redirect'
+			this.externalLink = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx4cc076e518106cc3&redirect_uri=https%3A%2F%2Flhyg.hollwingroup.com%2Fprod-api%2FwxPublic%2FgetOpenID&response_type=code&scope=snsapi_base&state=lhyg#wechat_redirect'
 			window.location.href = this.externalLink
 		},
 	}

@@ -27,8 +27,10 @@
 			<!-- #ifndef MP -->
 			<view class="input-content">
 				<view class="input-item" style="position: relative;">
-					<text class="tit">手机号码</text>
-					<input :value="mobile" placeholder="请输入手机号码" maxlength="11" data-key="mobile" @input="inputChange" />
+					<view class="tit">手机号码</view>
+					<view class="houmiande">
+						<input class="inputWai" :value="mobile" placeholder="请输入手机号码" maxlength="11" data-key="mobile" @input="inputChange" />
+					</view>
 				</view>
 				<view class="">
 					<move-verify @result='verifyResult' ref="verifyElement"></move-verify>
@@ -36,14 +38,13 @@
 				<view class="input-item">
 					<text class="tit">验证码</text>
 					<view class="houmiande">
-						<input :value="verifyCode" placeholder="请输入验证码" placeholder-class="input-empty" maxlength="20"
+						<input class="inputWai" :value="verifyCode" placeholder="请输入验证码" placeholder-class="input-empty" maxlength="20"
 							data-key="verifyCode" @input="inputChange" @confirm="toLogin" />
-						<button :disabled="!isCorretPhoneNumber" class="sms-code-btn"
+						<button :disabled="!isCorretPhoneNumber" class="sms-code-btn" size="mini"
 							:class="{ correct_phone_number: isCorretPhoneNumber }" @click.prevent="getSmsCode">
 							{{ countdown > 0 ? `(${countdown}s)已发送` : '获取验证码' }}
 						</button>
 					</view>
-					
 				</view>
 			</view>
 			<view class="footer-tip">
@@ -56,10 +57,21 @@
 				<!-- <u-checkbox-group v-model="agree" @change="checkboxChange">
 						<u-checkbox size="28rpx" label='' name='' shape="circle"></u-checkbox>
 					</u-checkbox-group> -->
-				我已阅读并理解
-				<text class="link">《服务协议》</text>
-				和
+				我已阅读并同意
 				<text class="link" >《隐私协议》</text>
+			</view>
+			<view class="footer-tip">
+				<u-radio-group v-model="agreeHZ" @change="checkboxHZChange">
+					<u-radio name='a' size="28rpx"></u-radio>
+				</u-radio-group>
+			
+			
+				<!-- <view class="circle"></view> -->
+				<!-- <u-checkbox-group v-model="agree" @change="checkboxChange">
+						<u-checkbox size="28rpx" label='' name='' shape="circle"></u-checkbox>
+					</u-checkbox-group> -->
+				我已阅读并同意
+				<text class="link">《合作协议》</text>
 			</view>
 			<button class="confirm-btn" @click="toLogin" :disabled="logining">登录</button>
 			<view class="tip">
@@ -72,7 +84,7 @@
 		</view> -->
 		<u-modal :show="cardShow" :showConfirmButton="false" width="622rpx" style="padding-top: 0;">
 			
-			<view class="rich" style="height: 700px; margin:  auto; overflow: scroll">
+			<view class="rich" style="height: 700px; margin:  auto; overflow: scroll;overflow-x: hidden;">
 				<u-loading-icon v-if="!node" text="加载中" textSize="24"></u-loading-icon>
 				<view v-else>
 					<rich-text :nodes="node"></rich-text>
@@ -85,11 +97,26 @@
 				
 			</view>
 		</u-modal>
+		<u-modal :show="cardShowHZ" :showConfirmButton="false" width="622rpx" style="padding-top: 0;">
+			
+			<view class="rich" style="height: 700px; margin:  auto; overflow: scroll;overflow-x: hidden;">
+				<u-loading-icon v-if="!nodeHZ" text="加载中" textSize="24"></u-loading-icon>
+				<view v-else>
+					<rich-text :nodes="nodeHZ"></rich-text>
+				<view style="display: flex;">
+					<u-button text="确认"
+						style=" font-size: 32rpx;font-family: PingFang SC;margin-top: 15px; font-weight: 500;color: #3A84F0;"
+						@click="cardbtnHZ"></u-button>
+				</view>
+				</view>
+				
+			</view>
+		</u-modal>
 	</view>
 </template>
 
 <script>
-import { getnumcode, getAgreement,querybyPhone } from "@/api/user.js"
+import { getnumcode, getAgreement,querybyPhone,getCooperationAgreement } from "@/api/user.js"
 import moveVerify from "@/components/helang-moveVerify/helang-moveVerify.vue"
 import {
 	mapMutations
@@ -103,16 +130,21 @@ export default {
 		return {
 			mobile: '',
 			cardShow: false,
+			cardShowHZ: false,
 			verifyCode: null,
 			password: undefined,
 			logining: false,
 			carloading:true,
+			carloadingHZ:true,
 			loginStatus:false,
+			loginStatusHZ:false,
 			node: ``,
+			nodeHZ: ``,
 			countdown: 0,
 			timer: null,
 			id: '',
 			agree: false,
+			agreeHZ: false,
 			resultData:{},
 			isAgree: [{
 				nema: 'argree'
@@ -194,7 +226,10 @@ export default {
 		cardbtn() {
 			this.cardShow = !this.cardShow
 			this.loginStatus=true
-			console.log(this.agree)
+		},
+		cardbtnHZ() {
+			this.cardShowHZ = !this.cardShowHZ
+			this.loginStatusHZ=true
 		},
 		getSmsCode() {
 			if (!this.resultData.flag) {
@@ -223,6 +258,13 @@ export default {
 				this.node = res.data
 			})
 		},
+		checkboxHZChange(e) {
+			this.cardShowHZ = !this.cardShowHZ
+			getCooperationAgreement().then((res) => {
+				this.carloadingHZ=!this.carloadingHZ
+				this.nodeHZ = res.data
+			})
+		},
 		//  #ifndef MP
 		async toLogin() {
 			if (!this.mobile) {
@@ -235,9 +277,10 @@ export default {
 			querybyPhone({phone:this.mobile}).then(res=>{
 				if (res.data!=0) {
 					this.agree = 'a'
+					this.agreeHZ = 'a'
 					this.loginGoGoGo()
 				}else{
-					if (this.loginStatus) {
+					if (this.loginStatus && this.loginStatusHZ) {
 						this.loginGoGoGo()
 					} else {
 						this.$api.msg('请仔细阅读协议后登录');
@@ -302,11 +345,11 @@ page {
 }
 
 .container {
-	padding-top: 115px;
+	padding-top: 20rpx;
 	position: relative;
 	width: 100vw;
 	height: 100vh;
-	overflow: hidden;
+	overflow: auto;
 	background: #fff;
 }
 
@@ -316,7 +359,7 @@ page {
 	justify-content: center;
 	align-items: center;
 	text-align: center;
-	padding-bottom: 200rpx;
+	padding-bottom: 100rpx;
 
 	.logo {
 		margin: 0 auto;
@@ -415,7 +458,6 @@ page {
 	align-items: flex-start;
 	justify-content: center;
 	padding: 0 30upx;
-	height: 120upx;
 	border-radius: 4px;
 	margin-bottom: 50upx;
 
@@ -432,6 +474,10 @@ page {
 	.houmiande{
 		display: flex;
 		width: 100%;
+	}
+	.inputWai{
+		flex: 1;
+		    border-bottom: 1rpx solid #d2d2d2;
 	}
 	input {
 		height: 60upx;

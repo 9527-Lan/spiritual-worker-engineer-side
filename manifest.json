@@ -1,5 +1,5 @@
 {
-    "name" : "灵工-工程师端",
+    "name" : "灵工-用户端",
     "appid" : "__UNI__3EC3C2E",
     "description" : "",
     "versionName" : "1.0.0",
@@ -98,7 +98,11 @@
                 }
             },
             //步骤二勾选后的效果
-            "https" : false
+            "https" : true
+        },
+        "router" : {
+            "base" : "/lhyg/engineer/",
+            "mode" : "hash"
         }
     }
 }

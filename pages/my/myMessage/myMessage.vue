@@ -322,6 +322,10 @@
 				this.$refs.uForm.validateField('typeIds')
 			},
 			labelSelect(e) {
+				if (e.length>3) {
+					uni.$u.toast('服务标签最多填写三个')
+					return 
+				}
 				this.showLabel = false
 				this.userInfo.labelIds = e.length ? e.map(el => el.id).toString() : ''
 				this.label = e.length ? e.map(el => el.name).toString() : ''

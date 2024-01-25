@@ -90,6 +90,12 @@ export function getAgreement(){
 		method: 'get',
 	})
 }
+export function getCooperationAgreement(){
+	return request({
+		url: '/engineerEnd/cooperationAgreement',
+		method: 'get',
+	})
+}
 export function querybyPhone(params){
 	return request({
 		url: '/engineerEnd/querybyPhone',
