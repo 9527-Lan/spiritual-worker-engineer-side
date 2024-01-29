@@ -53,16 +53,15 @@
 				<u-radio-group v-model="agree" @change="checkboxChange">
 					<u-radio name='a' size="28rpx"></u-radio>
 				</u-radio-group>
-			
-			
-				<!-- <view class="circle"></view> -->
-				<!-- <u-checkbox-group v-model="agree" @change="checkboxChange">
-						<u-checkbox size="28rpx" label='' name='' shape="circle"></u-checkbox>
-					</u-checkbox-group> -->
-				我已阅读并理解
-				<text class="link">《服务协议》</text>
-				和
+				我已阅读并同意
 				<text class="link" >《隐私协议》</text>
+			</view>
+			<view class="footer-tip">
+				<u-radio-group v-model="agreess" @change="checkboxChangess">
+					<u-radio name='a' size="28rpx"></u-radio>
+				</u-radio-group>
+				我已阅读并同意
+				<text class="link" >《合作协议》</text>
 			</view>
 			<button class="confirm-btn" @click="toLogin" :disabled="logining">登录</button>
 			<view class="tip">
@@ -92,7 +91,7 @@
 </template>
 
 <script>
-import { getnumcode, getAgreement,querybyPhone } from "@/api/user.js"
+import { getnumcode, getAgreement,querybyPhone,getCooperationAgreement } from "@/api/user.js"
 import moveVerify from "@/components/helang-moveVerify/helang-moveVerify.vue"
 import {
 	mapMutations
@@ -112,10 +111,11 @@ export default {
 			carloading:true,
 			loginStatus:false,
 			node: ``,
-			countdown: 10,
+			countdown: 60,
 			timer: null,
 			id: '',
 			agree: false,
+			agreess: false,
 			resultData:{},
 			isAgree: [{
 				nema: 'argree'
@@ -206,7 +206,7 @@ export default {
 				uni.$u.toast('请先滑动滑块再发送验证码'); 
 				return 
 			}
-			if(this.countdown == 10 && this.canSendSms) {
+			if(this.countdown == 60 && this.canSendSms) {
 				if(this.isFirst) {
 					this.isFirst = false
 				}
@@ -229,7 +229,7 @@ export default {
 			} 
 			
 			if(this.countdown == 0 && this.canSendSms) {
-				this.countdown = 10
+				this.countdown = 60
 				this.canSendSms = false
 				var setTimeouts = setInterval(() => {
 					this.countdown--;
@@ -255,6 +255,13 @@ export default {
 				this.node = res.data
 			})
 		},
+		checkboxChangess(e) {
+			this.cardShow = !this.cardShow
+			getCooperationAgreement().then((res) => {
+				this.carloading=!this.carloading
+				this.node = res.data
+			})
+		},
 		//  #ifndef MP
 		async toLogin() {
 			if (!this.mobile) {
@@ -267,6 +274,7 @@ export default {
 			querybyPhone({phone:this.mobile}).then(res=>{
 				if (res.data!=0) {
 					this.agree = 'a'
+					this.agreess = 'a'
 					this.loginGoGoGo()
 				}else{
 					if (this.loginStatus) {
@@ -334,7 +342,7 @@ page {
 }
 
 .container {
-	padding-top: 115px;
+	padding-top: 40rpx;
 	position: relative;
 	width: 100vw;
 	height: 100vh;
