@@ -161,13 +161,15 @@
 
 
 					CardsAdd(this.form).then(res => {
-						if(res.code='00000'){
+						if(res.code =='00000'){
 							uni.$u.toast('提交成功')
-						setTimeout(() => {
-							uni.navigateTo({
-								url: "/pages/my/card/card"
-							})
-						}, 1000)
+							setTimeout(() => {
+								uni.navigateTo({
+									url: "/pages/my/card/card"
+								})
+							}, 1000)
+						}else{
+							uni.$u.toast(res.msg)
 						}
 					
 					})

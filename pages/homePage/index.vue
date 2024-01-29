@@ -35,7 +35,7 @@
 			</u-col>
 		</u-row>
 		<u-sticky  :offsetTop="(64+(top+statusBarHeight)+30)" zIndex="10000000" ref="stickyFixed">
-			<u-tabs class="tab" @click="changeOption" :list="tabList" lineWidth="33" lineHeight="0.4rem" :scrollable="false"
+			<u-tabs class="tab" @click="changeOption" :list="tabList" lineWidth="33" lineHeight="0.4rem" :scrollable="true"
 				:activeStyle="{
 						color: '#333333',
 						fontWeight: 'bold',
@@ -244,7 +244,7 @@ let menuButtonInfo = uni.getMenuButtonBoundingClientRect()?uni.getMenuButtonBoun
 		margin: 42rpx 32rpx;
 
 		/deep/ .u-tabs__wrapper__nav__line {
-			width: 35px !important;
+			width: 90rpx !important;
 		}
 	}
 

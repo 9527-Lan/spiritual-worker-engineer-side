@@ -27,7 +27,7 @@
 					</u-form-item>
 					<u-form-item required label="性别" prop="engineerSexName" borderBottom @click="showSex = true"
 						ref="item1">
-						<u--input v-model="userInfo.engineerSexName" disabled disabledColor="#ffffff" placeholder="请选择性别"
+						<u--input v-model="userInfo.engineerSexName" disabledColor="#ffffff" placeholder="请选择性别"
 							border="none"></u--input>
 						<u-icon slot="right" name="arrow-right"></u-icon>
 					</u-form-item>
@@ -59,8 +59,8 @@
 					<u-form-item label="身份证照片" borderBottom required>
 						<!-- <u--input v-model="userInfo.workType" disabled disabledColor="#ffffff" border="none"></u--input> -->
 						<view class="imgdelegate" v-if="userInfo.cardImgNegative&&userInfo.cardImgPositive">
-							<u-image  :src="'https://lhyg.hnxfsd.cn/prod-api/file/download?fileId=' + userInfo.cardImgNegative" height="120rpx" width="120rpx"  style="margin-right: 20px;"></u-image>
-						   <u-image  :src="'https://lhyg.hnxfsd.cn/prod-api/file/download?fileId=' + userInfo.cardImgPositive" height="120rpx" width="120rpx"></u-image>
+							<u-image  :src="'https://lhyg.hollwingroup.com/prod-api/file/download?fileId=' + userInfo.cardImgNegative" height="120rpx" width="120rpx"  style="margin-right: 20px;"></u-image>
+						   <u-image  :src="'https://lhyg.hollwingroup.com/prod-api/file/download?fileId=' + userInfo.cardImgPositive" height="120rpx" width="120rpx"></u-image>
 						</view>
 						<u-tag v-if="userInfo.status != 2" text='去上传' shape="circle" plain size="mini"
 							@click="toIdCard()" slot="right"></u-tag>

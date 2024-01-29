@@ -27,24 +27,26 @@
 			<!-- #ifndef MP -->
 			<view class="input-content">
 				<view class="input-item" style="position: relative;">
-					<view class="tit">手机号码</view>
-					<view class="houmiande">
-						<input class="inputWai" :value="mobile" placeholder="请输入手机号码" maxlength="11" data-key="mobile" @input="inputChange" />
-					</view>
+					<text class="tit">手机号码</text>
+					<input :value="mobile" placeholder="请输入手机号码" maxlength="11" data-key="mobile" @input="inputChange" />
+					
+					<button v-if="isFirst" :disabled="!isCorretPhoneNumber" class="sms-code-btn"
+						:class="{ correct_phone_number: isCorretPhoneNumber }" @tap="getSmsCode">
+						获取验证码
+					</button>
+					
+					<button v-else :disabled="!isCorretPhoneNumber" class="sms-code-btn"
+						:class="{ correct_phone_number: isCorretPhoneNumber }" @tap="getSmsCode">
+						{{ countdown != 0 ? `(${countdown}s)后重新获取` : '重新获取'}}
+					</button>
 				</view>
-				<view class="">
+				<view class="input-item">
 					<move-verify @result='verifyResult' ref="verifyElement"></move-verify>
 				</view>
 				<view class="input-item">
 					<text class="tit">验证码</text>
-					<view class="houmiande">
-						<input class="inputWai" :value="verifyCode" placeholder="请输入验证码" placeholder-class="input-empty" maxlength="20"
-							data-key="verifyCode" @input="inputChange" @confirm="toLogin" />
-						<button :disabled="!isCorretPhoneNumber" class="sms-code-btn" size="mini"
-							:class="{ correct_phone_number: isCorretPhoneNumber }" @click.prevent="getSmsCode">
-							{{ countdown > 0 ? `(${countdown}s)已发送` : '获取验证码' }}
-						</button>
-					</view>
+					<input :value="verifyCode" placeholder="请输入验证码" placeholder-class="input-empty" maxlength="20"
+						data-key="verifyCode" @input="inputChange" @confirm="toLogin" />
 				</view>
 			</view>
 			<view class="footer-tip">
@@ -57,21 +59,10 @@
 				<!-- <u-checkbox-group v-model="agree" @change="checkboxChange">
 						<u-checkbox size="28rpx" label='' name='' shape="circle"></u-checkbox>
 					</u-checkbox-group> -->
-				我已阅读并同意
+				我已阅读并理解
+				<text class="link">《服务协议》</text>
+				和
 				<text class="link" >《隐私协议》</text>
-			</view>
-			<view class="footer-tip">
-				<u-radio-group v-model="agreeHZ" @change="checkboxHZChange">
-					<u-radio name='a' size="28rpx"></u-radio>
-				</u-radio-group>
-			
-			
-				<!-- <view class="circle"></view> -->
-				<!-- <u-checkbox-group v-model="agree" @change="checkboxChange">
-						<u-checkbox size="28rpx" label='' name='' shape="circle"></u-checkbox>
-					</u-checkbox-group> -->
-				我已阅读并同意
-				<text class="link">《合作协议》</text>
 			</view>
 			<button class="confirm-btn" @click="toLogin" :disabled="logining">登录</button>
 			<view class="tip">
@@ -84,7 +75,7 @@
 		</view> -->
 		<u-modal :show="cardShow" :showConfirmButton="false" width="622rpx" style="padding-top: 0;">
 			
-			<view class="rich" style="height: 700px; margin:  auto; overflow: scroll;overflow-x: hidden;">
+			<view class="rich" style="height: 700px; margin:  auto; overflow: scroll">
 				<u-loading-icon v-if="!node" text="加载中" textSize="24"></u-loading-icon>
 				<view v-else>
 					<rich-text :nodes="node"></rich-text>
@@ -97,26 +88,11 @@
 				
 			</view>
 		</u-modal>
-		<u-modal :show="cardShowHZ" :showConfirmButton="false" width="622rpx" style="padding-top: 0;">
-			
-			<view class="rich" style="height: 700px; margin:  auto; overflow: scroll;overflow-x: hidden;">
-				<u-loading-icon v-if="!nodeHZ" text="加载中" textSize="24"></u-loading-icon>
-				<view v-else>
-					<rich-text :nodes="nodeHZ"></rich-text>
-				<view style="display: flex;">
-					<u-button text="确认"
-						style=" font-size: 32rpx;font-family: PingFang SC;margin-top: 15px; font-weight: 500;color: #3A84F0;"
-						@click="cardbtnHZ"></u-button>
-				</view>
-				</view>
-				
-			</view>
-		</u-modal>
 	</view>
 </template>
 
 <script>
-import { getnumcode, getAgreement,querybyPhone,getCooperationAgreement } from "@/api/user.js"
+import { getnumcode, getAgreement,querybyPhone } from "@/api/user.js"
 import moveVerify from "@/components/helang-moveVerify/helang-moveVerify.vue"
 import {
 	mapMutations
@@ -130,21 +106,16 @@ export default {
 		return {
 			mobile: '',
 			cardShow: false,
-			cardShowHZ: false,
 			verifyCode: null,
 			password: undefined,
 			logining: false,
 			carloading:true,
-			carloadingHZ:true,
 			loginStatus:false,
-			loginStatusHZ:false,
 			node: ``,
-			nodeHZ: ``,
-			countdown: 0,
+			countdown: 10,
 			timer: null,
 			id: '',
 			agree: false,
-			agreeHZ: false,
 			resultData:{},
 			isAgree: [{
 				nema: 'argree'
@@ -152,7 +123,9 @@ export default {
 			externalLink:'',
 			aaa:false,
 			code: undefined,
-			openid:''
+			openid:'',
+			canSendSms: true,
+			isFirst: true,
 		};
 	},
 	computed: {
@@ -226,43 +199,60 @@ export default {
 		cardbtn() {
 			this.cardShow = !this.cardShow
 			this.loginStatus=true
-		},
-		cardbtnHZ() {
-			this.cardShowHZ = !this.cardShowHZ
-			this.loginStatusHZ=true
+			console.log(this.agree)
 		},
 		getSmsCode() {
 			if (!this.resultData.flag) {
 				uni.$u.toast('请先滑动滑块再发送验证码'); 
 				return 
 			}
-			getnumcode({ phone: this.mobile }).then((res) => {
-				if (res.code === '00000') {
-					this.$api.msg('验证码已发送');
-					console.log(res, 'res');
-					this.countdown = 60
-					var setTimeouts = setInterval(() => {
-						this.countdown--;
-						if (this.countdown <= 0) {
-							clearInterval(setTimeouts)
-						}
-					}, 1000)
+			if(this.countdown == 10 && this.canSendSms) {
+				if(this.isFirst) {
+					this.isFirst = false
 				}
-
-			})
+				this.canSendSms = false
+				var setTimeouts = setInterval(() => {
+					this.countdown--;
+					if (this.countdown == 0) {
+						clearInterval(setTimeouts)
+						this.canSendSms = true
+					}
+				}, 1000)
+				getnumcode({ phone: this.mobile }).then((res) => {
+					if (res.code === '00000') {
+						this.$api.msg('验证码已发送');
+						console.log(res, 'res');
+						
+					}
+				
+				})
+			} 
+			
+			if(this.countdown == 0 && this.canSendSms) {
+				this.countdown = 10
+				this.canSendSms = false
+				var setTimeouts = setInterval(() => {
+					this.countdown--;
+					if (this.countdown == 0) {
+						clearInterval(setTimeouts)
+						this.canSendSms = true
+					}
+				}, 1000)
+				getnumcode({ phone: this.mobile }).then((res) => {
+					if (res.code === '00000') {
+						this.$api.msg('验证码已发送');
+						console.log(res, 'res');
+						
+					}
+				
+				})
+			}
 		},
 		checkboxChange(e) {
 			this.cardShow = !this.cardShow
 			getAgreement().then((res) => {
 				this.carloading=!this.carloading
 				this.node = res.data
-			})
-		},
-		checkboxHZChange(e) {
-			this.cardShowHZ = !this.cardShowHZ
-			getCooperationAgreement().then((res) => {
-				this.carloadingHZ=!this.carloadingHZ
-				this.nodeHZ = res.data
 			})
 		},
 		//  #ifndef MP
@@ -277,10 +267,9 @@ export default {
 			querybyPhone({phone:this.mobile}).then(res=>{
 				if (res.data!=0) {
 					this.agree = 'a'
-					this.agreeHZ = 'a'
 					this.loginGoGoGo()
 				}else{
-					if (this.loginStatus && this.loginStatusHZ) {
+					if (this.loginStatus) {
 						this.loginGoGoGo()
 					} else {
 						this.$api.msg('请仔细阅读协议后登录');
@@ -345,11 +334,11 @@ page {
 }
 
 .container {
-	padding-top: 20rpx;
+	padding-top: 115px;
 	position: relative;
 	width: 100vw;
 	height: 100vh;
-	overflow: auto;
+	overflow: hidden;
 	background: #fff;
 }
 
@@ -359,7 +348,7 @@ page {
 	justify-content: center;
 	align-items: center;
 	text-align: center;
-	padding-bottom: 100rpx;
+	padding-bottom: 200rpx;
 
 	.logo {
 		margin: 0 auto;
@@ -458,6 +447,7 @@ page {
 	align-items: flex-start;
 	justify-content: center;
 	padding: 0 30upx;
+	height: 120upx;
 	border-radius: 4px;
 	margin-bottom: 50upx;
 
@@ -471,22 +461,18 @@ page {
 		font-size: $font-sm + 2upx;
 		color: $font-color-base;
 	}
-	.houmiande{
-		display: flex;
-		width: 100%;
-	}
-	.inputWai{
-		flex: 1;
-		    border-bottom: 1rpx solid #d2d2d2;
-	}
+
 	input {
 		height: 60upx;
 		font-size: $font-base + 2upx;
 		color: $font-color-dark;
+		width: 100%;
 	}
 }
 
 .sms-code-btn {
+	position: absolute;
+	right: 0;
 	border: none;
 	color: #ccc;
 	background: transparent;

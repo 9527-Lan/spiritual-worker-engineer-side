@@ -77,7 +77,9 @@
 				form: {
 					money:0
 				},
-				eee:{},
+				eee:{
+					label:''
+				},
 				show:false,
 				columns:[
 					[]
@@ -128,6 +130,10 @@
 						item.label = item.cardType + '-' + item.cardNo
 						return item
 					})]
+					if(this.columns.length){
+						this.eee = this.columns[0][0]
+						console.log(this.eee);
+					}
 				})
 			},
 			rightClick() {

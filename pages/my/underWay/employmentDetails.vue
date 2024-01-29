@@ -61,8 +61,8 @@
 									</view>
 									<view style="margin-left: 84rpx;">
 										<view v-if="pItem.orderDesc" class="remark">备注：{{ pItem.orderDesc }}</view>
-										<u-album v-if="pItem.orderImgUrl && pItem.orderImgUrl.length > 0"
-											:multipleSize="150" :rowCount="3" :urls="pItem.orderImgUrl"></u-album>
+										<u-album v-if="pItem.imgs && pItem.imgs.length > 0"
+											:multipleSize="150" :rowCount="3" :urls="pItem.imgs"></u-album>
 									</view>
 								</view>
 							</u-steps-item>
@@ -124,7 +124,10 @@
 						order_id: this.orderList.id,
 						engineer_id: uni.getStorageSync('engineer_id')
 					}).then(res => {
-						this.orderList.casualOrderRecords = res.data
+						this.orderList.casualOrderRecords = res.data.map(item=>{
+							item.imgs = item.orderImg?item.orderImg.split(',').map(item => 'https://lhyg.hollwingroup.com/prod-api/file/download?fileId=' + item) :[]
+							return item
+						})
 					})
 				})
 			},

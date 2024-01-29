@@ -3,10 +3,10 @@
 		<view class="bg"></view>
 		<view class="myMsg" :style="'margin-top:' + myMsgTop + 'rpx'">
 			<view class="left">
-				<u-avatar :src="myList.headSculptureUrl" size="120" @click="upAvatar"></u-avatar>
-				<view v-if="!myList.headSculptureUrl">
-					<avatar @upload="myUpload" ref="avatar" v-if="!myList.headSculptureUrl" style="width: 0;height: 0;"></avatar>
-					<view class="shezhi" v-if="!myList.headSculptureUrl" @click="uploadTouX">
+				<u-avatar :src="'https://lhyg.hollwingroup.com/prod-api/file/download?fileId=' + myList.headSculpture" size="120" @click="upAvatar"></u-avatar>
+				<view v-if="!myList.headSculpture">
+					<avatar @upload="myUpload" ref="avatar" v-if="!myList.headSculpture" style="width: 0;height: 0;"></avatar>
+					<view class="shezhi" v-if="!myList.headSculpture" @click.native.stop="uploadTouX">
 						设置
 					</view>
 				</view>
@@ -20,7 +20,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="money" style="background: url(/static/my/balance.png) round;">
+		<view class="money" style="background: url(./static/my/balance.png) round;">
 			<view class="top">
 				<view class="balance">
 					<view class="balanceTop">余额（元）</view>
@@ -152,7 +152,7 @@
 						</view>
 						<view style="height: 150rpx; width: 622rpx; padding: 10px 20px; margin-bottom: 30px;">
 							<view class="item-img" style="display: flex;">
-								<u-avatar id="headSculptureUrl" class="dowloadImg111" :src="myList.headSculptureUrl" mode="aspectFit" size="108" style="margin-right: 15px;"></u-avatar>
+								<u-avatar id="headSculptureUrl" class="dowloadImg111" :src="'https://lhyg.hollwingroup.com/prod-api/file/download?fileId=' + myList.headSculpture" mode="aspectFit" size="108" style="margin-right: 15px;"></u-avatar>
 								<view>
 									<view id="text1" class="dowloadImg111" style=" font-weight: bold; font-size: 32rpx; margin: 5px 0;">	{{ myList.engineerRealname }}
 									</view>

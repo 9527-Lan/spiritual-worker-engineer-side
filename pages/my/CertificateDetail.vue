@@ -6,7 +6,7 @@
 		<view class="from">
 			<view style="width: 600rpx;padding:40rpx 20rpx;">
 			<view class="upImg">
-                <image v-for="(item,index) in imgs" :src="item" mode="widthFix" style="width: 370rpx;height: 242rpx;"/>
+                <image v-for="(item,index) in imgs" :src="'https://lhyg.hollwingroup.com/prod-api/file/download?fileId=' + item" mode="widthFix" style="width: 370rpx;height: 242rpx;"/>
 		
                 
 			</view>
@@ -56,9 +56,8 @@
 			}
 		},
 		onLoad(options) {
-            myCertificateItem(options.id).then((res)=>{
-                this.imgs=res.data
-            })
+			console.log(options);
+			this.imgs = options.data?options.data.split(','):[]
 		},
 		methods: {
 			leftClick() {

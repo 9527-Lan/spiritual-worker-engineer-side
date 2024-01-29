@@ -144,10 +144,10 @@ export default {
         },
         // 详情
         detail(item) {
-            console.log(item);
-            console.log(item.id);
+			console.log(item);
+			console.log("/pages/my/CertificateDetail?id=" + item.id + '&data=' + item.certificateImg);
             uni.navigateTo({
-                url: "/pages/my/CertificateDetail?id=" + item.id
+                url: "/pages/my/CertificateDetail?id=" + item.id + '&data=' + item.certificateImg
             })
         }
     }
