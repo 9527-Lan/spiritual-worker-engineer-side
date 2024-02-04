@@ -50,18 +50,28 @@
 				</view>
 			</view>
 			<view class="footer-tip">
-				<u-radio-group v-model="agree" @change="checkboxChange">
-					<u-radio name='a' size="28rpx"></u-radio>
-				</u-radio-group>
+				<u-checkbox-group
+					v-model="agree"
+					placement="column"
+					@change="checkboxChange"
+				>
+					<u-checkbox :iconSize='20' :size="28" name='1' shape='circle'>
+					</u-checkbox>
+				</u-checkbox-group>
 				我已阅读并同意
-				<text class="link" >《隐私协议》</text>
+				<text class="link" @click="zhanshi1" >《隐私协议》</text>
 			</view>
 			<view class="footer-tip">
-				<u-radio-group v-model="agreess" @change="checkboxChangess">
-					<u-radio name='a' size="28rpx"></u-radio>
-				</u-radio-group>
+				 <u-checkbox-group
+					v-model="agreess"
+					placement="column"
+					@change="checkboxChangess"
+				>
+					<u-checkbox :iconSize='20' :size="28" name='1' shape='circle'>
+					</u-checkbox>
+				</u-checkbox-group>
 				我已阅读并同意
-				<text class="link" >《合作协议》</text>
+				<text class="link" @click="zhanshi2">《合作协议》</text>
 			</view>
 			<button class="confirm-btn" @click="toLogin" :disabled="logining">登录</button>
 			<view class="tip">
@@ -72,14 +82,17 @@
 			还没有账号?
 			<text @click="toRegist">马上注册</text>
 		</view> -->
-		<u-modal :show="cardShow" :showConfirmButton="false" width="622rpx" style="padding-top: 0;">
+		<u-modal :show="cardShow" :showConfirmButton="false" width="calc(100vw - 100rpx)" style="padding-top: 0;">
 			
-			<view class="rich" style="height: 700px; margin:  auto; overflow: scroll">
+			<view class="rich" style="height: calc(100vh - 300rpx); margin:  auto; overflow: scroll;overflow-x: hidden;">
 				<u-loading-icon v-if="!node" text="加载中" textSize="24"></u-loading-icon>
 				<view v-else>
 					<rich-text :nodes="node"></rich-text>
 				<view style="display: flex;">
 					<u-button text="确认"
+						style=" font-size: 32rpx;font-family: PingFang SC;margin-top: 15px; font-weight: 500;color: #3A84F0;"
+						@click="submitbtn"></u-button>
+						<u-button text="取消"
 						style=" font-size: 32rpx;font-family: PingFang SC;margin-top: 15px; font-weight: 500;color: #3A84F0;"
 						@click="cardbtn"></u-button>
 				</view>
@@ -109,13 +122,14 @@ export default {
 			password: undefined,
 			logining: false,
 			carloading:true,
-			loginStatus:false,
+			loginStatus:0,
+			label:'',
 			node: ``,
 			countdown: 60,
 			timer: null,
 			id: '',
-			agree: false,
-			agreess: false,
+			agree: [],
+			agreess: [],
 			resultData:{},
 			isAgree: [{
 				nema: 'argree'
@@ -140,6 +154,10 @@ export default {
 			this.id = options.id
 			console.log(this.id);
 		}
+		// 假设弹窗的元素有一个类名为 .popup
+		document.querySelector('.rich').addEventListener('touchmove', function(event) {
+		    event.preventDefault(); // 阻止滑动事件的默认行为
+		});
 		// #ifdef MP
 		this.getCode()
 		
@@ -198,7 +216,6 @@ export default {
 		},
 		cardbtn() {
 			this.cardShow = !this.cardShow
-			this.loginStatus=true
 			console.log(this.agree)
 		},
 		getSmsCode() {
@@ -249,6 +266,8 @@ export default {
 			}
 		},
 		checkboxChange(e) {
+			if(!e.length) return
+			this.label = 'agreess'
 			this.cardShow = !this.cardShow
 			getAgreement().then((res) => {
 				this.carloading=!this.carloading
@@ -256,6 +275,29 @@ export default {
 			})
 		},
 		checkboxChangess(e) {
+			if(!e.length) return
+			this.label = 'agreess'
+			this.cardShow = !this.cardShow
+			getCooperationAgreement().then((res) => {
+				this.carloading=!this.carloading
+				this.node = res.data
+			})
+		},
+		submitbtn(){
+			this[this.label] = ['1']
+			this.cardShow = !this.cardShow
+			this.loginStatus = this.loginStatus + 1
+		},
+		zhanshi1(){
+			this.label = 'agree'
+			this.cardShow = !this.cardShow
+			getAgreement().then((res) => {
+				this.carloading=!this.carloading
+				this.node = res.data
+			})
+		},
+		zhanshi2(){
+			this.label = 'agreess'
 			this.cardShow = !this.cardShow
 			getCooperationAgreement().then((res) => {
 				this.carloading=!this.carloading
@@ -273,11 +315,11 @@ export default {
 			}
 			querybyPhone({phone:this.mobile}).then(res=>{
 				if (res.data!=0) {
-					this.agree = 'a'
-					this.agreess = 'a'
+					this.agree = ['1']
+					this.agreess = ['1']
 					this.loginGoGoGo()
 				}else{
-					if (this.loginStatus) {
+					if (this.loginStatus >= 2) {
 						this.loginGoGoGo()
 					} else {
 						this.$api.msg('请仔细阅读协议后登录');
@@ -346,7 +388,7 @@ page {
 	position: relative;
 	width: 100vw;
 	height: 100vh;
-	overflow: hidden;
+	overflow: auto;
 	background: #fff;
 }
 

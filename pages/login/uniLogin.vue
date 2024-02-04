@@ -60,9 +60,9 @@
 		methods: {
 			async toLogin() {
 				
-				uni.switchTab({
-					url: '/pages/homePage/index'
-				});
+				// uni.switchTab({
+				// 	url: '/pages/homePage/index'
+				// });
 				if (this.agree) {
 					this.logining = true;
 					uni.login({

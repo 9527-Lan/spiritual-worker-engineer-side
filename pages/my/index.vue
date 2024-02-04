@@ -4,7 +4,7 @@
 		<view class="myMsg" :style="'margin-top:' + myMsgTop + 'rpx'">
 			<view class="left">
 				<u-avatar :src="'https://lhyg.hollwingroup.com/prod-api/file/download?fileId=' + myList.headSculpture" size="120" @click="upAvatar"></u-avatar>
-				<view v-if="!myList.headSculpture">
+				<view v-if="!myList.headSculpture" class="yangshi">
 					<avatar @upload="myUpload" ref="avatar" v-if="!myList.headSculpture" style="width: 0;height: 0;"></avatar>
 					<view class="shezhi" v-if="!myList.headSculpture" @click.native.stop="uploadTouX">
 						设置
@@ -515,6 +515,10 @@ export default {
 		position: relative;
 		border-radius: 50%;
 		overflow: hidden;
+		.yangshi{
+			position: absolute;
+			top: -40rpx;
+		}
 		.shezhi{
 			position: absolute;
 			bottom: 0;
